@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Lato, Nunito_Sans } from "next/font/google"; // Import Google Font
+import { Nunito_Sans } from "next/font/google"; // Import Google Font
 import Nav from "@/components/layout/nav";
 
 

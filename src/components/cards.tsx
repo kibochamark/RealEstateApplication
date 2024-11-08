@@ -182,7 +182,7 @@ function PropertyCarousel({ images }: {images: string[]}) {
                 alt={`Property image ${index + 1}`}
                 width={400}
                 height={300}
-                className="w-full h-[200px] object-cover"
+                className="w-full h-[400px] object-cover"
               />
             </CarouselItem>
           ))}

@@ -3,15 +3,8 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from "framer-motion"
 import { ChevronDown, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import { Input } from "@/components/ui/input"
-import { usePathname, useRouter } from 'next/navigation'
+
+import { usePathname} from 'next/navigation'
 import Link from 'next/link'
 
 const Nav = () => {
@@ -20,7 +13,7 @@ const Nav = () => {
     const [scrolled, setScrolled] = useState(false)
     const path = usePathname()
 
-    console.log(path, scrolled)
+    // console.log(path, scrolled)
 
     useEffect(() => {
         const checkMobile = () => setIsMobile(window.innerWidth < 768)
