@@ -120,7 +120,6 @@ export default function Component() {
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
       >
         {properties.map((property) => (
-          <Link href={`/listing/${property.id}`} key={property.id}>
           <motion.div key={property.id} variants={itemVariants}>
             <Card className="overflow-hidden shadow-none border-none">
               <div className="relative">
@@ -137,6 +136,8 @@ export default function Component() {
                   </div>
                 </div>
               </div>
+              <Link href={`/listing/${property.id}`} key={property.id}>
+
               <CardContent className="p-4">
                 <h3 className="font-semibold mb-2">{property.title}</h3>
                 <div className="flex items-center text-muted-foreground mb-2">
@@ -161,9 +162,10 @@ export default function Component() {
                   <p className="text-sm text-muted-foreground">Intime Homes</p>
                 </div>
               </CardContent>
+
+              </Link>
             </Card>
           </motion.div>
-          </Link>
         ))}
       </motion.div>
 

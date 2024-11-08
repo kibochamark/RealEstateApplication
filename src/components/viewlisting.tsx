@@ -235,23 +235,24 @@ export default function ViewListing() {
                 className={`grid gap-6 w-full ${isGridView ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4' : 'grid-cols-1'}`}
             >
                 {filteredProperties.map((property) => (
-                    <Link href={`/listing/${property.id}`} key={property.id}>
-                        <motion.div key={property.id} variants={itemVariants}>
-                            <Card className="overflow-hidden shadow-none border-none">
-                                <div className="relative">
-                                    <PropertyCarousel images={property.images} />
-                                    <div className="absolute top-4 left-4 flex gap-2">
-                                        {property.featured && (
-                                            <Badge className="bg-green-500">FEATURED</Badge>
-                                        )}
-                                        <Badge variant="secondary">{property.status}</Badge>
-                                    </div>
-                                    <div className="absolute bottom-4 left-4">
-                                        <div className="text-white font-bold text-xl">
-                                            {property.price}
-                                        </div>
+                    <motion.div key={property.id} variants={itemVariants}>
+                        <Card className="overflow-hidden shadow-none border-none">
+                            <div className="relative">
+                                <PropertyCarousel images={property.images} />
+                                <div className="absolute top-4 left-4 flex gap-2">
+                                    {property.featured && (
+                                        <Badge className="bg-green-500">FEATURED</Badge>
+                                    )}
+                                    <Badge variant="secondary">{property.status}</Badge>
+                                </div>
+                                <div className="absolute bottom-4 left-4">
+                                    <div className="text-white font-bold text-xl">
+                                        {property.price}
                                     </div>
                                 </div>
+                            </div>
+                            <Link href={`/listing/${property.id}`} key={property.id}>
+
                                 <CardContent className="p-4">
                                     <h3 className="font-semibold mb-2">{property.title}</h3>
                                     <div className="flex items-center text-muted-foreground mb-2">
@@ -276,9 +277,10 @@ export default function ViewListing() {
                                         <p className="text-sm text-muted-foreground">Intime Homes</p>
                                     </div>
                                 </CardContent>
-                            </Card>
-                        </motion.div>
-                    </Link>
+                            </Link>
+
+                        </Card>
+                    </motion.div>
                 ))}
             </motion.div>
 
