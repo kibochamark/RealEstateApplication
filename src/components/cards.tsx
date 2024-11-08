@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Bed, Maximize2, MapPin, Expand } from "lucide-react"
 import Image from "next/image"
-import { 
+import {
   Carousel,
   CarouselContent,
   CarouselItem,
@@ -15,6 +15,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
+import Link from "next/link"
 
 export default function Component() {
   const [ref, inView] = useInView({
@@ -168,15 +169,18 @@ export default function Component() {
         <button className="px-4 py-2 border border-primary300 transition-all duration-300 hover:bg-primary300 hover:text-white cursor-pointer text-primary500 bg-white rounded-md">
           Load More
         </button>
-        <button className="px-4 py-2 bg-primary300 transition-all duration-300 hover:bg-white hover:text-primary500 text-white rounded-md">
-          View All Listings
-        </button>
+        <Link href="/intime-listings">
+          <button className="px-4 py-2 bg-primary300 transition-all duration-300 hover:bg-white hover:text-primary500 text-white rounded-md">
+
+            View All Listings
+          </button>
+        </Link>
       </div>
     </div>
   )
 }
 
-function PropertyCarousel({ images }: { images: string[] }) {
+export function PropertyCarousel({ images }: { images: string[] }) {
   const [] = useState(0)
 
   return (

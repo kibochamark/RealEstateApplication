@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { ChevronDown, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-import { usePathname} from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 
 const Nav = () => {
@@ -12,8 +12,6 @@ const Nav = () => {
     const [isMobile, setIsMobile] = useState(false)
     const [scrolled, setScrolled] = useState(false)
     const path = usePathname()
-
-    // console.log(path, scrolled)
 
     useEffect(() => {
         const checkMobile = () => setIsMobile(window.innerWidth < 768)
@@ -23,19 +21,13 @@ const Nav = () => {
     }, [])
 
     useEffect(() => {
-        // Check if we're on the home page
-        const isHomePage = path === "/"
-
-        // Scroll event listener for background color change on home page only
-        const handleScroll = () => {
-            if (isHomePage) {
-                setScrolled(window.scrollY > 50)
-            }
-        }
-
+        const handleScroll = () => setScrolled(window.scrollY > 50)
         window.addEventListener("scroll", handleScroll)
         return () => window.removeEventListener("scroll", handleScroll)
-    }, [path])
+    }, [])
+
+    const isHomePage = path === "/"
+    const navTextColor = !isHomePage || scrolled || !isMobile ? "text-black bg-white" : "text-white"
 
     const NavItem = ({ href, children }: { href: string; children: React.ReactNode }) => (
         <Link href={href} className="block py-2 hover:text-secondary300 ">{children}</Link>
@@ -61,7 +53,7 @@ const Nav = () => {
     )
 
     return (
-        <nav className={`flex items-center fixed justify-end z-20 w-full p-6 ${scrolled ? "bg-white text-black" : "bg-transparent  text-white"} transition-colors duration-300`}>
+        <nav className={`flex items-center fixed justify-end top-0 z-20 w-full p-6 ${scrolled ? "bg-white" : "bg-transparent"} ${navTextColor} transition-colors duration-300`}>
             <div className="flex-1 md:hidden">
                 <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(!isMenuOpen)}>
                     <Menu className="h-6 w-6" />
@@ -74,14 +66,14 @@ const Nav = () => {
                         animate={isMobile ? { x: 0 } : { opacity: 1 }}
                         exit={isMobile ? { x: "-100%" } : { opacity: 1 }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className={`fixed md:relative top-0 left-0 bottom-0 w-64 md:w-auto ${scrolled ? isMobile ? "text-white": "text-black" : "text-white"} z-[100] md:z-auto flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 p-6 md:p-0 ${isMobile ? "bg-black opacity-80" : "hidden md:flex"}`}
+                        className={`fixed md:relative top-0 left-0 bottom-0 w-64 md:w-auto ${isMobile ? "bg-black opacity-80" : "hidden md:flex"} z-[100] md:z-auto flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 p-6 md:p-0 ${navTextColor}`}
                     >
                         {isMobile && (
                             <Button variant="ghost" size="icon" className="self-end mb-4" onClick={() => setIsMenuOpen(false)}>
                                 <X className="h-6 w-6" />
                             </Button>
                         )}
-                        <NavItem href="#">Home</NavItem>
+                        <NavItem href="/">Home</NavItem>
                         <DropdownNavItem
                             title="Properties For Sale"
                             items={["Houses For Sale", "Apartments For Sale", "Land For Sale"]}
@@ -90,7 +82,7 @@ const Nav = () => {
                             title="Properties To Let"
                             items={["Townhouses/Villas For Rent", "Studio Apartments For Rent", "Office Spaces For Rent"]}
                         />
-                        <NavItem href="#">Blog</NavItem>
+                        <NavItem href="/intime-listings">Listings</NavItem>
                         <NavItem href="#">Testimonials</NavItem>
                         <NavItem href="#">Contact</NavItem>
                     </motion.div>

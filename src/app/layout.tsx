@@ -27,7 +27,9 @@ export default function RootLayout({
         className={`${lato.className} antialiased min-h-screen`}
       >
         <div className="relative">
+          <div className="top-0">
           <Nav />
+          </div>
           {children}
           <Footer/>
         </div>
