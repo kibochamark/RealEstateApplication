@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/carousel"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 
-
 export default function Component() {
   const [ref, inView] = useInView({
     triggerOnce: true,
@@ -98,9 +97,9 @@ export default function Component() {
         initial="hidden"
         animate="visible"
         variants={containerVariants}
-        className="text-center  mb-12"
+        className="text-center mb-12"
       >
-        <motion.div variants={itemVariants} className="w-12 h-1  bg-primary300 mx-auto mb-6" />
+        <motion.div variants={itemVariants} className="w-12 h-1 bg-primary300 mx-auto mb-6" />
         <motion.h1 variants={itemVariants} className="text-4xl font-bold mb-4">
           FIND YOUR DREAM HOME
         </motion.h1>
@@ -164,11 +163,20 @@ export default function Component() {
           </motion.div>
         ))}
       </motion.div>
+
+      <div className="flex justify-center gap-4 mt-8">
+        <button className="px-4 py-2 border border-primary300 transition-all duration-300 hover:bg-primary300 hover:text-white cursor-pointer text-primary500 bg-white rounded-md">
+          Load More
+        </button>
+        <button className="px-4 py-2 bg-primary300 transition-all duration-300 hover:bg-white hover:text-primary500 text-white rounded-md">
+          View All Listings
+        </button>
+      </div>
     </div>
   )
 }
 
-function PropertyCarousel({ images }: {images: string[]}) {
+function PropertyCarousel({ images }: { images: string[] }) {
   const [] = useState(0)
 
   return (

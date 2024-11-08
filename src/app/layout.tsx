@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Nunito_Sans } from "next/font/google"; // Import Google Font
 import Nav from "@/components/layout/nav";
+import Footer from "@/components/layout/footer";
 
 
 // Import the Lato font from Google Fonts
@@ -28,6 +29,7 @@ export default function RootLayout({
         <div className="relative">
           <Nav />
           {children}
+          <Footer/>
         </div>
 
       </body>
