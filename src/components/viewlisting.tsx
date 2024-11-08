@@ -1,12 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import Image from 'next/image'
 import { ArrowUpDown, LayoutGrid, LayoutList, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Bed, Maximize2, MapPin, Expand } from "lucide-react"
+import { Bed, Maximize2, MapPin } from "lucide-react"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -26,7 +25,6 @@ import {
 } from '@/components/ui/select'
 import { useInView } from "react-intersection-observer"
 import { PropertyCarousel } from './cards'
-import Filter from './filter'
 import Link from 'next/link'
 
 export default function ViewListing() {
