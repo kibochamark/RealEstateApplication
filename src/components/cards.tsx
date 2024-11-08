@@ -120,6 +120,7 @@ export default function Component() {
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
       >
         {properties.map((property) => (
+          <Link href={`/listing/${property.id}`} key={property.id}>
           <motion.div key={property.id} variants={itemVariants}>
             <Card className="overflow-hidden shadow-none border-none">
               <div className="relative">
@@ -162,6 +163,7 @@ export default function Component() {
               </CardContent>
             </Card>
           </motion.div>
+          </Link>
         ))}
       </motion.div>
 

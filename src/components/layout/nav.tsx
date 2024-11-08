@@ -27,7 +27,7 @@ const Nav = () => {
     }, [])
 
     const isHomePage = path === "/"
-    const navTextColor = !isHomePage || scrolled || !isMobile ? "text-black bg-white" : "text-white"
+    // const navTextColor = !isHomePage || scrolled || !isMobile ? "text-black bg-white" : "text-white"
 
     const NavItem = ({ href, children }: { href: string; children: React.ReactNode }) => (
         <Link href={href} className="block py-2 hover:text-secondary300 ">{children}</Link>
@@ -53,7 +53,7 @@ const Nav = () => {
     )
 
     return (
-        <nav className={`flex items-center fixed justify-end top-0 z-20 w-full p-6 ${scrolled ? "bg-white" : "bg-transparent"} ${navTextColor} transition-colors duration-300`}>
+        <nav className={`flex items-center fixed justify-end top-0 z-20 w-full p-6 ${scrolled ? "bg-white" :  path == "/" ? "bg-transparent text-white" :"bg-white text-black"}   transition-colors duration-300`}>
             <div className="flex-1 md:hidden">
                 <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(!isMenuOpen)}>
                     <Menu className="h-6 w-6" />
@@ -66,7 +66,7 @@ const Nav = () => {
                         animate={isMobile ? { x: 0 } : { opacity: 1 }}
                         exit={isMobile ? { x: "-100%" } : { opacity: 1 }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className={`fixed md:relative top-0 left-0 bottom-0 w-64 md:w-auto ${isMobile ? "bg-black opacity-80" : "hidden md:flex"} z-[100] md:z-auto flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 p-6 md:p-0 ${navTextColor}`}
+                        className={`fixed md:relative top-0 left-0 bottom-0 w-64 md:w-auto ${isMobile ? "bg-black opacity-80 text-white" : "hidden md:flex"} z-[100] md:z-auto flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 p-6 md:p-0`}
                     >
                         {isMobile && (
                             <Button variant="ghost" size="icon" className="self-end mb-4" onClick={() => setIsMenuOpen(false)}>

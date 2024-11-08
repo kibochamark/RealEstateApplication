@@ -27,6 +27,7 @@ import {
 import { useInView } from "react-intersection-observer"
 import { PropertyCarousel } from './cards'
 import Filter from './filter'
+import Link from 'next/link'
 
 export default function ViewListing() {
     const [isGridView, setIsGridView] = useState(true)
@@ -129,7 +130,7 @@ export default function ViewListing() {
 
     return (
         <div className="container mx-auto px-4 py-8 ">
-            
+
             <div className="mb-8 p-6 bg-card rounded-lg shadow">
                 <h2 className="text-xl font-semibold mb-4">Filters</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -236,48 +237,50 @@ export default function ViewListing() {
                 className={`grid gap-6 w-full ${isGridView ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4' : 'grid-cols-1'}`}
             >
                 {filteredProperties.map((property) => (
-                    <motion.div key={property.id} variants={itemVariants}>
-                        <Card className="overflow-hidden shadow-none border-none">
-                            <div className="relative">
-                                <PropertyCarousel images={property.images} />
-                                <div className="absolute top-4 left-4 flex gap-2">
-                                    {property.featured && (
-                                        <Badge className="bg-green-500">FEATURED</Badge>
-                                    )}
-                                    <Badge variant="secondary">{property.status}</Badge>
-                                </div>
-                                <div className="absolute bottom-4 left-4">
-                                    <div className="text-white font-bold text-xl">
-                                        {property.price}
+                    <Link href={`/listing/${property.id}`} key={property.id}>
+                        <motion.div key={property.id} variants={itemVariants}>
+                            <Card className="overflow-hidden shadow-none border-none">
+                                <div className="relative">
+                                    <PropertyCarousel images={property.images} />
+                                    <div className="absolute top-4 left-4 flex gap-2">
+                                        {property.featured && (
+                                            <Badge className="bg-green-500">FEATURED</Badge>
+                                        )}
+                                        <Badge variant="secondary">{property.status}</Badge>
+                                    </div>
+                                    <div className="absolute bottom-4 left-4">
+                                        <div className="text-white font-bold text-xl">
+                                            {property.price}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <CardContent className="p-4">
-                                <h3 className="font-semibold mb-2">{property.title}</h3>
-                                <div className="flex items-center text-muted-foreground mb-2">
-                                    <MapPin className="w-4 h-4 mr-1" />
-                                    {property.location}
-                                </div>
-                                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                                    {property.beds && (
-                                        <div className="flex items-center">
-                                            <Bed className="w-4 h-4 mr-1" />
-                                            {property.beds}
-                                        </div>
-                                    )}
-                                    {property.sqft && (
-                                        <div className="flex items-center">
-                                            <Maximize2 className="w-4 h-4 mr-1" />
-                                            {property.sqft}
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="mt-4 pt-4 border-t border-gray-200">
-                                    <p className="text-sm text-muted-foreground">Intime Homes</p>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </motion.div>
+                                <CardContent className="p-4">
+                                    <h3 className="font-semibold mb-2">{property.title}</h3>
+                                    <div className="flex items-center text-muted-foreground mb-2">
+                                        <MapPin className="w-4 h-4 mr-1" />
+                                        {property.location}
+                                    </div>
+                                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                        {property.beds && (
+                                            <div className="flex items-center">
+                                                <Bed className="w-4 h-4 mr-1" />
+                                                {property.beds}
+                                            </div>
+                                        )}
+                                        {property.sqft && (
+                                            <div className="flex items-center">
+                                                <Maximize2 className="w-4 h-4 mr-1" />
+                                                {property.sqft}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="mt-4 pt-4 border-t border-gray-200">
+                                        <p className="text-sm text-muted-foreground">Intime Homes</p>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
+                    </Link>
                 ))}
             </motion.div>
 
