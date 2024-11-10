@@ -6,7 +6,7 @@ const page = () => {
     <div className='w-full'>
 
         <div className='mt-20'>
-            <PropertyDetail/>f
+            <PropertyDetail/>
         </div>
 
     </div>

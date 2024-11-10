@@ -180,7 +180,7 @@ export default function PropertyDetail() {
                   <User className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="font-semibold">Musilli Homes</h3>
+                  <h3 className="font-semibold">Intime Homes</h3>
                   <Button variant="link" className="h-auto p-0">View Listings</Button>
                 </div>
               </div>
