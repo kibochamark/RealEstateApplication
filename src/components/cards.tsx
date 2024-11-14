@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/carousel"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 export default function Component() {
   const [ref, inView] = useInView({
@@ -32,6 +33,8 @@ export default function Component() {
       }
     }
   }
+
+  const router = useRouter()
 
   const itemVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -120,7 +123,9 @@ export default function Component() {
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
       >
         {properties.map((property) => (
-          <motion.div key={property.id} variants={itemVariants}>
+          <motion.div key={property.id} variants={itemVariants} onClick={()=>{
+            router.push(`/listing/${property.id}`)
+          }}>
             <Card className="overflow-hidden shadow-none border-none">
               <div className="relative">
                 <PropertyCarousel images={property.images} />
@@ -136,7 +141,6 @@ export default function Component() {
                   </div>
                 </div>
               </div>
-              <Link href={`/listing/${property.id}`} key={property.id}>
 
               <CardContent className="p-4">
                 <h3 className="font-semibold mb-2">{property.title}</h3>
@@ -163,7 +167,7 @@ export default function Component() {
                 </div>
               </CardContent>
 
-              </Link>
+             
             </Card>
           </motion.div>
         ))}

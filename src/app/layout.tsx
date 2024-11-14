@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Nunito_Sans } from "next/font/google"; // Import Google Font
+import { Jost } from "next/font/google"; // Import Google Font
 import Nav from "@/components/layout/nav";
 import Footer from "@/components/layout/footer";
 
 
 // Import the Lato font from Google Fonts
-const lato = Nunito_Sans({
+const lato = Jost({
   weight: ["400", "700", "900"], // Adjust weights as needed
   subsets: ["latin"], // Specify subsets
 });
 
 export const metadata: Metadata = {
-  title: "Intime Homes",
+  title: "Home - Intime Homes",
   description: "The better way to buy real estate",
 };
 

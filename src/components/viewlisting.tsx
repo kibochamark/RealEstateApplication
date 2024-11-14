@@ -26,6 +26,7 @@ import {
 import { useInView } from "react-intersection-observer"
 import { PropertyCarousel } from './cards'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 export default function ViewListing() {
     const [isGridView, setIsGridView] = useState(true)
@@ -34,6 +35,8 @@ export default function ViewListing() {
     const [bedrooms, setBedrooms] = useState('')
     const [propertyType, setPropertyType] = useState('')
     const totalPages = 10
+
+    const router = useRouter()
 
     const [ref, inView] = useInView({
         triggerOnce: true,
@@ -235,7 +238,9 @@ export default function ViewListing() {
                 className={`grid gap-6 w-full ${isGridView ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4' : 'grid-cols-1'}`}
             >
                 {filteredProperties.map((property) => (
-                    <motion.div key={property.id} variants={itemVariants}>
+                    <motion.div key={property.id} variants={itemVariants} onClick={()=>{
+                        router.push(`/listing/${property.id}`)
+                    }}>
                         <Card className="overflow-hidden shadow-none border-none">
                             <div className="relative">
                                 <PropertyCarousel images={property.images} />
@@ -251,7 +256,6 @@ export default function ViewListing() {
                                     </div>
                                 </div>
                             </div>
-                            <Link href={`/listing/${property.id}`} key={property.id}>
 
                                 <CardContent className="p-4">
                                     <h3 className="font-semibold mb-2">{property.title}</h3>
@@ -277,7 +281,7 @@ export default function ViewListing() {
                                         <p className="text-sm text-muted-foreground">Intime Homes</p>
                                     </div>
                                 </CardContent>
-                            </Link>
+                        
 
                         </Card>
                     </motion.div>
