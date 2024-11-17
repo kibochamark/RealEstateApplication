@@ -244,7 +244,7 @@ export default function PropertyDetail() {
 
       {/* description and features */}
       <div className='bg-secondary50/90   '>
-        <div className='container grid grid-cols-2 gap-4 px-4 py-8'>
+        <div className='container grid md:grid-cols-2 gap-4 px-4 py-8'>
 
 
           {/* Description */}
