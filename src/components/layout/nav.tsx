@@ -30,7 +30,7 @@ const Nav = () => {
     // const navTextColor = !isHomePage || scrolled || !isMobile ? "text-black bg-white" : "text-white"
 
     const NavItem = ({ href, children }: { href: string; children: React.ReactNode }) => (
-        <Link href={href} className="block py-2 hover:text-secondary300 ">{children}</Link>
+        <Link href={href} className={`block py-2 hover:bg-secondary300 transition-all duration-300 px-2`}>{children}</Link>
     )
 
     const DropdownNavItem = ({ title, items }: { title: string; items: string[] }) => (

@@ -42,23 +42,15 @@ export default function HeroSection() {
 
 
         {/* Hero Content */}
-        <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)]  px-6 md:px-4 text-center">
+        <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] pt-16  px-6 md:px-4 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="space-y-8"
           >
-            <motion.div variants={itemVariants} className="w-12 h-1 mt-6 bg-primary300 mx-auto mb-6" />
+            
 
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-primary200 text-xl"
-            >
-              WELCOME TO
-            </motion.p>
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -133,7 +125,7 @@ export default function HeroSection() {
               className="w-[200px] bg-transparent text-white border-white/20 placeholder:text-white/70"
             />
 
-            <Button className="bg-primary400 text-white hover:bg-[#D5C361] px-8">
+            <Button className="bg-primary400 text-white hover:bg-secondary300 rounded-none px-8">
               Search
             </Button>
           </motion.div>

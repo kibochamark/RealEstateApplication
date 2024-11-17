@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import {
@@ -12,20 +12,39 @@ import {
   DialogContent,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { 
-  Bed, 
-  Square, 
-  MapPin, 
+import {
+  Bed,
+  Square,
+  MapPin,
   Camera,
   Check,
   Share2,
   Building2,
-  User
+  User,
+  Maximize2
 } from 'lucide-react'
+import { Separator } from "@/components/ui/separator"
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import 'leaflet/dist/leaflet.css'
+import L from 'leaflet'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { PropertyCarousel } from './cards'
+import { useInView } from "react-intersection-observer"
+
+// Fix for default marker icon
+// delete L.Icon.Default.prototype
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
+})
 
 export default function PropertyDetail() {
   const [selectedImage, setSelectedImage] = useState(0)
-  
+  const position: [number, number] = [-1.2345, 36.80271] // Latitude and Longitude for Runda, Nairobi
+  const [isGridView, setIsGridView] = useState(true)
+
   const images = [
     '/14.jpg',
     '/11.jpg',
@@ -43,10 +62,53 @@ export default function PropertyDetail() {
     { icon: 'Parking', label: 'Parking' },
     { icon: 'Pool', label: 'Swimming Pool' },
   ]
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1
+  })
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2
+      }
+    }
+  }
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    }
+  }
+
+
+  const property = {
+    id: 1,
+    title: "2 Bedroom Apartment",
+    price: 7900000,
+    location: "Kilimani, Nairobi, Kenya",
+    beds: 2,
+    baths: 1,
+    sqft: "80 sq m",
+    type: "APARTMENT",
+    featured: true,
+    status: "FOR SALE",
+    images: ["/1.jpg?height=300&width=400", "/2.jpg?height=300&width=400", "/3.jpg?height=300&width=400"]
+  }
+
+  
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="grid lg:grid-cols-[1fr_400px] gap-8">
+    <div className="mx-auto ">
+
+      <div className="grid lg:grid-cols-[1fr_400px] gap-8 px-4 py-8 container">
         <div className="space-y-6">
           {/* Header */}
           <div className="space-y-4">
@@ -104,7 +166,6 @@ export default function PropertyDetail() {
               </DialogContent>
             </Dialog>
           </div>
-
           {/* Property Details */}
           <div className="grid grid-cols-3 gap-4">
             <Card>
@@ -142,34 +203,9 @@ export default function PropertyDetail() {
             </Card>
           </div>
 
-          {/* Description */}
-          <div className="space-y-4">
-            <h2 className="text-2xl font-semibold">Description</h2>
-            <p className="text-muted-foreground">
-              Located along Riverside Drive near Riverside Square. Flexible payment plans with 20% deposit.
-            </p>
-            <div className="space-y-2">
-              <h3 className="font-semibold">Prices:</h3>
-              <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                <li>2 Bedroom (101 sqm, master en-suite) - KSh 13.5M</li>
-                <li>3 Bedroom (DSQ/168 sqm) - KSh 20.5M</li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Features */}
-          <div className="space-y-4">
-            <h2 className="text-2xl font-semibold">Features</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {features.map((feature, idx) => (
-                <div key={idx} className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-green-500" />
-                  <span>{feature.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
+
+
 
         {/* Contact Form */}
         <div className="lg:sticky lg:top-8 space-y-6">
@@ -188,8 +224,8 @@ export default function PropertyDetail() {
                 <Input placeholder="Name" />
                 <Input placeholder="Phone" />
                 <Input placeholder="Email" />
-                <Textarea 
-                  placeholder="Message" 
+                <Textarea
+                  placeholder="Message"
                   defaultValue="Hello, I am interested in [2 and 3 Bedroom Apartments for Sale in Riverside]"
                 />
                 <Button className="w-full bg-[#B5A887] hover:bg-[#A39775] text-white">
@@ -199,7 +235,203 @@ export default function PropertyDetail() {
             </CardContent>
           </Card>
         </div>
+
+
+
+
+
       </div>
+
+      {/* description and features */}
+      <div className='bg-secondary50/90   '>
+        <div className='container grid grid-cols-2 gap-4 px-4 py-8'>
+
+
+          {/* Description */}
+          <div className="space-y-4 bg-white my-10 p-4">
+            <h2 className="text-2xl font-semibold">Description</h2>
+            <p className="text-muted-foreground">
+              Located along Riverside Drive near Riverside Square. Flexible payment plans with 20% deposit.
+            </p>
+            <div className="space-y-2">
+              <h3 className="font-semibold">Prices:</h3>
+              <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                <li>2 Bedroom (101 sqm, master en-suite) - KSh 13.5M</li>
+                <li>3 Bedroom (DSQ/168 sqm) - KSh 20.5M</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Features */}
+          <div className="space-y-4 bg-white my-10 p-4">
+            <h2 className="text-2xl font-semibold">Features</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {features.map((feature, idx) => (
+                <div key={idx} className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-green-500" />
+                  <span>{feature.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+      {/* address and maps */}
+      <div className='bg-secondary50/90  px-4 py-8'>
+        <div className="md:container">
+          <div className="grid gap-6 lg:grid-cols-2">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle>Address</CardTitle>
+                <Button variant="secondary">
+                  <MapPin className="mr-2 h-4 w-4" />
+                  Open on Google Maps
+                </Button>
+              </CardHeader>
+              <CardContent className="grid gap-6">
+                <div className="grid gap-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <div className="text-sm font-medium text-muted-foreground">City</div>
+                      <div>Nairobi</div>
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-muted-foreground">Area</div>
+                      <div>Runda</div>
+                    </div>
+                  </div>
+                  <Separator />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <div className="text-sm font-medium text-muted-foreground">State/county</div>
+                      <div>Nairobi Province</div>
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-muted-foreground">Country</div>
+                      <div>Kenya</div>
+                    </div>
+                  </div>
+                </div>
+                <Separator />
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium">Details</h3>
+                  <div className="text-sm text-muted-foreground">Updated on October 6, 2023 at 2:31 pm</div>
+                  <div className="grid gap-4 rounded-lg bg-muted p-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <div className="font-medium">Price:</div>
+                        <div className="text-2xl font-bold">$3,500/mo</div>
+                      </div>
+                      <div>
+                        <div className="font-medium">Property Type:</div>
+                        <div>Villa</div>
+                      </div>
+                    </div>
+                    <Separator />
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <div className="font-medium">Bedrooms:</div>
+                        <div>4</div>
+                      </div>
+                      <div>
+                        <div className="font-medium">Property Status:</div>
+                        <div>For Rent</div>
+                      </div>
+                    </div>
+                    <Separator />
+                    <div>
+                      <div className="font-medium">Bathrooms:</div>
+                      <div>5</div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <div className="h-[600px] rounded-lg border overflow-hidden">
+              <MapContainer center={position} zoom={13} style={{ height: '100%', width: '100%' }}>
+                <TileLayer
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                />
+                <Marker position={position}>
+                  <Popup>
+                    A property in Runda, Nairobi
+                  </Popup>
+                </Marker>
+              </MapContainer>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {/* similar listings */}
+
+      <div className='bg-white'>
+        <div className='px-4 py-8 container'>
+          <h3 className='text-3xl font-semibold my-4'>Similar Listings</h3>
+          <motion.div
+            ref={ref}
+            initial="hidden"
+            animate={inView ? "visible" : "hidden"}
+            variants={containerVariants}
+            className={`grid gap-6 w-full ${isGridView ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}
+          >
+
+            <motion.div key={property.id} variants={itemVariants} >
+              <Card className="overflow-hidden shadow-none border-none">
+                <div className="relative">
+                  <PropertyCarousel images={property.images} propertyId={property.id} />
+                  <div className="absolute top-4 left-4 flex gap-2">
+                    {property.featured && (
+                      <Badge className="bg-green-500">FEATURED</Badge>
+                    )}
+                    <Badge variant="secondary">{property.status}</Badge>
+                  </div>
+                  <div className="absolute bottom-4 left-4">
+                    <div className="text-white font-bold text-xl">
+                      {property.price}
+                    </div>
+                  </div>
+                </div>
+                <Link href={`/listing/${property.id}`}>
+
+                  <CardContent className="p-4">
+                    <h3 className="font-semibold mb-2">{property.title}</h3>
+                    <div className="flex items-center text-muted-foreground mb-2">
+                      <MapPin className="w-4 h-4 mr-1" />
+                      {property.location}
+                    </div>
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      {property.beds && (
+                        <div className="flex items-center">
+                          <Bed className="w-4 h-4 mr-1" />
+                          {property.beds}
+                        </div>
+                      )}
+                      {property.sqft && (
+                        <div className="flex items-center">
+                          <Maximize2 className="w-4 h-4 mr-1" />
+                          {property.sqft}
+                        </div>
+                      )}
+                    </div>
+                    <div className="mt-4 pt-4 border-t border-gray-200">
+                      <p className="text-sm text-muted-foreground">{property.type}</p>
+                    </div>
+                  </CardContent>
+                </Link>
+
+              </Card>
+            </motion.div>
+
+          </motion.div>
+        </div>
+      </div>
+
     </div>
   )
 }

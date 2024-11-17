@@ -54,6 +54,7 @@ export default function Component() {
       title: "2 Bedroom Apartment",
       price: "Ksh.7,900,000",
       location: "Kilimani, Nairobi, Kenya",
+      type:"Apartment",
       beds: 2,
       baths: 1,
       sqft: "80 sq m",
@@ -66,6 +67,7 @@ export default function Component() {
       title: "3 Bedroom Apartment Plus DSQ",
       price: "Ksh.27,000,000",
       location: "Nyali, Mombasa, Kenya",
+      type:"Apartment",
       beds: 3,
       baths: 2,
       sqft: "4200 sq ft",
@@ -78,6 +80,7 @@ export default function Component() {
       title: "Villas For Sale And Rent",
       price: "From Ksh.95,000,000",
       location: "Lower Kabete, Nairobi, Kenya",
+      type:"Villa",
       beds: "3,4 & 5",
       status: "FOR RENT",
       featured: true,
@@ -88,6 +91,7 @@ export default function Component() {
       title: "Amber Bay",
       price: "From Ksh.6,730,000",
       location: "Lavington, Nairobi, Kenya",
+      type:"Amber",
       beds: 1,
       featured: true,
       status: "FOR SALE",
@@ -123,12 +127,12 @@ export default function Component() {
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
       >
         {properties.map((property) => (
-          <motion.div key={property.id} variants={itemVariants} onClick={()=>{
-            router.push(`/listing/${property.id}`)
+          <motion.div key={property.id} variants={itemVariants} onClick={() => {
+            // router.push(`/listing/${property.id}`)
           }}>
             <Card className="overflow-hidden shadow-none border-none">
               <div className="relative">
-                <PropertyCarousel images={property.images} />
+                <PropertyCarousel images={property.images} propertyId={property.id} />
                 <div className="absolute top-4 left-4 flex gap-2">
                   {property.featured && (
                     <Badge className="bg-green-500">FEATURED</Badge>
@@ -142,43 +146,45 @@ export default function Component() {
                 </div>
               </div>
 
-              <CardContent className="p-4">
-                <h3 className="font-semibold mb-2">{property.title}</h3>
-                <div className="flex items-center text-muted-foreground mb-2">
-                  <MapPin className="w-4 h-4 mr-1" />
-                  {property.location}
-                </div>
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  {property.beds && (
-                    <div className="flex items-center">
-                      <Bed className="w-4 h-4 mr-1" />
-                      {property.beds}
-                    </div>
-                  )}
-                  {property.sqft && (
-                    <div className="flex items-center">
-                      <Maximize2 className="w-4 h-4 mr-1" />
-                      {property.sqft}
-                    </div>
-                  )}
-                </div>
-                <div className="mt-4 pt-4 border-t border-gray-200">
-                  <p className="text-sm text-muted-foreground">Intime Homes</p>
-                </div>
-              </CardContent>
+              <Link href={`/listing/${property.id}`}>
+                <CardContent className="p-4">
+                  <h3 className="font-semibold mb-2">{property.title}</h3>
+                  <div className="flex items-center text-muted-foreground mb-2">
+                    <MapPin className="w-4 h-4 mr-1" />
+                    {property.location}
+                  </div>
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    {property.beds && (
+                      <div className="flex items-center">
+                        <Bed className="w-4 h-4 mr-1" />
+                        {property.beds}
+                      </div>
+                    )}
+                    {property.sqft && (
+                      <div className="flex items-center">
+                        <Maximize2 className="w-4 h-4 mr-1" />
+                        {property.sqft}
+                      </div>
+                    )}
+                  </div>
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <p className="text-sm text-muted-foreground">{property.type}</p>
+                  </div>
+                </CardContent>
+              </Link>
 
-             
+
             </Card>
           </motion.div>
         ))}
       </motion.div>
 
       <div className="flex justify-center gap-4 mt-8">
-        <button className="px-4 py-2 border border-primary300 transition-all duration-300 hover:bg-primary300 hover:text-white cursor-pointer text-primary500 bg-white rounded-md">
+        <button className="px-4 py-2 border border-primary300 rounded-none transition-all duration-300 hover:bg-primary300 hover:text-white cursor-pointer text-primary500 bg-white">
           Load More
         </button>
         <Link href="/intime-listings">
-          <button className="px-4 py-2 bg-primary300 transition-all duration-300 hover:bg-white hover:text-primary500 text-white rounded-md">
+          <button className="px-4 py-2 bg-primary300 transition-all rounded-none duration-300 hover:bg-white hover:text-primary500 text-white ">
 
             View All Listings
           </button>
@@ -188,8 +194,9 @@ export default function Component() {
   )
 }
 
-export function PropertyCarousel({ images }: { images: string[] }) {
+export function PropertyCarousel({ images, propertyId }: { images: string[]; propertyId: number }) {
   const [] = useState(0)
+  const router = useRouter()
 
   return (
     <div className="relative">
@@ -197,10 +204,14 @@ export function PropertyCarousel({ images }: { images: string[] }) {
         <CarouselContent>
           {images.map((image, index) => (
             <CarouselItem key={index}>
+
               <Image
                 src={image}
                 alt={`Property image ${index + 1}`}
                 width={400}
+                onClick={() => {
+                  router.push(`/listing/${propertyId}`)
+                }}
                 height={300}
                 className="w-full h-[400px] object-cover"
               />

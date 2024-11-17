@@ -4,7 +4,7 @@ import React from 'react'
 const page = () => {
     return (
         <div className='w-full bg-primary50'>
-            <div className='mt-16'>
+            <div className='my-24'>
                 <ViewListing />
             </div>
 

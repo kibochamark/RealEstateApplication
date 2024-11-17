@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ArrowUpDown, LayoutGrid, LayoutList, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowUpDown, LayoutGrid, LayoutList, ChevronLeft, ChevronRight, SearchIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -114,6 +114,17 @@ export default function ViewListing() {
             type: "LAND",
             status: "FOR SALE",
             images: ["/10.jpg?height=300&width=400", "/11.jpg?height=300&width=400", "/12.jpg?height=300&width=400"]
+        },
+        {
+            id: 5,
+            title: "Amber Bay",
+            price: 6750000,
+            location: "Lavington, Nairobi, Kenya",
+            beds: 1,
+            featured: true,
+            type: "LAND",
+            status: "FOR SALE",
+            images: ["/10.jpg?height=300&width=400", "/11.jpg?height=300&width=400", "/12.jpg?height=300&width=400"]
         }
     ]
 
@@ -130,11 +141,11 @@ export default function ViewListing() {
     )
 
     return (
-        <div className="container mx-auto px-4 py-8 ">
+        <div className="container max-w-full  relative px-4 py-8 flex lg:flex-row flex-col lg:gap-10 gap-2">
 
-            <div className="mb-8 p-6 bg-card rounded-lg shadow">
+            <div className="mb-8 p-6 bg-card h-fit w-[100] lg:sticky top-20 flex flex-col  rounded-lg shadow">
                 <h2 className="text-xl font-semibold mb-4">Filters</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div>
                         <Label htmlFor="budget-range">Budget Range (Kshs)</Label>
                         <Slider
@@ -190,132 +201,280 @@ export default function ViewListing() {
                             </SelectContent>
                         </Select>
                     </div>
-                </div>
+                </div> */}
+                {/* Search Form */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.8 }}
+                    className="w-full p-2 flex flex-col gap-2"
+                >
+
+                    <div className="grid md:grid-cols-2 gap-2 w-full">
+                        <div className="col-span-1"> <Select>
+                            <SelectTrigger className="w-full bg-transparent text-black border-black">
+                                <SelectValue placeholder="Looking For?" />
+                            </SelectTrigger>
+                            <SelectContent className="text-black">
+                                <SelectItem value="buy">Buy Property</SelectItem>
+                                <SelectItem value="rent">Rent Property</SelectItem>
+                            </SelectContent>
+                        </Select>
+                        </div>
+                        <div className="col-span-1">
+                            <Select>
+                                <SelectTrigger className="w-full bg-transparent text-black border-black">
+                                    <SelectValue placeholder="Bedrooms" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="1">1 Bedroom</SelectItem>
+                                    <SelectItem value="2">2 Bedrooms</SelectItem>
+                                    <SelectItem value="3">3 Bedrooms</SelectItem>
+                                    <SelectItem value="4">4+ Bedrooms</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="col-span-1">
+                            <Select>
+                                <SelectTrigger className="w-full bg-transparent text-black border-black">
+                                    <SelectValue placeholder="Location" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="downtown">Downtown</SelectItem>
+                                    <SelectItem value="suburb">Suburb</SelectItem>
+                                    <SelectItem value="beach">Beach Area</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="col-span-1">
+                            <Select>
+                                <SelectTrigger className="w-full bg-transparent text-black border-black">
+                                    <SelectValue placeholder="For Rent/For Sale" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="rent">For Rent</SelectItem>
+                                    <SelectItem value="sale">For Sale</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+
+
+
+
+
+                    </div>
+
+
+                    <p className="my-2 text-black tracking-tight text-md text-left">Filter By Budget</p>
+
+                    <div className="w-full flex flex-1 flex-row gap-2">
+                        <div className="border border-secondary300 p-4 hover:bg-white hover:text-secondary300 duration-300 transition-all cursor-pointer text-black text-center tracking-tight">
+
+                            <p className="md:leading-3 text-sm leading-tight">0 - 500k</p>
+
+                        </div>
+                        <div className="border border-secondary300 p-4 hover:bg-white hover:text-secondary300 duration-300 transition-all cursor-pointer text-black text-center tracking-tight">
+
+                            <p className="leading-3">0 - 500k</p>
+
+                        </div>
+                        <div className="border border-secondary300 p-4 hover:bg-white hover:text-secondary300 duration-300 transition-all cursor-pointer text-black text-center tracking-tight">
+
+                            <p className="leading-3">0 - 500k</p>
+
+                        </div>
+                        <div className="border border-secondary300 p-4 hover:bg-white hover:text-secondary300 duration-300 transition-all cursor-pointer text-black text-center tracking-tight">
+
+                            <p className="leading-3">0 - 500k</p>
+
+                        </div>
+                    </div>
+                    <div className="relative w-full border border-secondary400">
+                        <Input
+                            type="text"
+                            placeholder="Search property by type or location"
+                            className="w-full h-full py-4 pl-8 tracking-tight leading-tight focus:outline-none outline-none rounded-none bg-transparent border-none text-black placeholder:text-black/40"
+                        />
+                        <SearchIcon className="absolute w-6 h-6 left-0 top-4 px-1 text-gray-400" />
+                    </div>
+
+                    <div className='flex gap-2 flex-row items-center justify-center'>
+                        <div className='bg-secondary300 h-1 w-full'></div>
+                        <p className='text-md font-semibold'>Or</p>
+                        <div className='bg-secondary300 h-1 w-full'></div>
+                    </div>
+
+
+
+                    <div>
+                        <Label htmlFor="budget-range">Custom Budget Range (Kshs)</Label>
+                        <Slider
+                            id="budget-range"
+                            min={0}
+                            max={100000000}
+                            step={1000000}
+                            value={budgetRange}
+                            onValueChange={setBudgetRange}
+                            className="mt-2"
+                        />
+                        <div className="flex justify-between mt-2">
+                            <Input
+                                type="number"
+                                value={budgetRange[0]}
+                                onChange={(e) => setBudgetRange([parseInt(e.target.value), budgetRange[1]])}
+                                className="w-[45%]"
+                            />
+                            <Input
+                                type="number"
+                                value={budgetRange[1]}
+                                onChange={(e) => setBudgetRange([budgetRange[0], parseInt(e.target.value)])}
+                                className="w-[45%]"
+                            />
+                        </div>
+                    </div>
+
+                    <Button className="bg-primary400 rounded-none text-white hover:bg-[#D5C361] px-8">
+                        Search
+                    </Button>
+                    <Button className="text-primary400 rounded-none  bg-white/30 border hover:bg-gray-400 hover:text-white border-primary400 px-8">
+                        Clear filter
+                    </Button>
+                </motion.div>
                 {/* <Filter /> */}
             </div>
 
-            <div className="flex items-center justify-between mb-6 w-full">
-                <h1 className="text-2xl font-semibold">{filteredProperties.length} Properties</h1>
-                <div className="flex items-center gap-2">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className="gap-2">
-                                <ArrowUpDown className="h-4 w-4" />
-                                Default Order
+
+            <div className='flex flex-col gap-2 w-full relative '>
+                <div className='grid grid-cols-2'>
+
+                    <h1 className="text-2xl font-medium">{filteredProperties.length} Properties</h1>
+
+
+
+                    <div className=" col-span-1 flex w-full items-center gap-2 justify-end">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline" className="gap-2">
+                                    <ArrowUpDown className="h-4 w-4" />
+                                    Default Order
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuItem>Price: Low to High</DropdownMenuItem>
+                                <DropdownMenuItem>Price: High to Low</DropdownMenuItem>
+                                <DropdownMenuItem>Newest First</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                        <div className="flex gap-1">
+                            <Button
+                                variant={isGridView ? "secondary" : "outline"}
+                                size="icon"
+                                onClick={() => setIsGridView(true)}
+                            >
+                                <LayoutGrid className="h-4 w-4" />
                             </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuItem>Price: Low to High</DropdownMenuItem>
-                            <DropdownMenuItem>Price: High to Low</DropdownMenuItem>
-                            <DropdownMenuItem>Newest First</DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                    <div className="flex gap-1">
-                        <Button
-                            variant={isGridView ? "secondary" : "outline"}
-                            size="icon"
-                            onClick={() => setIsGridView(true)}
-                        >
-                            <LayoutGrid className="h-4 w-4" />
-                        </Button>
-                        <Button
-                            variant={!isGridView ? "secondary" : "outline"}
-                            size="icon"
-                            onClick={() => setIsGridView(false)}
-                        >
-                            <LayoutList className="h-4 w-4" />
-                        </Button>
+                            <Button
+                                variant={!isGridView ? "secondary" : "outline"}
+                                size="icon"
+                                onClick={() => setIsGridView(false)}
+                            >
+                                <LayoutList className="h-4 w-4" />
+                            </Button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
 
-            <motion.div
-                ref={ref}
-                initial="hidden"
-                animate={inView ? "visible" : "hidden"}
-                variants={containerVariants}
-                className={`grid gap-6 w-full ${isGridView ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4' : 'grid-cols-1'}`}
-            >
-                {filteredProperties.map((property) => (
-                    <motion.div key={property.id} variants={itemVariants} onClick={()=>{
-                        router.push(`/listing/${property.id}`)
-                    }}>
-                        <Card className="overflow-hidden shadow-none border-none">
-                            <div className="relative">
-                                <PropertyCarousel images={property.images} />
-                                <div className="absolute top-4 left-4 flex gap-2">
-                                    {property.featured && (
-                                        <Badge className="bg-green-500">FEATURED</Badge>
-                                    )}
-                                    <Badge variant="secondary">{property.status}</Badge>
-                                </div>
-                                <div className="absolute bottom-4 left-4">
-                                    <div className="text-white font-bold text-xl">
-                                        {property.price}
-                                    </div>
-                                </div>
-                            </div>
 
-                                <CardContent className="p-4">
-                                    <h3 className="font-semibold mb-2">{property.title}</h3>
-                                    <div className="flex items-center text-muted-foreground mb-2">
-                                        <MapPin className="w-4 h-4 mr-1" />
-                                        {property.location}
-                                    </div>
-                                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                                        {property.beds && (
-                                            <div className="flex items-center">
-                                                <Bed className="w-4 h-4 mr-1" />
-                                                {property.beds}
-                                            </div>
-                                        )}
-                                        {property.sqft && (
-                                            <div className="flex items-center">
-                                                <Maximize2 className="w-4 h-4 mr-1" />
-                                                {property.sqft}
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className="mt-4 pt-4 border-t border-gray-200">
-                                        <p className="text-sm text-muted-foreground">Intime Homes</p>
-                                    </div>
-                                </CardContent>
-                        
-
-                        </Card>
-                    </motion.div>
-                ))}
-            </motion.div>
-
-
-            <div className="flex items-center justify-center space-x-2 mt-8">
-                <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
+                <motion.div
+                    ref={ref}
+                    initial="hidden"
+                    animate={inView ? "visible" : "hidden"}
+                    variants={containerVariants}
+                    className={`grid gap-6 w-full ${isGridView ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}
                 >
-                    <ChevronLeft className="h-4 w-4" />
-                </Button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    {filteredProperties.map((property) => (
+                        <motion.div key={property.id} variants={itemVariants} onClick={() => {
+                            // router.push(`/listing/${property.id}`)
+                        }}>
+                            <Card className="overflow-hidden shadow-none border-none">
+                                <div className="relative">
+                                    <PropertyCarousel images={property.images} propertyId={property.id} />
+                                    <div className="absolute top-4 left-4 flex gap-2">
+                                        {property.featured && (
+                                            <Badge className="bg-green-500">FEATURED</Badge>
+                                        )}
+                                        <Badge variant="secondary">{property.status}</Badge>
+                                    </div>
+                                    <div className="absolute bottom-4 left-4">
+                                        <div className="text-white font-bold text-xl">
+                                            {property.price}
+                                        </div>
+                                    </div>
+                                </div>
+                                <Link href={`/listing/${property.id}`}>
+
+                                    <CardContent className="p-4">
+                                        <h3 className="font-semibold mb-2">{property.title}</h3>
+                                        <div className="flex items-center text-muted-foreground mb-2">
+                                            <MapPin className="w-4 h-4 mr-1" />
+                                            {property.location}
+                                        </div>
+                                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                            {property.beds && (
+                                                <div className="flex items-center">
+                                                    <Bed className="w-4 h-4 mr-1" />
+                                                    {property.beds}
+                                                </div>
+                                            )}
+                                            {property.sqft && (
+                                                <div className="flex items-center">
+                                                    <Maximize2 className="w-4 h-4 mr-1" />
+                                                    {property.sqft}
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="mt-4 pt-4 border-t border-gray-200">
+                                            <p className="text-sm text-muted-foreground">{property.type}</p>
+                                        </div>
+                                    </CardContent>
+                                </Link>
+
+                            </Card>
+                        </motion.div>
+                    ))}
+                </motion.div>
+
+
+                <div className="flex items-center justify-center space-x-2 mt-8">
                     <Button
-                        key={page}
-                        variant={currentPage === page ? "default" : "outline"}
-                        onClick={() => handlePageChange(page)}
-                        className="w-8 h-8 p-0"
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
                     >
-                        {page}
+                        <ChevronLeft className="h-4 w-4" />
                     </Button>
-                ))}
-                <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                >
-                    <ChevronRight className="h-4 w-4" />
-                </Button>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                        <Button
+                            key={page}
+                            variant={currentPage === page ? "default" : "outline"}
+                            onClick={() => handlePageChange(page)}
+                            className="w-8 h-8 p-0"
+                        >
+                            {page}
+                        </Button>
+                    ))}
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                    >
+                        <ChevronRight className="h-4 w-4" />
+                    </Button>
+                </div>
             </div>
         </div>
     )
