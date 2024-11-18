@@ -53,7 +53,7 @@ const Nav = () => {
     )
 
     return (
-        <nav className={`flex items-center fixed justify-end top-0 z-20 w-full p-6 ${scrolled ? "bg-white" :  path == "/" ? "bg-transparent text-white" :"bg-white text-black"}   transition-colors duration-300`}>
+        <nav className={`flex items-center fixed justify-end top-0 z-50 w-full p-6 ${scrolled ? "bg-white" :  path == "/" ? "bg-transparent text-white" :"bg-white text-black"}   transition-colors duration-300`}>
             <div className="flex-1 md:hidden">
                 <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(!isMenuOpen)}>
                     <Menu className="h-6 w-6" />

@@ -104,7 +104,7 @@ export default function PropertyDetail() {
     images: ["/1.jpg?height=300&width=400", "/2.jpg?height=300&width=400", "/3.jpg?height=300&width=400"]
   }
 
-  
+
   return (
     <div className="mx-auto ">
 
@@ -243,12 +243,11 @@ export default function PropertyDetail() {
       </div>
 
       {/* description and features */}
-      <div className='bg-secondary50/90   '>
-        <div className='container grid md:grid-cols-2 gap-4 px-4 py-8'>
+      <div className='grid md:grid-cols-2'>
 
-
+        <div className='bg-primary100/10  container'>
           {/* Description */}
-          <div className="space-y-4 bg-white my-10 p-4">
+          <div className="space-y-4 my-10 px-4 py-8 ">
             <h2 className="text-2xl font-semibold">Description</h2>
             <p className="text-muted-foreground">
               Located along Riverside Drive near Riverside Square. Flexible payment plans with 20% deposit.
@@ -261,11 +260,44 @@ export default function PropertyDetail() {
               </ul>
             </div>
           </div>
-
+          <div className="space-y-4 my-10 px-4 py-8">
+                <h3 className="text-lg font-semibold">Details</h3>
+                <div className="text-sm text-muted-foreground">Updated on October 6, 2023 at 2:31 pm</div>
+                <div className="grid gap-4 rounded-lg bg-muted p-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <div className="font-medium">Price:</div>
+                      <div className="text-2xl font-bold">$3,500/mo</div>
+                    </div>
+                    <div>
+                      <div className="font-medium">Property Type:</div>
+                      <div>Villa</div>
+                    </div>
+                  </div>
+                  <Separator />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <div className="font-medium">Bedrooms:</div>
+                      <div>4</div>
+                    </div>
+                    <div>
+                      <div className="font-medium">Property Status:</div>
+                      <div>For Rent</div>
+                    </div>
+                  </div>
+                  <Separator />
+                  <div>
+                    <div className="font-medium">Bathrooms:</div>
+                    <div>5</div>
+                  </div>
+                </div>
+              </div>
+        </div>
+        <div className='bg-secondary50/90 px-4 py-8 md:container'>
           {/* Features */}
-          <div className="space-y-4 bg-white my-10 p-4">
+          <div className="space-y-4 bg-secondary50/90 my-10 p-4">
             <h2 className="text-2xl font-semibold">Features</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               {features.map((feature, idx) => (
                 <div key={idx} className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-green-500" />
@@ -274,105 +306,74 @@ export default function PropertyDetail() {
               ))}
             </div>
           </div>
-
         </div>
-      </div>
 
 
-      {/* address and maps */}
-      <div className='bg-secondary50/90  px-4 py-8'>
-        <div className="md:container">
-          <div className="grid gap-6 lg:grid-cols-2">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>Address</CardTitle>
-                <Button variant="secondary">
-                  <MapPin className="mr-2 h-4 w-4" />
-                  Open on Google Maps
-                </Button>
-              </CardHeader>
-              <CardContent className="grid gap-6">
-                <div className="grid gap-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <div className="text-sm font-medium text-muted-foreground">City</div>
-                      <div>Nairobi</div>
-                    </div>
-                    <div>
-                      <div className="text-sm font-medium text-muted-foreground">Area</div>
-                      <div>Runda</div>
-                    </div>
+
+
+        {/* address and maps */}
+        <div className="md:container bg-secondary50/90 ">
+          <Card className='border-none bg-transaparent shadow-none md:px-4 md:py-8 '>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>Address</CardTitle>
+              <Button variant="secondary">
+                <MapPin className="mr-2 h-4 w-4" />
+                Open on Google Maps
+              </Button>
+            </CardHeader>
+            <CardContent className="grid gap-6">
+              <div className="grid gap-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <div className="text-sm font-medium text-muted-foreground">City</div>
+                    <div>Nairobi</div>
                   </div>
-                  <Separator />
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <div className="text-sm font-medium text-muted-foreground">State/county</div>
-                      <div>Nairobi Province</div>
-                    </div>
-                    <div>
-                      <div className="text-sm font-medium text-muted-foreground">Country</div>
-                      <div>Kenya</div>
-                    </div>
+                  <div>
+                    <div className="text-sm font-medium text-muted-foreground">Area</div>
+                    <div>Runda</div>
                   </div>
                 </div>
                 <Separator />
-                <div className="space-y-4">
-                  <h3 className="text-lg font-medium">Details</h3>
-                  <div className="text-sm text-muted-foreground">Updated on October 6, 2023 at 2:31 pm</div>
-                  <div className="grid gap-4 rounded-lg bg-muted p-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <div className="font-medium">Price:</div>
-                        <div className="text-2xl font-bold">$3,500/mo</div>
-                      </div>
-                      <div>
-                        <div className="font-medium">Property Type:</div>
-                        <div>Villa</div>
-                      </div>
-                    </div>
-                    <Separator />
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <div className="font-medium">Bedrooms:</div>
-                        <div>4</div>
-                      </div>
-                      <div>
-                        <div className="font-medium">Property Status:</div>
-                        <div>For Rent</div>
-                      </div>
-                    </div>
-                    <Separator />
-                    <div>
-                      <div className="font-medium">Bathrooms:</div>
-                      <div>5</div>
-                    </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <div className="text-sm font-medium text-muted-foreground">State/county</div>
+                    <div>Nairobi Province</div>
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium text-muted-foreground">Country</div>
+                    <div>Kenya</div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-            <div className="h-[600px] rounded-lg border overflow-hidden">
-              <MapContainer center={position} zoom={13} style={{ height: '100%', width: '100%' }}>
-                <TileLayer
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                />
-                <Marker position={position}>
-                  <Popup>
-                    A property in Runda, Nairobi
-                  </Popup>
-                </Marker>
-              </MapContainer>
-            </div>
-          </div>
+              </div>
+              <Separator />
+              
+            </CardContent>
+          </Card>
+
+        </div>
+
+        <div className="bg-white overflow-hidden z-20">
+          <MapContainer center={position} zoom={13} style={{ height: '100%', width: '100%' }}>
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            />
+            <Marker position={position}>
+              <Popup>
+                A property in Runda, Nairobi
+              </Popup>
+            </Marker>
+          </MapContainer>
         </div>
 
       </div>
 
+
       {/* similar listings */}
 
-      <div className='bg-white'>
+      <div className='bg-white my-10'>
         <div className='px-4 py-8 container'>
-          <h3 className='text-3xl font-semibold my-4'>Similar Listings</h3>
+          <h3 className='text-3xl font-semibold my-6'>Similar Listings</h3>
           <motion.div
             ref={ref}
             initial="hidden"
