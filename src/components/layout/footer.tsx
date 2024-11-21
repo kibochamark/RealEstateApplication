@@ -3,7 +3,7 @@ import React from 'react'
 const Footer = () => {
     return (
         <div className='w-full'>
-            <footer className="bg-white lg:grid lg:grid-cols-5">
+            <footer className="bg-secondary300 lg:grid lg:grid-cols-5">
                 <div className="relative block h-32 lg:col-span-2 lg:h-full">
                     <img
                         src="/14.jpg"

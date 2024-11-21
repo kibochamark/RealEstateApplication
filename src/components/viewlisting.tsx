@@ -269,24 +269,24 @@ export default function ViewListing() {
                     <p className="my-2 text-black tracking-tight text-md text-left">Filter By Budget</p>
 
                     <div className="w-full flex flex-1 flex-row gap-2">
-                        <div className="border border-secondary300 p-4 hover:bg-white hover:text-secondary300 duration-300 transition-all cursor-pointer text-black text-center tracking-tight">
+                        <div className="border text-center p-2 text-sm border-secondary300  hover:bg-white hover:text-secondary300 duration-300 transition-all cursor-pointer text-black tracking-tight">
 
-                            <p className="md:leading-3 text-sm leading-tight">0 - 500k</p>
-
-                        </div>
-                        <div className="border border-secondary300 p-4 hover:bg-white hover:text-secondary300 duration-300 transition-all cursor-pointer text-black text-center tracking-tight">
-
-                            <p className="leading-3">0 - 500k</p>
+                            0 - 500k
 
                         </div>
-                        <div className="border border-secondary300 p-4 hover:bg-white hover:text-secondary300 duration-300 transition-all cursor-pointer text-black text-center tracking-tight">
+                        <div className="border text-center p-2 text-sm border-secondary300  hover:bg-white hover:text-secondary300 duration-300 transition-all cursor-pointer text-black tracking-tight">
 
-                            <p className="leading-3">0 - 500k</p>
+                            0 - 500k
 
                         </div>
-                        <div className="border border-secondary300 p-4 hover:bg-white hover:text-secondary300 duration-300 transition-all cursor-pointer text-black text-center tracking-tight">
+                        <div className="border text-center p-2 text-sm border-secondary300  hover:bg-white hover:text-secondary300 duration-300 transition-all cursor-pointer text-black tracking-tight">
 
-                            <p className="leading-3">0 - 500k</p>
+                            0 - 500k
+
+                        </div>
+                        <div className="border text-center p-2 text-sm border-secondary300  hover:bg-white hover:text-secondary300 duration-300 transition-all cursor-pointer text-black tracking-tight">
+
+                            0 - 500k
 
                         </div>
                     </div>

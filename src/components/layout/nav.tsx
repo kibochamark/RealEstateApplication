@@ -83,8 +83,9 @@ const Nav = () => {
                             items={["Townhouses/Villas For Rent", "Studio Apartments For Rent", "Office Spaces For Rent"]}
                         />
                         <NavItem href="/intime-listings">Listings</NavItem>
-                        <NavItem href="#">Testimonials</NavItem>
-                        <NavItem href="#">Contact</NavItem>
+                        <NavItem href="/#testimonials">Testimonials</NavItem>
+                        <NavItem href="/blogs">Blogs</NavItem>
+                        <NavItem href="/contact">Contact</NavItem>
                     </motion.div>
                 )}
             </AnimatePresence>
