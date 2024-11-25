@@ -19,7 +19,7 @@ import Image from "next/image"
 import { ReactNode } from "react"
 import { NavBarDropDown } from "./NavBardropdown"
 
-const AdminLayout = async ({children}:{children:ReactNode}) => {
+const AdminLayout = ({children}:{children:ReactNode}) => {
   const pathname = usePathname()
   return (
     <SidebarProvider>
