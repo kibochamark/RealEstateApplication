@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/sidebar"
 import { usePathname } from "next/navigation"
 import Image from "next/image"
-import { ReactNode } from "react"
+import React, { ReactNode } from "react"
 import { NavBarDropDown } from "./NavBardropdown"
 
 const AdminLayout = ({children}:{children:ReactNode}) => {
@@ -36,20 +36,20 @@ const AdminLayout = ({children}:{children:ReactNode}) => {
 
 
                   index === 0 ? (
-                    <BreadcrumbItem className="block">
+                    <BreadcrumbItem className="block" key={index}>
                       <BreadcrumbLink href={`/${item}`} className="text-primary300">
                         {item}
                       </BreadcrumbLink>
                     </BreadcrumbItem>
                   ) : (
-                    <>
+                    <React.Fragment key={index}>
 
                       <BreadcrumbSeparator className="hidden md:block" />
                       <BreadcrumbItem>
                         <BreadcrumbPage>{item}</BreadcrumbPage>
                       </BreadcrumbItem>
 
-                    </>
+                    </React.Fragment>
 
                   )
 
