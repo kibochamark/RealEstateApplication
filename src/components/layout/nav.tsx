@@ -13,6 +13,10 @@ const Nav = () => {
     const [scrolled, setScrolled] = useState(false)
     const path = usePathname()
 
+    if(path.includes("intime-admin")){
+        return null
+    }
+
     useEffect(() => {
         const checkMobile = () => setIsMobile(window.innerWidth < 768)
         checkMobile()
@@ -30,7 +34,7 @@ const Nav = () => {
     // const navTextColor = !isHomePage || scrolled || !isMobile ? "text-black bg-white" : "text-white"
 
     const NavItem = ({ href, children }: { href: string; children: React.ReactNode }) => (
-        <Link href={href} className={`block py-2 hover:bg-secondary300 transition-all duration-300 px-2`}>{children}</Link>
+        <Link href={href} className={`block py-2 ${path.split("/")[1] == href.split("/")[1] && "bg-secondary300"} hover:bg-secondary300 transition-all duration-300 px-2`}>{children}</Link>
     )
 
     const DropdownNavItem = ({ title, items }: { title: string; items: string[] }) => (
@@ -82,10 +86,10 @@ const Nav = () => {
                             title="Properties To Let"
                             items={["Townhouses/Villas For Rent", "Studio Apartments For Rent", "Office Spaces For Rent"]}
                         />
-                        <NavItem href="/intime-listings">Listings</NavItem>
-                        <NavItem href="/#testimonials">Testimonials</NavItem>
+                        <NavItem href="/listing">listing</NavItem>
+                        {/* <NavItem href="/#testimonials">Testimonials</NavItem> */}
                         <NavItem href="/blogs">Blogs</NavItem>
-                        <NavItem href="/contact">Contact</NavItem>
+                        {/* <NavItem href="/contact">Contact</NavItem> */}
                     </motion.div>
                 )}
             </AnimatePresence>

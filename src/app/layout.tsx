@@ -3,6 +3,7 @@ import "./globals.css";
 import { Jost } from "next/font/google"; // Import Google Font
 import Nav from "@/components/layout/nav";
 import Footer from "@/components/layout/footer";
+import { AuthProvider } from "@/providers/auth-provider";
 
 
 // Import the Lato font from Google Fonts
@@ -27,11 +28,13 @@ export default function RootLayout({
         className={`${lato.className} antialiased min-h-screen`}
       >
         <div className="relative">
-          <div className="top-0">
-          <Nav />
-          </div>
-          {children}
-          <Footer/>
+          <AuthProvider>
+            <div className="top-0">
+              <Nav />
+            </div>
+            {children}
+            <Footer />
+          </AuthProvider>
         </div>
 
       </body>

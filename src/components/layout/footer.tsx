@@ -1,6 +1,15 @@
+"use client"
+import { usePathname } from 'next/navigation'
 import React from 'react'
 
 const Footer = () => {
+    const path = usePathname()
+
+    if(path.includes("intime-admin")){
+        return null
+    }
+
+    
     return (
         <div className='w-full'>
             <footer className="bg-secondary300 lg:grid lg:grid-cols-5">
