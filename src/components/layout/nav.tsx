@@ -13,9 +13,7 @@ const Nav = () => {
     const [scrolled, setScrolled] = useState(false)
     const path = usePathname()
 
-    if(path.includes("intime-admin")){
-        return null
-    }
+    
 
     useEffect(() => {
         const checkMobile = () => setIsMobile(window.innerWidth < 768)
@@ -55,6 +53,10 @@ const Nav = () => {
             </div>
         </div>
     )
+
+    if(path.includes("intime-admin")){
+        return null
+    }
 
     return (
         <nav className={`flex items-center fixed justify-end top-0 z-50 w-full p-6 ${scrolled ? "bg-white" :  path == "/" ? "bg-transparent text-white" :"bg-white text-black"}   transition-colors duration-300`}>
