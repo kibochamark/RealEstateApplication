@@ -4,14 +4,15 @@ import { columns } from './columns'
 import { getproperties, getpropertyfeatures } from '@/actions/property'
 import { Loader } from 'lucide-react'
 import PageView from '@/components/admin/property/Manageproperty'
+import { getpropertytypes } from '@/actions/propertytype'
 
 const page = async () => {
-    const properties = await getproperties()
-    const features = await getpropertyfeatures()
-    console.log(features, "test")
+    const properties = await getproperties() ?? []
+    const features = await getpropertyfeatures() ?? []
+    const propertytypes = await getpropertytypes() ?? []
     return (
         <div className="col-span-3 md:container">
-            <PageView properties={properties} features={features} />
+            <PageView properties={properties} propertytypes={propertytypes[0]} features={features} />
 
         </div>
     )

@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { propertyReducer } from './slices/PropertySlice'
+import { datatableReducer } from './slices/DataTableSlice'
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
-      property:propertyReducer
+      property:propertyReducer,
+      datatable:datatableReducer
     },
   })
 }

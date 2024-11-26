@@ -19,11 +19,13 @@ import Image from "next/image"
 import React, { ReactNode } from "react"
 import { NavBarDropDown } from "./NavBardropdown"
 
-const AdminLayout = ({children}:{children:ReactNode}) => {
+const AdminLayout = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname()
   return (
     <SidebarProvider>
       <AppSidebar />
+
+      
       <SidebarInset>
         <header className="flex h-16 sticky top-0  w-full  justify-between shrink-0 bg-transparent backdrop-blur-md shadow-md items-center gap-2 border-b">
           <div className="flex items-center gap-2 px-3">
@@ -60,7 +62,7 @@ const AdminLayout = ({children}:{children:ReactNode}) => {
             </Breadcrumb>
           </div>
           <div className="flex items-center gap-2 px-3">
-<NavBarDropDown/>
+            <NavBarDropDown />
             {/* <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
               <Image width={300} height={300} src={"/logo.jpeg"} alt={"logo"} className="w-full h-full" />
             </div>

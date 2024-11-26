@@ -183,7 +183,7 @@ export default function Component() {
         <button className="px-4 py-2 border border-primary300 rounded-none transition-all duration-300 hover:bg-primary300 hover:text-white cursor-pointer text-primary500 bg-white">
           Load More
         </button>
-        <Link href="/intime-listings">
+        <Link href="/listing">
           <button className="px-4 py-2 bg-primary300 transition-all rounded-none duration-300 hover:bg-white hover:text-primary500 text-white ">
 
             View All Listings

@@ -1,17 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { Satellite } from "lucide-react";
 
-interface PropertyState {
-  editdata:any;
-  isedit:boolean;
-  isadd:boolean;
-  page:string;
+interface DataTableState {
+  deletedata:any
+  isdelete:boolean;
+  deletefunc ?:any;
 }
 
-const initialState: PropertyState = {
-  editdata:{},
-  isadd:false,
-  isedit:false,
-  page:''
+const initialState: DataTableState = {
+    deletedata: [],
+    isdelete: false
 };
 
 // export const fetchFeatures = createAsyncThunk('property/fetchFeatures', async () => {
@@ -54,23 +52,22 @@ const initialState: PropertyState = {
 //   }
 // );
 
-const propertySlice = createSlice({
+const datatableSlice = createSlice({
   name: 'property',
   initialState,
   reducers: {
-    setEditData:(state, action)=>{
-        state.isedit = !state.isedit
-        state.editdata = action.payload.data
-        state.page = action.payload.page
+    setDeleteData:(state, action)=>{
+        state.isdelete = !state.isdelete
+        state.deletedata = action.payload.deletedata
+        state.deletefunc = action.payload.deletefunc
     },
-    setIsAdd:(state)=>{
-        state.isadd = !state.isadd
-    },
-    clearEditData:(state)=>{
-        state.isedit =!state.isedit
-        state.editdata ={}
-        state.page= ""
+    clearDelete:(state)=>{
+        state.isdelete =!state.isdelete
+        state.deletedata={}
+        state.deletefunc = async () => {};
+
     }
+    
   },
 //   extraReducers: (builder) => {
 //     builder
@@ -97,6 +94,6 @@ const propertySlice = createSlice({
 //   },
 });
 
-export const {setEditData, clearEditData, setIsAdd} = propertySlice.actions
-export const propertyReducer = propertySlice.reducer
+export const {setDeleteData, clearDelete} = datatableSlice.actions
+export const datatableReducer = datatableSlice.reducer
 

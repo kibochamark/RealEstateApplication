@@ -23,11 +23,13 @@ import { setEditData } from "@/store/slices/PropertySlice"
 
 
 interface DataTableRowActionsProps<TData> {
-  row: Row<TData>
+  row: Row<TData>,
+  page:string
 }
 
 export function DataTableRowActions<TData>({
   row,
+  page
 }: DataTableRowActionsProps<TData>) {
   const property = row.original as Property
 
@@ -46,8 +48,8 @@ export function DataTableRowActions<TData>({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
         <DropdownMenuItem onClick={()=>{
-          dispatch(setEditData({...property}))
-        }}>Edit</DropdownMenuItem>
+          dispatch(setEditData({data:property, page}))
+        }} className="text-center text-primary300">Edit</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )

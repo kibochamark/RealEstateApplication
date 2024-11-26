@@ -28,7 +28,6 @@ export default function DashboardLayout({
       <AdminLayout>
         <ReduxProvider>
           {children}
-          <Script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_API_KEY&libraries=places"/>
         </ReduxProvider>
       </AdminLayout>
 

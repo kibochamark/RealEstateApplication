@@ -17,7 +17,7 @@ import { FeatureBadges } from './features';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 
 
-export default function AddProperty({features}:{features:any}) {
+export default function AddProperty({features, propertytypes}:{features:any; propertytypes:any}) {
     //   const dispatch = useDispatch<AppDispatch>();
     const router = useRouter();
       const { editdata } = useSelector((state: RootState) => state.property);
@@ -152,10 +152,9 @@ export default function AddProperty({features}:{features:any}) {
 
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300">
                             <option disabled>Choose a sale type</option>
-                            <option value="US">United States</option>
-                            <option value="CA">Canada</option>
-                            <option value="FR">France</option>
-                            <option value="DE">Germany</option>
+                            <option value="Sale">Sale</option>
+                            <option value="Rent">Rental</option>
+        
                         </select>
                         {formik.errors.saleType && formik.touched.saleType && <div className="text-red-500">{formik.errors.saleType}</div>}
                     </div>
@@ -286,12 +285,13 @@ export default function AddProperty({features}:{features:any}) {
                             name='propertyType'
                             defaultValue={formik.values.propertyType}
 
-                            id="countries" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300">
+                            id="" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300">
                             <option disabled>Choose a property type</option>
-                            <option value="US">United States</option>
-                            <option value="CA">Canada</option>
-                            <option value="FR">France</option>
-                            <option value="DE">Germany</option>
+                            {propertytypes?.map((type:{name:string, id:number}, idx:number)=>{
+                                return(
+                                    <option value={type.id} key={idx}>{type.name}</option>
+                                )
+                            })}
                         </select>
                         {formik.errors.propertyType && formik.touched.propertyType && <div className="text-red-500">{formik.errors.propertyType}</div>}
                     </div>

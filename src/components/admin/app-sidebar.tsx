@@ -1,5 +1,5 @@
 import * as React from "react"
-import { GalleryVerticalEnd, PlusCircle } from "lucide-react"
+import { GalleryVerticalEnd, House, PlusCircle } from "lucide-react"
 
 import {
   Sidebar,
@@ -16,94 +16,157 @@ import {
 } from "@/components/ui/sidebar"
 import Image from "next/image"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs"
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 
-// This is sample data.
-const data = {
-  navMain: [
-    {
-      title: "Property Management",
-      url: "#",
-      items: [
-        {
-          title: "property listing",
-          url: "managelisting",
-          icon:<PlusCircle className="text-secondary300 w-10 h-20" size={24}/>
-        },
-       
-      ],
-    },
-    {
-      title: "Property feature management",
-      url: "#",
-      items: [
-        {
-          title: "view listed feautures",
-          url: "#",
-          icon:<PlusCircle className="text-secondary300 w-10 h-20" size={24}/>
-        },
-        {
-          title: "create property feature",
-          url: "#",
-          isActive: true,
-          icon:<PlusCircle className="text-secondary300 w-10 h-20" size={24}/>
-        },
 
-      ],
-    }
-  ],
-}
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  return (
-    <Sidebar {...props}>
-      <SidebarHeader className="bg-secondary300">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg" className="hover:bg-secondary300" asChild>
-              <Link href="#">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <Image width={300} height={300} src={"/logo.jpeg"} alt={"logo"} className="w-full h-full" />
-                </div>
-                <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-semibold text-white">Intime Homes Consultancy</span>
-                  <span className="">v1.0.0</span>
-                </div>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>
-      <SidebarContent className="bg-secondary200">
-        <SidebarGroup>
-          <SidebarMenu>
-            {data.navMain.map((item) => (
-              <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild>
-                  <Link href={item.url} className="font-medium">
-                    {item.title}
-                  </Link>
-                </SidebarMenuButton>
-                {item.items?.length ? (
-                  <SidebarMenuSub>
-                    {item.items.map((item) => (
-                      <SidebarMenuSubItem key={item.title}>
-                        <SidebarMenuSubButton asChild isActive={item.isActive}>
-                          <div>
-                            {item.icon}
-                            <Link href={item.url}>{item.title}</Link>
 
-                          </div>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                    ))}
-                  </SidebarMenuSub>
-                ) : null}
-              </SidebarMenuItem>
+  const pathname = usePathname()
+  const { getUser } = useKindeBrowserClient();
+  const user = getUser()
+
+  // This is sample data.
+  const data = {
+    navMain: [
+      {
+        title: "Dashboard",
+        url: "/intime-admin",
+        items: [],
+        icon: "/dashboard.png"
+      },
+      {
+
+        title: "property listing",
+        url: "/intime-admin/managelisting",
+        icon: "/property.png"
+
+      },
+      {
+
+        title: "feature listing",
+        url: "/intime-admin/managefeatures",
+        icon: "/feature.png",
+
+      },
+      {
+
+        title: "Property Type listing",
+        url: "/intime-admin/manage-property-types",
+        icon: "/list.png",
+
+      }
+    ],
+  }
+  return (
+    // <Sidebar {...props}>
+    //   <SidebarHeader className="bg-primary300/15">
+    //     <SidebarMenu>
+    //       <SidebarMenuItem>
+    //         <SidebarMenuButton size="lg" className="hover:bg-primary300" asChild>
+    //           <Link href="#">
+    //             <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+    //               <Image width={300} height={300} src={"/logo.jpeg"} alt={"logo"} className="w-full h-full" />
+    //             </div>
+    //             <div className="flex flex-col gap-0.5 leading-none">
+    //               <span className="font-semibold text-secondary500">Intime Homes Consultancy</span>
+    //               <span className="">v1.0.0</span>
+    //             </div>
+    //           </Link>
+    //         </SidebarMenuButton>
+    //       </SidebarMenuItem>
+    //     </SidebarMenu>
+    //   </SidebarHeader>
+    //   <SidebarContent className="bg-primary200/15">
+    //     <SidebarGroup>
+    //       <SidebarMenu>
+    //         {data.navMain.map((item) => (
+    //           <SidebarMenuItem key={item.title}>
+    //             <SidebarMenuButton asChild className="my-4">
+    //               <Link href={item.url} className="font-medium">
+    //                 {item.title}
+    //               </Link>
+    //             </SidebarMenuButton>
+    //             {item.items?.length ? (
+    //               <SidebarMenuSub>
+    //                 {item.items.map((item) => (
+    //                   <SidebarMenuSubItem key={item.title}>
+    //                     <SidebarMenuSubButton className={``} asChild isActive={pathname.split("/")[2] === item.url.split("/")[2]}>
+    //                       <div>
+    //                         {item.icon}
+    //                         <Link href={item.url}>{item.title}</Link>
+
+    //                       </div>
+    //                     </SidebarMenuSubButton>
+    //                   </SidebarMenuSubItem>
+    //                 ))}
+    //               </SidebarMenuSub>
+    //             ) : null}
+    //           </SidebarMenuItem>
+    //         ))}
+    //       </SidebarMenu>
+    //     </SidebarGroup>
+    //   </SidebarContent>
+    //   <SidebarRail />
+    // </Sidebar>
+    <Sidebar className="h-screen flex justify-between bg-primary300">
+      <SidebarHeader className="h-screen flex justify-between bg-primary300/15">
+        <div className="px-4 py-6">
+          <div className=" flex flex-col gap-4">
+            <span className="grid h-10 w-32 place-content-center rounded-lg bg-gray-100 text-xs text-gray-600">
+              <Image width={300} height={300} src={"/logo.jpeg"} alt={"logo"} className="w-full h-full" />
+
+            </span>
+            <div className="flex flex-col gap-0.5 my-4 leading-none">
+              <span className="font-semibold text-secondary500">Intime Homes Consultancy</span>
+            </div>
+          </div>
+
+
+          <ul className="mt-6 space-y-4">
+            {data.navMain.map((item, idx) => (
+
+
+              <li key={idx}>
+                <Link
+                  href={item.url}
+                  className={`rounded-lg flex gap-2 ${pathname.split("/")[2] === item.url.split("/")[2] ? "bg-secondary500 text-white" : ""}  px-4 py-2 text-sm font-medium`}
+                >
+                  <Image width={20} height={20} src={item.icon} alt={item.title} />
+                  {item.title}
+                </Link >
+
+              </li>
+
+
             ))}
-          </SidebarMenu>
-        </SidebarGroup>
-      </SidebarContent>
-      <SidebarRail />
-    </Sidebar>
+
+
+
+
+
+          </ul>
+        </div >
+        <div className="sticky  border-e inset-y-0 border-gray-100">
+          <Link href="#" className="flex items-center gap-2 bg-white p-4 hover:bg-gray-50">
+            <Avatar>
+              <AvatarImage src="" />
+              <AvatarFallback>{user?.given_name?.charAt(0).toUpperCase()}</AvatarFallback>
+            </Avatar>
+
+            <div>
+              <p className="text-xs">
+                <strong className="block font-medium">{user?.username}</strong>
+
+                <span> {user?.email}</span>
+              </p>
+            </div>
+          </Link>
+        </div>
+      </SidebarHeader>
+      
+    </Sidebar >
   )
 }

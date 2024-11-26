@@ -135,27 +135,27 @@ const Footer = () => {
 
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div>
-                                <p className="font-medium text-gray-900">Services</p>
+                                <p className="font-medium text-gray-900">Quick Links</p>
 
                                 <ul className="mt-6 space-y-4 text-sm">
                                     <li>
-                                        <a href="#" className="text-gray-700 transition hover:opacity-75"> 1on1 Coaching </a>
+                                        <a href="/" className="text-gray-700 transition hover:opacity-75">Home</a>
                                     </li>
 
                                     <li>
-                                        <a href="#" className="text-gray-700 transition hover:opacity-75"> Company Review </a>
+                                        <a href="/listing" className="text-gray-700 transition hover:opacity-75">Properties</a>
                                     </li>
 
                                     <li>
-                                        <a href="#" className="text-gray-700 transition hover:opacity-75"> Accounts Review </a>
+                                        <a href="/blogs" className="text-gray-700 transition hover:opacity-75"> Blogs </a>
                                     </li>
 
                                     <li>
-                                        <a href="#" className="text-gray-700 transition hover:opacity-75"> HR Consulting </a>
+                                        <a href="/intime-admin" className="text-gray-700 transition hover:opacity-75"> Admin panel </a>
                                     </li>
 
                                     <li>
-                                        <a href="#" className="text-gray-700 transition hover:opacity-75"> SEO Optimisation </a>
+                                        <a href="#" className="text-gray-700 transition hover:opacity-75"> FAQ </a>
                                     </li>
                                 </ul>
                             </div>
@@ -197,7 +197,7 @@ const Footer = () => {
                             </ul>
 
                             <p className="mt-8 text-xs text-gray-500 sm:mt-0">
-                                &copy; 2022. Company Name. All rights reserved.
+                                &copy; {new Date().getFullYear()}. Somalink. All rights reserved.
                             </p>
                         </div>
                     </div>

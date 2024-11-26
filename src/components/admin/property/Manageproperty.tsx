@@ -11,7 +11,7 @@ import { useAppDispatch } from '@/store/hooks'
 import { clearEditData, setIsAdd } from '@/store/slices/PropertySlice'
 import EditProperty from './EditProperty'
 
-const PageView = ({ properties, features }: { properties: any; features:any }) => {
+const PageView = ({ properties, features, propertytypes }: { properties: any; features:any; propertytypes:any; }) => {
     const editdata = useSelector((state: RootState) => state.property.editdata)
     const isedit = useSelector((state: RootState) => state.property.isedit)
     const isadd = useSelector((state: RootState) => state.property.isadd)
@@ -28,7 +28,7 @@ const PageView = ({ properties, features }: { properties: any; features:any }) =
                         dispatch(setIsAdd())
 
                     }
-                }} className='bg-primary300 text-white rounded-none' >
+                }} className='bg-primary500 text-white rounded-none' >
                     {isadd || isedit ? "back" : "add property"}
                 </Button>
             </div>
@@ -36,8 +36,8 @@ const PageView = ({ properties, features }: { properties: any; features:any }) =
             <Suspense fallback={<Loader className='animate animate-spin text-secondary300' />}>
 
                 {isadd ? (
-                    <AddProperty features={features} />
-                ) : isedit ? (<EditProperty features={features} />) : (
+                    <AddProperty features={features} propertytypes={propertytypes} />
+                ) : isedit ? (<EditProperty features={features} propertytypes={propertytypes} />) : (
                     <div className='overflow-hidden'>
                         <DataTable columns={columns} data={properties ?? []} searchColumn="title" />
                     </div>

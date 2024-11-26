@@ -202,7 +202,7 @@ export const columns: ColumnDef<Property>[] = [
             return (
                 <div className="flex space-x-2">
                     <span className="max-w-[500px] truncate font-medium">
-                        {row.original?.propertytype["name"]}
+                        {row.original?.propertytype?.name}
                     </span>
                 </div>
             )
@@ -220,7 +220,7 @@ export const columns: ColumnDef<Property>[] = [
                         {new Intl.NumberFormat("en-US", {
                             style: "currency",
                             currency: "KES",
-                        }).format(parseFloat(row.original?.price.toString()))}
+                        }).format(parseFloat(row.original?.price?.toString()))}
                     </span>
                 </div>
             )
@@ -256,7 +256,7 @@ export const columns: ColumnDef<Property>[] = [
 
             return (
                 <div className="flex w-[100px] items-center">
-                    <span>{row.original.featured}</span>
+                    <span>{row?.original?.featured}</span>
                 </div>
             )
         },
@@ -266,7 +266,7 @@ export const columns: ColumnDef<Property>[] = [
     },
     {
         id: "actions",
-        cell: ({ row }) => <DataTableRowActions row={row} />,
+        cell: ({ row }) => <DataTableRowActions row={row} page={"properties"} />,
     },
 ]
 
