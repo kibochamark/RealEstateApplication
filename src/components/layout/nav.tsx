@@ -13,7 +13,7 @@ const Nav = () => {
     const [scrolled, setScrolled] = useState(false)
     const path = usePathname()
 
-    
+
 
     useEffect(() => {
         const checkMobile = () => setIsMobile(window.innerWidth < 768)
@@ -54,12 +54,12 @@ const Nav = () => {
         </div>
     )
 
-    if(path.includes("intime-admin")){
+    if (path.includes("intime-admin")) {
         return null
     }
 
     return (
-        <nav className={`flex items-center fixed justify-end top-0 z-50 w-full p-6 ${scrolled ? "bg-white" :  path == "/" ? "bg-transparent text-white" :"bg-white text-black"}   transition-colors duration-300`}>
+        <nav className={`flex items-center fixed justify-end top-0 z-50 w-full p-6 ${scrolled ? "bg-white" : path == "/" ? "bg-transparent text-white" : "bg-white text-black"}   transition-colors duration-300`}>
             <div className="flex-1 md:hidden">
                 <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(!isMenuOpen)}>
                     <Menu className="h-6 w-6" />
@@ -91,7 +91,7 @@ const Nav = () => {
                         <NavItem href="/listing">listing</NavItem>
                         {/* <NavItem href="/#testimonials">Testimonials</NavItem> */}
                         <NavItem href="/blogs">Blogs</NavItem>
-                        {/* <NavItem href="/contact">Contact</NavItem> */}
+                        <NavItem href="/contact">Contact</NavItem>
                     </motion.div>
                 )}
             </AnimatePresence>
