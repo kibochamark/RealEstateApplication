@@ -44,7 +44,7 @@ export default function AddProperty({
     initialValues: {
       name: "mark",
       description: "",
-      // location: "", // Ensure location is provided
+      location: "", // Ensure location is provided
       street_address: "",
       city: "",
       saleType: "Sale",
@@ -59,7 +59,7 @@ export default function AddProperty({
       country: "", // Ensure country is provided
       area: "",
       bedrooms: 0,
-      // images: [],
+      images: [],
     },
 
     onSubmit: async (values) => {

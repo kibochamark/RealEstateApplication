@@ -43,3 +43,23 @@ export const postProperty = async (data: any) => {
   }
 };
 
+
+
+export const patchProperty = async (data: any) => {
+  try {
+    const res = await axios.patch(baseUrl + `propertytype`, data, {
+      headers: {
+        'Content-Type': 'application/json',  
+      }
+    });
+
+    return res?.data ?? [];
+    console.log(res, "res----------");
+    
+  } catch (e: any) {
+    console.error("Error patching property:", e);
+    return [e.response?.data?.message ?? e.message, e.response?.status ?? 400];
+  }
+};
+
+
