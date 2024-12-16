@@ -4,6 +4,7 @@ import React from 'react'
 
 const page = async () => {
     const features = await getpropertyfeatures() ?? []
+    console.log(features, 'the features')
     return (
         <div className='col-span-3 container'>
 

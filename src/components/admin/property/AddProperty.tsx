@@ -1,171 +1,213 @@
-'use client'
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { FieldArray, useFormik } from 'formik';
-import { useRouter } from 'next/navigation';
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Select } from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { AppDispatch, RootState } from '@/store/store';
-import * as Yup from "yup"
-import { FeatureBadges } from './features';
-import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { FieldArray, useFormik } from "formik";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AppDispatch, RootState } from "@/store/store";
+import * as Yup from "yup";
+import { FeatureBadges } from "./features";
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+import { postProperty } from "@/actions/property";
+import toast from "react-hot-toast";
 
+export default function AddProperty({
+  features,
+  propertytypes,
+}: {
+  features: any;
+  propertytypes: any;
+}) {
+  //   const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
+  const { editdata } = useSelector((state: RootState) => state.property);
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [loading, setLoading] = useState("");
+  const [value, setValue] = useState(null);
 
-export default function AddProperty({features, propertytypes}:{features:any; propertytypes:any}) {
-    //   const dispatch = useDispatch<AppDispatch>();
-    const router = useRouter();
-      const { editdata } = useSelector((state: RootState) => state.property);
-    const [uploadedImages, setUploadedImages] = useState<string[]>([]);
-    const [value, setValue] = useState(null);
+  console.log(editdata, "edit");
 
-    console.log(editdata, "edit")
+  //   useEffect(() => {
+  //     dispatch(fetchFeatures());
+  //     dispatch(fetchPropertyTypes());
+  //     dispatch(fetchLocations());
+  //   }, [dispatch]);
 
+  const formik = useFormik({
+    initialValues: {
+      name: "mark",
+      description: "",
+      // location: "", // Ensure location is provided
+      street_address: "",
+      city: "",
+      saleType: "Sale",
+      featured: false,
+      propertyType: "", // Ensure this is provided
+      size: "", // This must be a string
+      distance: "", // This must be a string
+      price: 0,
+      pricepermonth: 0,
+      features: [], // This must be an array of strings
+      state: "",
+      country: "", // Ensure country is provided
+      area: "",
+      bedrooms: 0,
+      // images: [],
+    },
 
-    //   useEffect(() => {
-    //     dispatch(fetchFeatures());
-    //     dispatch(fetchPropertyTypes());
-    //     dispatch(fetchLocations());
-    //   }, [dispatch]);
+    onSubmit: async (values) => {
+      console.log(values, "Submitting form values");
 
-    const formik = useFormik({
-        initialValues: {
-            name: 'mark',
-            description: '',
-            location: '',
-            street_address: '',
-            city: '',
-            saleType: 'Sale',
-            featured: false,
-            propertyType: '',
-            size: '',
-            distance: '',
-            price: 0,
-            pricepermonth: 0,
-            features: [],
-            state: '',
-            country: '',
-            area: '',
-            bedrooms: 0,
-            images: []
-        },
-        // validationSchema: Yup.object().shape({
-        //     name: Yup.string().required('Name is required'),
-        //     description: Yup.string().required('Description is required'),
-        //     location: Yup.number().integer().positive().required('Location is required'),
-        //     street_address: Yup.string().required('Street address is required'),
-        //     city: Yup.string(),
-        //     saleType: Yup.string().oneOf(['Sale', 'Rent', 'Lease']).default('Sale'),
-        //     featured: Yup.boolean(),
-        //     propertyType: Yup.number().integer().positive().required('Property type is required'),
-        //     size: Yup.string().required('Size is required'),
-        //     distance: Yup.string().required('Distance is required'),
-        //     price: Yup.number().min(0).default(0),
-        //     pricepermonth: Yup.number().min(0).default(0),
-        //     features: Yup.array().of(Yup.string()).required('At least one feature is required'),
-        //     state: Yup.string().required('State is required'),
-        //     country: Yup.string().required('Country is required'),
-        //     area: Yup.string().required('Area is required'),
-        //     bedrooms: Yup.number().min(0).default(0),
-        //     images: Yup.array().of(Yup.string())
-        // }),
-        onSubmit: (values) => {
+      try {
+        // Ensure the required fields are in the correct format
+        const requestData = {
+          ...values,
+          // If necessary, map data to ensure types are correct
+          // size: String(values.size),
+          // distance: String(values.distance),
+          // features: String(values.features), // Ensure features is a string
+          // Optional: you can process images if necessary here
+        };
 
-        }
-    })
+        const response = await postProperty(requestData);
 
+        // Handle the response
+        console.log("Property successfully posted:", response);
+        toast.success("Property successfully posted");
+      } catch (error) {
+        console.error("Error posting property:", error);
+      }
+    },
+  });
 
+  const handleImageUpload = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    setFieldValue: (field: string, value: any) => void
+  ) => {
+    const files = event.target.files;
+    if (files) {
+      const newImages = Array.from(files).map((file) =>
+        URL.createObjectURL(file)
+      );
+      setUploadedImages((prevImages) => [...prevImages, ...newImages]);
+      setFieldValue("images", [...uploadedImages, ...newImages]);
+    }
+  };
 
-    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>, setFieldValue: (field: string, value: any) => void) => {
-        const files = event.target.files;
-        if (files) {
-            const newImages = Array.from(files).map(file => URL.createObjectURL(file));
-            setUploadedImages(prevImages => [...prevImages, ...newImages]);
-            setFieldValue('images', [...uploadedImages, ...newImages]);
-        }
-    };
+  const handleImageDelete = (
+    index: number,
+    setFieldValue: (field: string, value: any) => void
+  ) => {
+    const newImages = uploadedImages.filter((_, i) => i !== index);
+    setUploadedImages(newImages);
+    setFieldValue("images", newImages);
+  };
 
-    const handleImageDelete = (index: number, setFieldValue: (field: string, value: any) => void) => {
-        const newImages = uploadedImages.filter((_, i) => i !== index);
-        setUploadedImages(newImages);
-        setFieldValue('images', newImages);
-    };
+  //   if (isLoading) {
+  //     return <div>Loading...</div>;
+  //   }
 
-    //   if (isLoading) {
-    //     return <div>Loading...</div>;
-    //   }
+  //   if (error) {
+  //     return <div>Error: {error}</div>;
+  //   }
 
-    //   if (error) {
-    //     return <div>Error: {error}</div>;
-    //   }
+  return (
+    <Card className="w- border-none shadow-none">
+      <CardHeader>
+        <CardTitle>Create New Property</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <form
+          className="md:grid gap-4 md:grid-cols-3 grid-cols-1"
+          onSubmit={formik.handleSubmit}
+        >
+          <div>
+            <label
+              htmlFor="name"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Property title
+            </label>
+            <input
+              onChange={(e) => formik.handleChange(e)}
+              onBlur={formik.handleBlur}
+              defaultValue={formik.values.name}
+              name="name"
+              type="text"
+              id="name"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
+              placeholder="John"
+              required
+            />
+            {formik.errors.name && formik.touched.name && (
+              <div className="text-red-500">{formik.errors.name}</div>
+            )}
+          </div>
 
-    return (
-        <Card className="w- border-none shadow-none">
-            <CardHeader>
-                <CardTitle>Create New Property</CardTitle>
-            </CardHeader>
-            <CardContent>
+          <div>
+            <label
+              htmlFor=""
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Description
+            </label>
+            <textarea
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              name="description"
+              defaultValue={formik.values.description}
+              id=""
+              rows={4}
+              className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary300 focus:border-primary300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
+              placeholder="Write your thoughts here..."
+            ></textarea>
 
+            {formik.errors.description && formik.touched.description && (
+              <div className="text-red-500">{formik.errors.description}</div>
+            )}
+          </div>
 
-                <form className="md:grid gap-4 md:grid-cols-3 grid-cols-1" onSubmit={formik.handleSubmit}>
-                    <div>
-                        <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Property title</label>
-                        <input
+          <div>
+            <label
+              htmlFor=""
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Select a sale type
+            </label>
+            <select
+              id=""
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              name="saleType"
+              defaultValue={formik.values.saleType}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
+            >
+              <option disabled>Choose a sale type</option>
+              <option value="Sale">Sale</option>
+              <option value="Rent">Rental</option>
+            </select>
+            {formik.errors.saleType && formik.touched.saleType && (
+              <div className="text-red-500">{formik.errors.saleType}</div>
+            )}
+          </div>
 
-                            onChange={(e) => formik.handleChange(e)}
-                            onBlur={formik.handleBlur}
-                            defaultValue={formik.values.name}
-                            name='name'
-                            type='text'
-                            id="name"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300" placeholder="John" required />
-                        {formik.errors.name && formik.touched.name && <div className="text-red-500">{formik.errors.name}</div>}
-                    </div>
+          <hr className="my-4 md:col-span-3 col-span-1" />
 
-                    <div>
-
-                        <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
-                        <textarea
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            name='description'
-                            defaultValue={formik.values.description}
-
-                            id=""
-                            rows={4} className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary300 focus:border-primary300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300" placeholder="Write your thoughts here..."></textarea>
-
-                        {formik.errors.description && formik.touched.description && <div className="text-red-500">{formik.errors.description}</div>}
-                    </div>
-
-                    <div>
-                        <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select  a sale type</label>
-                        <select id=""
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            name='saleType'
-                            defaultValue={formik.values.saleType}
-
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300">
-                            <option disabled>Choose a sale type</option>
-                            <option value="Sale">Sale</option>
-                            <option value="Rent">Rental</option>
-        
-                        </select>
-                        {formik.errors.saleType && formik.touched.saleType && <div className="text-red-500">{formik.errors.saleType}</div>}
-                    </div>
-
-                    <hr className='my-4 md:col-span-3 col-span-1' />
-
-
-
-                    <div>
-                        <label htmlFor="location" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Property Location</label>
-                        {/* <select id="location"
+          <div>
+            <label
+              htmlFor="location"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Property Location
+            </label>
+            {/* <select id="location"
                             defaultValue={formik.values.location}
 
                             name='location' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300">
@@ -175,7 +217,7 @@ export default function AddProperty({features, propertytypes}:{features:any; pro
                             <option value="FR">France</option>
                             <option value="DE">Germany</option>
                         </select> */}
-                        {/* <GooglePlacesAutocomplete
+            {/* <GooglePlacesAutocomplete
                             selectProps={{
                                 value,
                                 onChange: setValue,
@@ -194,221 +236,371 @@ export default function AddProperty({features, propertytypes}:{features:any; pro
                             }}
                             apiKey='d8f480b55msh9b5c4d05232d6c8p1d2848jsn6f501098217d'
                         /> */}
-                        {formik.errors.location && formik.touched.location && <div className="text-red-500">{formik.errors.location}</div>}
-                    </div>
+            {/* {formik.errors.location && formik.touched.location && (
+              <div className="text-red-500">{formik.errors.location}</div>
+            )} */}
+          </div>
 
+          <div>
+            <label
+              htmlFor=""
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Street Address
+            </label>
+            <input
+              type="text"
+              id=""
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              name="street_address"
+              defaultValue={formik.values.street_address}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
+              placeholder="234 street"
+              required
+            />
+            {formik.errors.street_address && formik.touched.street_address && (
+              <div className="text-red-500">{formik.errors.street_address}</div>
+            )}
+          </div>
 
-                    <div>
-                        <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Street Address</label>
-                        <input type="text" id=""
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            name='street_address'
-                            defaultValue={formik.values.street_address}
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
-                            placeholder="234 street" required />
-                        {formik.errors.street_address && formik.touched.street_address && <div className="text-red-500">{formik.errors.street_address}</div>}
-                    </div>
+          <div>
+            <label
+              htmlFor=""
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              City
+            </label>
+            <input
+              type="text"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              name="city"
+              defaultValue={formik.values.city}
+              id=""
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
+              placeholder="Nairobi"
+              required
+            />
+            {formik.errors.city && formik.touched.city && (
+              <div className="text-red-500">{formik.errors.city}</div>
+            )}
+          </div>
 
-                    <div>
-                        <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">City</label>
-                        <input type="text"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            name='city'
-                            defaultValue={formik.values.city}
+          <div>
+            <label
+              htmlFor=""
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              State
+            </label>
+            <input
+              type="text"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              name="state"
+              defaultValue={formik.values.state}
+              id=""
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
+              placeholder="kiambu"
+              required
+            />
+            {formik.errors.state && formik.touched.state && (
+              <div className="text-red-500">{formik.errors.state}</div>
+            )}
+          </div>
 
-                            id="" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300" placeholder="Nairobi" required />
-                        {formik.errors.city && formik.touched.city && <div className="text-red-500">{formik.errors.city}</div>}
-                    </div>
+          <div>
+            <label
+              htmlFor=""
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Country
+            </label>
+            <input
+              type="text"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              name="country"
+              defaultValue={formik.values.country}
+              id=""
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
+              placeholder="Kenya"
+              required
+            />
+            {formik.errors.country && formik.touched.country && (
+              <div className="text-red-500">{formik.errors.country}</div>
+            )}
+          </div>
 
+          <div>
+            <label
+              htmlFor=""
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Area
+            </label>
+            <input
+              type="text"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              name="area"
+              id=""
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
+              placeholder="runda"
+              required
+            />
+            {formik.errors.area && formik.touched.area && (
+              <div className="text-red-500">{formik.errors.area}</div>
+            )}
+          </div>
 
+          <hr className="my-4 col-span-3" />
 
+          <div className="mt-6">
+            <input
+              id="default-checkbox"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              name="featured"
+              defaultChecked={formik.values.featured}
+              type="checkbox"
+              value=""
+              className="w-4 h-4  text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-primary300 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            />
+            <label
+              htmlFor="default-checkbox"
+              className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >
+              Featured
+            </label>
+          </div>
 
-                    <div>
-                        <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">State</label>
-                        <input type="text"
+          <div>
+            <label
+              htmlFor=""
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Select a property type
+            </label>
+            <select
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              name="propertyType"
+              defaultValue={formik.values.propertyType}
+              id=""
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
+            >
+              <option disabled>Choose a property type</option>
+              {propertytypes?.map(
+                (type: { name: string; id: number }, idx: number) => {
+                  return (
+                    <option value={type.id} key={idx}>
+                      {type.name}
+                    </option>
+                  );
+                }
+              )}
+            </select>
+            {formik.errors.propertyType && formik.touched.propertyType && (
+              <div className="text-red-500">{formik.errors.propertyType}</div>
+            )}
+          </div>
 
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            name='state'
-                            defaultValue={formik.values.state}
+          <div>
+            <label
+              htmlFor=""
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Size
+            </label>
+            <input
+              type="number"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              name="size"
+              defaultValue={formik.values.size}
+              min={0}
+              id=""
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
+              placeholder="0"
+              required
+            />
+            {formik.errors.size && formik.touched.size && (
+              <div className="text-red-500">{formik.errors.size}</div>
+            )}
+          </div>
 
-                            id="" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300" placeholder="kiambu" required />
-                        {formik.errors.state && formik.touched.state && <div className="text-red-500">{formik.errors.state}</div>}
-                    </div>
+          <div>
+            <label
+              htmlFor=""
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Distance
+            </label>
+            <input
+              type="number"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              name="distance"
+              defaultValue={formik.values.distance}
+              id=""
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
+              placeholder="0"
+              required
+            />
+            {formik.errors.distance && formik.touched.distance && (
+              <div className="text-red-500">{formik.errors.distance}</div>
+            )}
+          </div>
 
-                    <div>
-                        <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Country</label>
-                        <input type="text"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            name='country'
-                            defaultValue={formik.values.country}
+          <div>
+            <label
+              htmlFor=""
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Price
+            </label>
+            <input
+              type="number"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              name="price"
+              defaultValue={formik.values.price}
+              id=""
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
+              placeholder="0.00"
+              required
+            />
+            {formik.errors.price && formik.touched.price && (
+              <div className="text-red-500">{formik.errors.price}</div>
+            )}
+          </div>
 
-                            id="" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300" placeholder="Kenya" required />
-                        {formik.errors.country && formik.touched.country && <div className="text-red-500">{formik.errors.country}</div>}
-                    </div>
+          <div>
+            <label
+              htmlFor=""
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Price per month
+            </label>
+            <input
+              type="text"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              name="pricepermonth"
+              defaultValue={formik.values.pricepermonth}
+              id=""
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
+              placeholder="0"
+              required
+            />
+            {formik.errors.pricepermonth && formik.touched.pricepermonth && (
+              <div className="text-red-500">{formik.errors.pricepermonth}</div>
+            )}
+          </div>
 
+          <div>
+            <label
+              htmlFor=""
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Bedrooms
+            </label>
+            <input
+              type="number"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              name="bedrooms"
+              defaultValue={formik.values.bedrooms}
+              id=""
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
+              placeholder="0"
+              required
+            />
+            {formik.errors.bedrooms && formik.touched.bedrooms && (
+              <div className="text-red-500">{formik.errors.bedrooms}</div>
+            )}
+          </div>
 
-                    <div>
-                        <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Area</label>
-                        <input type="text"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            name='area'
-                            id=""
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300" placeholder="runda" required />
-                        {formik.errors.area && formik.touched.area && <div className="text-red-500">{formik.errors.area}</div>}
-                    </div>
+          <div>
+            <label
+              htmlFor=""
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Property features
+            </label>
 
-                    <hr className='my-4 col-span-3' />
+            <FeatureBadges
+              features={features}
+              selectedFeatures={formik.values.features}
+              onFeatureToggle={function (feature: string): void {
+                if (formik.values.features?.find((f) => f == feature)) {
+                  formik.setFieldValue(
+                    "features",
+                    formik.values.features.filter((f) => f !== feature)
+                  );
+                } else {
+                  formik.setFieldValue("features", [
+                    ...formik.values.features,
+                    feature,
+                  ]);
+                }
+              }}
+            />
+          </div>
 
-                    <div className='mt-6'>
-                        <input id="default-checkbox"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            name='featured'
-                            defaultChecked={formik.values.featured}
-
-                            type="checkbox" value="" className="w-4 h-4  text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-primary300 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                        <label htmlFor="default-checkbox"
-
-                            className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Featured</label>
-                    </div>
-
-                    <div>
-                        <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select  a property type</label>
-                        <select
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            name='propertyType'
-                            defaultValue={formik.values.propertyType}
-
-                            id="" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300">
-                            <option disabled>Choose a property type</option>
-                            {propertytypes?.map((type:{name:string, id:number}, idx:number)=>{
-                                return(
-                                    <option value={type.id} key={idx}>{type.name}</option>
-                                )
-                            })}
-                        </select>
-                        {formik.errors.propertyType && formik.touched.propertyType && <div className="text-red-500">{formik.errors.propertyType}</div>}
-                    </div>
-
-                    <div>
-                        <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Size</label>
-                        <input type="number"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            name='size'
-                            defaultValue={formik.values.size}
-
-                            min={0} id="" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300" placeholder="0" required />
-                        {formik.errors.size && formik.touched.size && <div className="text-red-500">{formik.errors.size}</div>}
-                    </div>
-
-                    <div>
-                        <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Distance</label>
-                        <input type="number"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            name='distance'
-                            defaultValue={formik.values.distance}
-
-                            id="" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300" placeholder="0" required />
-                        {formik.errors.distance && formik.touched.distance && <div className="text-red-500">{formik.errors.distance}</div>}
-                    </div>
-
-                    <div>
-                        <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Price</label>
-                        <input type="number"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            name='price'
-                            defaultValue={formik.values.price}
-
-                            id="" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300" placeholder="0.00" required />
-                        {formik.errors.price && formik.touched.price && <div className="text-red-500">{formik.errors.price}</div>}
-                    </div>
-
-                    <div>
-                        <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Price per month</label>
-                        <input type="text"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            name='pricepermonth'
-                            defaultValue={formik.values.pricepermonth}
-
-                            id="" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300" placeholder="0" required />
-                        {formik.errors.pricepermonth && formik.touched.pricepermonth && <div className="text-red-500">{formik.errors.pricepermonth}</div>}
-                    </div>
-
-
-
-
-
-
-                    <div>
-                        <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Bedrooms</label>
-                        <input type="number"
-
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            name='bedrooms'
-                            defaultValue={formik.values.bedrooms}
-
-                            id="" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300" placeholder="0" required />
-                        {formik.errors.bedrooms && formik.touched.bedrooms && <div className="text-red-500">{formik.errors.bedrooms}</div>}
-                    </div>
-
-                    <div>
-                        <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Property features</label>
-
-                        <FeatureBadges features={features} selectedFeatures={formik.values.features} onFeatureToggle={function (feature: string): void {
-                            if (formik.values.features?.find(f => f == feature)) {
-                                formik.setFieldValue("features", formik.values.features.filter((f) => f !== feature))
-                            } else {
-                                formik.setFieldValue("features", [...formik.values.features, feature])
-
-                            }
-                        }} />
-                    </div>
-
-                    <div>
-                        <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Images</label>
-                        <input
-                            id="images"
-                            name="images"
-                            type="file"
-                            multiple
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
-                            onChange={(event) => handleImageUpload(event, formik.setFieldValue)}
-                        />
-                        <div className="mt-4 grid grid-cols-3 gap-4">
-                            {uploadedImages.map((image, index) => (
-                                <div key={index} className="relative">
-                                    <img src={image} alt={`Uploaded ${index + 1}`} className="w-full h-32 object-cover rounded" />
-                                    <Button
-                                        type="button"
-                                        variant="destructive"
-                                        size="sm"
-                                        className="absolute top-0 right-0 m-1"
-                                        onClick={() => handleImageDelete(index, formik.setFieldValue)}
-                                    >
-                                        Delete
-                                    </Button>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    <Button type="submit" className="w-full">Create Property</Button>
-                </form>
-
-
-            </CardContent>
-        </Card>
-    );
+          <div>
+            <label
+              htmlFor=""
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Images
+            </label>
+            <input
+              id="images"
+              name="images"
+              type="file"
+              multiple
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
+              onChange={(event) =>
+                handleImageUpload(event, formik.setFieldValue)
+              }
+            />
+            <div className="mt-4 grid grid-cols-3 gap-4">
+              {uploadedImages.map((image, index) => (
+                <div key={index} className="relative">
+                  <img
+                    src={image}
+                    alt={`Uploaded ${index + 1}`}
+                    className="w-full h-32 object-cover rounded"
+                  />
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    className="absolute top-0 right-0 m-1"
+                    onClick={() =>
+                      handleImageDelete(index, formik.setFieldValue)
+                    }
+                  >
+                    Delete
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </div>
+          {loading ? (
+            <Button type="submit" className="w-full">
+              Loading ..{" "}
+            </Button>
+          ) : (
+            <Button type="submit" className="w-full">
+              Create Property
+            </Button>
+          )}
+        </form>
+      </CardContent>
+    </Card>
+  );
 }
-

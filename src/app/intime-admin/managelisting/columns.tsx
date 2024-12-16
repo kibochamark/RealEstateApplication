@@ -97,7 +97,7 @@ export type Property = {
         country: string;
         saleType: string;
         featured: boolean;
-        propertytype: {
+        propertyType: {
             name:string;
         };
         size: string;
@@ -118,6 +118,7 @@ export type Property = {
 
 
 export const columns: ColumnDef<Property>[] = [
+    
     {
         id: "select",
         header: ({ table }) => (
@@ -202,7 +203,7 @@ export const columns: ColumnDef<Property>[] = [
             return (
                 <div className="flex space-x-2">
                     <span className="max-w-[500px] truncate font-medium">
-                        {row.original?.propertytype?.name}
+                        {row.original?.propertyType?.name}
                     </span>
                 </div>
             )

@@ -18,6 +18,8 @@ const AddFeature = () => {
             description: Yup.string().required()
         }),
         onSubmit(values, formikHelpers) {
+            console.log(values, "values---------------------------------");
+            
 
             mutation.mutateAsync({ ...values })
 

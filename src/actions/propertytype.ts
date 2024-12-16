@@ -10,9 +10,7 @@ export const createpropertytype = async (propertytype: {
     name: string;
     
 }) => {
-    const { isAuthenticated } = getKindeServerSession()
-
-    if (await isAuthenticated()) {
+    
 
         try {
 
@@ -29,9 +27,7 @@ export const createpropertytype = async (propertytype: {
             return [e.message, 400]
         }
 
-    } else {
-        return ["unauthorized", 403]
-    }
+   
 }
 
 export const updateproperty = async (propertytype: {
@@ -39,9 +35,7 @@ export const updateproperty = async (propertytype: {
     name: string;
     
 }) => {
-    const { isAuthenticated } = getKindeServerSession()
-
-    if (await isAuthenticated()) {
+ 
 
         try {
 
@@ -58,9 +52,7 @@ export const updateproperty = async (propertytype: {
             return [e.message, 400]
         }
 
-    } else {
-        return ["unauthorized", 403]
-    }
+   
 }
 
 
@@ -105,9 +97,7 @@ export const removefeature = async (feature: any) => {
 
 
 export const getpropertytypes = async()=>{
-    const { isAuthenticated } = getKindeServerSession()
-
-    if (await isAuthenticated()) {
+  
 
         try {
 
@@ -120,9 +110,7 @@ export const getpropertytypes = async()=>{
             return [e.message, 400]
         }
 
-    } else {
-        return ["unauthorized", 403]
-    }
+    
 
 }
 

@@ -52,7 +52,7 @@ export function DataTableViewOptions<TData>({
         <Button onClick={() => {
           mutation.mutateAsync()
         }} disabled={(!table.getIsSomeRowsSelected() && !table.getIsAllPageRowsSelected()) || mutation.isPending} className="bg-red-700 cursor-pointer text-white" >
-          {mutation.isPending ? <Ellipsis className="animate animate-spin" /> : "delete"}
+          {mutation.isPending ? <Ellipsis className="animate animate-spin" /> : "Delete"}
         </Button>
       </div>
       <DropdownMenu>
