@@ -57,7 +57,7 @@ export function DataTableToolbar<TData>({
       </div>
 
       {/* Pass the correct deleteType dynamically */}
-      <DataTableViewOptions table={table} deleteType={deleteType} />
+      <DataTableViewOptions table={table} deleteType={deleteType} pathname={pathname} />
     </div>
   )
 }

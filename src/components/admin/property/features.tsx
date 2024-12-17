@@ -2,7 +2,7 @@ import React from 'react';
 import { Badge } from "@/components/ui/badge"
 
 interface FeatureBadgesProps {
-  features: string[];
+  features:{id:number; name:string;}[];
   selectedFeatures: string[];
   onFeatureToggle: (feature: string) => void;
 }
@@ -10,14 +10,14 @@ interface FeatureBadgesProps {
 export function FeatureBadges({ features, selectedFeatures, onFeatureToggle }: FeatureBadgesProps) {
   return (
     <div className="flex flex-wrap gap-2">
-      {features.map((feature:any) => (
+      {features.map((feature) => (
         <Badge
-          key={feature}
+          key={feature.id}
           variant="outline"
           className={`cursor-pointer transition-colors ${
-            selectedFeatures.includes(feature?.id) ? 'bg-primary300 text-primary-foreground' : 'bg-background'
+            selectedFeatures.includes(feature.id.toString()) ? 'bg-primary300 text-primary-foreground' : 'bg-background'
           }`}
-          onClick={() => onFeatureToggle(feature?.id)}
+          onClick={() => onFeatureToggle(feature.id.toString())}
         >
           {feature?.name}
         </Badge>

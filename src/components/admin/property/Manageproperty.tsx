@@ -39,7 +39,7 @@ const PageView = ({ properties, features, propertytypes }: { properties: any; fe
                     <AddProperty features={features} propertytypes={propertytypes} />
                 ) : isedit ? (<EditProperty features={features} propertytypes={propertytypes} />) : (
                     <div className='overflow-hidden'>
-                        <DataTable columns={columns} data={properties ?? []} searchColumn="title"/>
+                        <DataTable columns={columns} data={properties ?? []} searchColumn="name"/>
                     </div>
                 )}
 

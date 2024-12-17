@@ -84,12 +84,6 @@ export type Property = {
         id: number;
         name: string;
         description: string;
-        location: {
-          id: number;
-          longitude: string;
-          latitude: string;
-          locationname: string;
-        },
         street_address: string;
         city: string;
         area: string;
@@ -180,15 +174,15 @@ export const columns: ColumnDef<Property>[] = [
     //     },
     // },
     {
-        accessorKey: "location.locationname",
+        accessorKey: "area",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Location" />
+            <DataTableColumnHeader column={column} title="Area Located" />
         ),
         cell: ({ row }) => {
             return (
                 <div className="flex space-x-2">
                     <span className="max-w-[500px] truncate font-medium">
-                        {row.original?.location?.locationname}
+                        {row.original?.area}
                     </span>
                 </div>
             )

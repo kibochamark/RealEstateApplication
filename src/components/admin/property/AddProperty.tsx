@@ -51,28 +51,41 @@ export default function AddProperty({
       street_address: "",
       city: "",
       saleType: "Sale",
+      longitude: "",
+      latitude: "",
       featured: false,
-      propertyType: "", // Ensure this is provided
+      propertyType: 0, // Ensure this is provided
       size: "", // This must be a string
       distance: "", // This must be a string
       price: 0,
       pricepermonth: 0,
       features: [], // This must be an array of strings
       state: "",
-      country: "", // Ensure country is provided
+      country: "",
+      county:"", 
+      // Ensure country is provided
       area: "",
       bedrooms: 0,
     },
 
     onSubmit: async (values) => {
-      let formattedValues = Object.entries(values).filter(([key, value]) => { // Remove empty values
+      // convert features from an array to a string
+      let updatedvalues={
+        ...values,
+        features:values.features.join(",")
+      }
+
+      // remove unwanted data from our post body and format it
+      let formattedValues = Object.entries(updatedvalues).filter(([key, value]) => { // Remove empty values
         if (key === "images" || key === "Image") {
           return false;
         }
         return true;
 
       });
-      console.log(values, "Submitting form values");
+
+
+      console.log(Object.fromEntries(formattedValues), "Submitting form values");
 
       try {
         const formData = new FormData();
@@ -81,16 +94,7 @@ export default function AddProperty({
         });
         formData.append("json", JSON.stringify(Object.fromEntries(formattedValues))); // Append JSON as a string to form data
 
-        // Ensure the required fields are in the correct format
-        const requestData = {
-          ...values,
-          
-          // If necessary, map data to ensure types are correct
-          // size: String(values.size),
-          // distance: String(values.distance),
-          // features: String(values.features), // Ensure features is a string
-          // Optional: you can process images if necessary here
-        };
+    
 
         const response = await postProperty(formData);
 
@@ -213,7 +217,7 @@ export default function AddProperty({
               defaultValue={formik.values.saleType}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
             >
-              <option disabled>Choose a sale type</option>
+              <option >Choose a sale type</option>
               <option value="Sale">Sale</option>
               <option value="Rent">Rental</option>
             </select>
@@ -226,10 +230,10 @@ export default function AddProperty({
 
           <div>
             <label
-              htmlFor="location"
+              htmlFor="long"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Property Location
+              Longitude
             </label>
             {/* <select id="location"
                             defaultValue={formik.values.location}
@@ -241,28 +245,60 @@ export default function AddProperty({
                             <option value="FR">France</option>
                             <option value="DE">Germany</option>
                         </select> */}
-            {/* <GooglePlacesAutocomplete
-                            selectProps={{
-                                value,
-                                onChange: setValue,
-                            }}
-                            onLoadFailed={(error) => (
-                                console.error("Could not inject Google script", error)
-                            )}
-                            autocompletionRequest={{
-                                bounds: [
-                                    { lat: 50, lng: 50 },
-                                    { lat: 100, lng: 100 }
-                                ],
-                                componentRestrictions: {
-                                    country: ['ke'],
-                                }
-                            }}
-                            apiKey='d8f480b55msh9b5c4d05232d6c8p1d2848jsn6f501098217d'
-                        /> */}
+
             {/* {formik.errors.location && formik.touched.location && (
               <div className="text-red-500">{formik.errors.location}</div>
             )} */}
+            <input
+              type="text"
+              id=""
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              name="longitude"
+              defaultValue={formik.values.longitude}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
+              placeholder=""
+              required
+            />
+            {formik.errors.longitude && formik.touched.longitude && (
+              <div className="text-red-500">{formik.errors.longitude}</div>
+            )}
+          </div>
+          <div>
+            <label
+              htmlFor="lat"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Latitude
+            </label>
+            {/* <select id="location"
+                            defaultValue={formik.values.location}
+
+                            name='location' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300">
+                            <option selected>Choose a country</option>
+                            <option value="US">United States</option>
+                            <option value="CA">Canada</option>
+                            <option value="FR">France</option>
+                            <option value="DE">Germany</option>
+                        </select> */}
+
+            {/* {formik.errors.location && formik.touched.location && (
+              <div className="text-red-500">{formik.errors.location}</div>
+            )} */}
+            <input
+              type="text"
+              id=""
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              name="latitude"
+              defaultValue={formik.values.latitude}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
+              placeholder=""
+              required
+            />
+            {formik.errors.latitude && formik.touched.latitude && (
+              <div className="text-red-500">{formik.errors.latitude}</div>
+            )}
           </div>
 
           <div>
@@ -331,6 +367,28 @@ export default function AddProperty({
             />
             {formik.errors.state && formik.touched.state && (
               <div className="text-red-500">{formik.errors.state}</div>
+            )}
+          </div>
+          <div>
+            <label
+              htmlFor=""
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              county
+            </label>
+            <input
+              type="text"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              name="county"
+              defaultValue={formik.values.county}
+              id=""
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
+              placeholder="kiambu"
+              required
+            />
+            {formik.errors.county && formik.touched.county && (
+              <div className="text-red-500">{formik.errors.county}</div>
             )}
           </div>
 
@@ -415,7 +473,7 @@ export default function AddProperty({
               id=""
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
             >
-              <option disabled>Choose a property type</option>
+              <option>Choose a property type</option>
               {propertytypes?.map(
                 (type: { name: string; id: number }, idx: number) => {
                   return (
@@ -439,7 +497,7 @@ export default function AddProperty({
               Size
             </label>
             <input
-              type="number"
+              type="text"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               name="size"
@@ -463,7 +521,7 @@ export default function AddProperty({
               Distance
             </label>
             <input
-              type="number"
+              type="text"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               name="distance"

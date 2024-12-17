@@ -3,10 +3,19 @@
 import { baseUrl } from "@/lib/globalvariables";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import axios from "axios";
+import { revalidatePath } from "next/cache";
 
-export const getproperties = async () => {
+export const getproperties = async (limit=200, offset=0) => {
   try {
-    const data = await axios.get(baseUrl + "properties");
+    const searchparams = new URLSearchParams()
+    searchparams.append('limit', limit.toString())
+    searchparams.append('offset', offset.toString())
+    const data = await axios.get(baseUrl + "properties", {
+      params:searchparams
+    });
+
+
+    // console.log(data, data.data)
 
     return data?.data?.data ?? [];
   } catch (e: any) {
@@ -38,6 +47,7 @@ export const postProperty = async (data: any) => {
 
       if(res.status === 201){
         
+        revalidatePath("/intime-admin/managelisting")
         return [null, res?.data ?? []]
       }
       throw new Error("Error posting property");

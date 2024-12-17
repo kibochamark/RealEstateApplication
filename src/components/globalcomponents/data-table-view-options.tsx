@@ -16,19 +16,22 @@ import { useMutation } from "@tanstack/react-query"
 import toast from "react-hot-toast"
 import { Ellipsis } from "lucide-react"
 import { baseUrl } from "@/lib/globalvariables"
+import { RevalidatePath } from "./RevalidateCustomPath"
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>
   deleteType: "propertytype" | "feature" | "property" // API endpoint type
+  pathname:string;
 }
 
 export function DataTableViewOptions<TData>({
   table,
   deleteType,
+  pathname
 }: DataTableViewOptionsProps<TData>) {
 
-  console.log("Base URL:", baseUrl); // Debug log
-  console.log("Delete Type:", deleteType); // Debug log
+  // console.log("Base URL:", baseUrl); // Debug log
+  // console.log("Delete Type:", deleteType); // Debug log
 
   // Mutation for handling deletion
   const mutation = useMutation({
@@ -37,6 +40,9 @@ export function DataTableViewOptions<TData>({
         const res = await fetch(`${baseUrl}${id}/${deleteType}`, {
           method: "DELETE",
         })
+        if(res.status == 204){
+          RevalidatePath(pathname)
+        }
         return { id, status: res.status }
       })
       return Promise.all(promises)
