@@ -26,16 +26,23 @@ export const getpropertyfeatures = async () => {
 
 
 export const postProperty = async (data: any) => {
+  console.log(data, "recived data ----------");
+  
   try {
     // Ensure the data is properly serialized if it's not already in JSON format
     const res = await axios.post(baseUrl + "property", data, {
       headers: {
-        'Content-Type': 'application/json',  // Make sure the content is treated as JSON
+        'Content-Type': 'multipart/form-data',  // Make sure the content is treated as JSON
       }
     });
 
+      if(res.status === 201){
+        
+        return [null, res?.data ?? []]
+      }
+      throw new Error("Error posting property");
+      
     // Return response data or empty array if no data returned
-    return res?.data ?? [];
   } catch (e: any) {
     // Log the error and return a more descriptive error message
     console.error("Error posting property:", e);

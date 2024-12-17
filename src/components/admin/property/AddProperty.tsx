@@ -18,6 +18,11 @@ import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import { postProperty } from "@/actions/property";
 import toast from "react-hot-toast";
 
+interface PropertyImage {
+  url: string;
+  Image: File;
+}
+
 export default function AddProperty({
   features,
   propertytypes,
@@ -28,12 +33,11 @@ export default function AddProperty({
   //   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const { editdata } = useSelector((state: RootState) => state.property);
-  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [uploadedImages, setUploadedImages] = useState<PropertyImage[]>([]);
   const [loading, setLoading] = useState("");
   const [value, setValue] = useState(null);
 
-  console.log(editdata, "edit");
-
+  const formattedImages = uploadedImages.map((image) => image.Image);
   //   useEffect(() => {
   //     dispatch(fetchFeatures());
   //     dispatch(fetchPropertyTypes());
@@ -44,7 +48,6 @@ export default function AddProperty({
     initialValues: {
       name: "mark",
       description: "",
-      location: "", // Ensure location is provided
       street_address: "",
       city: "",
       saleType: "Sale",
@@ -59,16 +62,29 @@ export default function AddProperty({
       country: "", // Ensure country is provided
       area: "",
       bedrooms: 0,
-      images: [],
     },
 
     onSubmit: async (values) => {
+      let formattedValues = Object.entries(values).filter(([key, value]) => { // Remove empty values
+        if (key === "images" || key === "Image") {
+          return false;
+        }
+        return true;
+
+      });
       console.log(values, "Submitting form values");
 
       try {
+        const formData = new FormData();
+        formattedImages.forEach((image, index) => {
+          formData.append(`images`, image);
+        });
+        formData.append("json", JSON.stringify(Object.fromEntries(formattedValues))); // Append JSON as a string to form data
+
         // Ensure the required fields are in the correct format
         const requestData = {
           ...values,
+          
           // If necessary, map data to ensure types are correct
           // size: String(values.size),
           // distance: String(values.distance),
@@ -76,11 +92,16 @@ export default function AddProperty({
           // Optional: you can process images if necessary here
         };
 
-        const response = await postProperty(requestData);
+        const response = await postProperty(formData);
 
         // Handle the response
-        console.log("Property successfully posted:", response);
-        toast.success("Property successfully posted");
+        if (!response[0]) {
+          console.log("Property successfully posted:", response);
+          toast.success("Property successfully posted");
+        } else {
+          console.error("Error posting property:", response[0]);
+          toast.error("Error posting property");
+        }
       } catch (error) {
         console.error("Error posting property:", error);
       }
@@ -93,9 +114,12 @@ export default function AddProperty({
   ) => {
     const files = event.target.files;
     if (files) {
-      const newImages = Array.from(files).map((file) =>
-        URL.createObjectURL(file)
-      );
+      const newImages = Array.from(files).map((file) => {
+        return {
+          url: URL.createObjectURL(file),
+          Image: file,
+        };
+      });
       setUploadedImages((prevImages) => [...prevImages, ...newImages]);
       setFieldValue("images", [...uploadedImages, ...newImages]);
     }
@@ -571,7 +595,7 @@ export default function AddProperty({
               {uploadedImages.map((image, index) => (
                 <div key={index} className="relative">
                   <img
-                    src={image}
+                    src={image.url}
                     alt={`Uploaded ${index + 1}`}
                     className="w-full h-32 object-cover rounded"
                   />
