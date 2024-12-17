@@ -34,7 +34,7 @@ export default function AddProperty({
   const router = useRouter();
   const { editdata } = useSelector((state: RootState) => state.property);
   const [uploadedImages, setUploadedImages] = useState<PropertyImage[]>([]);
-  const [loading, setLoading] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [value, setValue] = useState(null);
 
   const formattedImages = uploadedImages.map((image) => image.Image);
@@ -88,6 +88,7 @@ export default function AddProperty({
       console.log(Object.fromEntries(formattedValues), "Submitting form values");
 
       try {
+        setIsLoading(true);
         const formData = new FormData();
         formattedImages.forEach((image, index) => {
           formData.append(`images`, image);
@@ -99,9 +100,12 @@ export default function AddProperty({
         const response = await postProperty(formData);
 
         // Handle the response
+        setIsLoading(false);
         if (!response[0]) {
           console.log("Property successfully posted:", response);
           toast.success("Property successfully posted");
+          formik.resetForm();
+          setUploadedImages([]);
         } else {
           console.error("Error posting property:", response[0]);
           toast.error("Error posting property");
@@ -672,9 +676,9 @@ export default function AddProperty({
               ))}
             </div>
           </div>
-          {loading ? (
-            <Button type="submit" className="w-full">
-              Loading ..{" "}
+          {isLoading ? (
+            <Button type="submit" className="w-full" disabled>
+              Creating Property.. ..{" "}
             </Button>
           ) : (
             <Button type="submit" className="w-full">

@@ -23,6 +23,19 @@ export const getproperties = async (limit=200, offset=0) => {
   }
 };
 
+
+export const getPropertyById = async (id: number) => {
+  
+  try {
+    const response = await axios.get(baseUrl + `/${id}/property`);
+    return response?.data ?? []; 
+  } catch (e: any) {
+    return [e.message, 400]; 
+  }
+};
+
+
+
 export const getpropertyfeatures = async () => {
   try {
     const data = await axios.get(baseUrl + "features");
@@ -35,7 +48,6 @@ export const getpropertyfeatures = async () => {
 
 
 export const postProperty = async (data: any) => {
-  console.log(data, "recived data ----------");
   
   try {
     // Ensure the data is properly serialized if it's not already in JSON format
@@ -71,7 +83,6 @@ export const patchProperty = async (data: any) => {
     });
 
     return res?.data ?? [];
-    console.log(res, "res----------");
     
   } catch (e: any) {
     console.error("Error patching property:", e);

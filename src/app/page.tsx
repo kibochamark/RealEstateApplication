@@ -1,3 +1,4 @@
+import { getproperties } from "@/actions/property";
 import Aboutus from "@/components/aboutus";
 import { RecentBlogs } from "@/components/Blogs/RecentBlogs";
 import Component from "@/components/cards";
@@ -22,11 +23,12 @@ const testimonials = [
 ]
 
 
-export default function Home() {
+export default async function Home() {
+  const properties = await getproperties() ?? []
   return (
     <>
       <HeroSection />
-      <Component />
+      <Component properties={properties}/>
       <div className="">
         <Aboutus />
       </div>
