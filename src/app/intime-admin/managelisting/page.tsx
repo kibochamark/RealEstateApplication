@@ -10,6 +10,12 @@ const page = async () => {
     const properties = await getproperties() ?? []
     const features = await getpropertyfeatures() ?? []
     const propertytypes = await getpropertytypes() ?? []
+    console.log(propertytypes, "propertypes,,,,,,,");
+    console.log(properties, "properties222,,,,,,,");
+    console.log(features, "features 333,,,,,,,");
+
+
+    
     return (
         <div className="col-span-3 md:container">
             <PageView properties={properties} propertytypes={propertytypes[0]} features={features} />

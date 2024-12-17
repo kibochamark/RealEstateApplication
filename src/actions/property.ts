@@ -1,51 +1,72 @@
-"use server"
+"use server";
 
-import { baseUrl } from "@/lib/globalvariables"
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
-import axios from "axios"
+import { baseUrl } from "@/lib/globalvariables";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import axios from "axios";
 
+export const getproperties = async () => {
+  try {
+    const data = await axios.get(baseUrl + "properties");
 
+    return data?.data?.data ?? [];
+  } catch (e: any) {
+    return [e.message, 400];
+  }
+};
 
-export const getproperties = async()=>{
-    const {isAuthenticated} = getKindeServerSession()
+export const getpropertyfeatures = async () => {
+  try {
+    const data = await axios.get(baseUrl + "features");
 
-    if(await isAuthenticated()){
-
-        try{
-
-            const data = await axios.get(baseUrl + "properties")
-
-            return data?.data?.data ?? []
-
-        }catch(e:any){
-            return [e.message, 400]
-        }
-
-    }else{
-        return ["unauthorized", 403]
-    }
-}
+    return data?.data?.data ?? [];
+  } catch (e: any) {
+    return [e.message, 400];
+  }
+};
 
 
-export const getpropertyfeatures = async()=>{
-    const {isAuthenticated} = getKindeServerSession()
+export const postProperty = async (data: any) => {
+  console.log(data, "recived data ----------");
+  
+  try {
+    // Ensure the data is properly serialized if it's not already in JSON format
+    const res = await axios.post(baseUrl + "property", data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',  // Make sure the content is treated as JSON
+      }
+    });
 
-    if(await isAuthenticated()){
+      if(res.status === 201){
+        
+        return [null, res?.data ?? []]
+      }
+      throw new Error("Error posting property");
+      
+    // Return response data or empty array if no data returned
+  } catch (e: any) {
+    // Log the error and return a more descriptive error message
+    console.error("Error posting property:", e);
+    return [e.response?.data?.message ?? e.message, e.response?.status ?? 400];
+  }
+};
 
-        try{
 
-            const data = await axios.get(baseUrl + "features")
 
-            return data?.data?.data ?? []
+export const patchProperty = async (data: any) => {
+  try {
+    const res = await axios.patch(baseUrl + `propertytype`, data, {
+      headers: {
+        'Content-Type': 'application/json',  
+      }
+    });
 
-        }catch(e:any){
-            return [e.message, 400]
-        }
-
-    }else{
-        return ["unauthorized", 403]
-    }
-}
-
+    return res?.data ?? [];
+    console.log(res, "res----------");
+    
+  } catch (e: any) {
+    console.error("Error patching property:", e);
+    return [e.response?.data?.message ?? e.message, e.response?.status ?? 400];
+  }
+};
 
 

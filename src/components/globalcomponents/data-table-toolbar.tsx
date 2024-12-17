@@ -1,7 +1,8 @@
-"use client"
+"use client" // Add this to enable client-side rendering
 
 import { Cross2Icon } from "@radix-ui/react-icons"
 import { Table } from "@tanstack/react-table"
+import { usePathname } from "next/navigation" // Import usePathname for accessing the current path
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -17,6 +18,18 @@ export function DataTableToolbar<TData>({
   searchColumn,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
+  const pathname = usePathname() // Access the current path
+
+  // Determine the correct deleteType based on the current path
+  let deleteType: "propertytype" | "feature" | "property" = "propertytype" // Default value
+
+  if (pathname === "/intime-admin/manage-property-types") {
+    deleteType = "propertytype"
+  } else if (pathname === "/intime-admin/managefeatures") {
+    deleteType = "feature"
+  } else if (pathname === "/intime-admin/managelisting") {
+    deleteType = "property"
+  }
 
   return (
     <div className="flex items-center justify-between">
@@ -42,8 +55,9 @@ export function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
-      <DataTableViewOptions table={table} />
+
+      {/* Pass the correct deleteType dynamically */}
+      <DataTableViewOptions table={table} deleteType={deleteType} />
     </div>
   )
 }
-
