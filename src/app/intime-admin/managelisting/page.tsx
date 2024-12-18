@@ -1,13 +1,13 @@
 import { DataTable } from '@/components/globalcomponents/data-table'
 import React, { Suspense } from 'react'
 import { columns } from './columns'
-import { getproperties, getpropertyfeatures } from '@/actions/property'
+import { getAllproperties, getproperties, getpropertyfeatures } from '@/actions/property'
 import { Loader } from 'lucide-react'
 import PageView from '@/components/admin/property/Manageproperty'
 import { getpropertytypes } from '@/actions/propertytype'
 
 const page = async () => {
-    const properties = await getproperties() ?? []
+    const properties = await getAllproperties() ?? []
     const features = await getpropertyfeatures() ?? []
     const propertytypes = await getpropertytypes() ?? []
     console.log(propertytypes, "propertypes,,,,,,,");

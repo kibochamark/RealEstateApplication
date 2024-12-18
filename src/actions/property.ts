@@ -5,14 +5,27 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import axios from "axios";
 import { revalidatePath } from "next/cache";
 
-export const getproperties = async (limit=200, offset=0) => {
+export const getproperties = async (limit=200, page=1) => {
   try {
     const searchparams = new URLSearchParams()
     searchparams.append('limit', limit.toString())
-    searchparams.append('offset', offset.toString())
+    searchparams.append('page', page.toString())
     const data = await axios.get(baseUrl + "properties", {
       params:searchparams
     });
+
+
+    // console.log(data, data.data)
+
+    return data?.data?.data ?? [];
+  } catch (e: any) {
+    return [e.message, 400];
+  }
+};
+export const getAllproperties = async () => {
+  try {
+   
+    const data = await axios.get(baseUrl + "allproperties");
 
 
     // console.log(data, data.data)
