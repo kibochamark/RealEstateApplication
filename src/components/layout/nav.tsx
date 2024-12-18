@@ -14,6 +14,9 @@ const Nav = () => {
     const path = usePathname()
 
 
+    if(path.startsWith("/intimehomes")) return null
+
+
 
     useEffect(() => {
         const checkMobile = () => setIsMobile(window.innerWidth < 768)
