@@ -5,7 +5,7 @@ import React from 'react'
 const Footer = () => {
     const path = usePathname()
 
-    if(path.includes("intime-admin")){
+    if(path.includes("intime-admin") || path.startsWith("/intimehomes")){
         return null
     }
 

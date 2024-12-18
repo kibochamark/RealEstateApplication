@@ -15,10 +15,9 @@ const page = async() => {
     const properties = await getproperties() ?? []
     return (
         <div className='w-full bg-primary50'>
-            <div className='my-24'>
+            <div className='py-24'>
                 <ViewListing  properties={properties}/>
             </div>
-
         </div>
     )
 }
