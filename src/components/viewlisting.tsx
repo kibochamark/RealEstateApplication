@@ -33,15 +33,20 @@ import {
 import { useInView } from "react-intersection-observer";
 import { PropertyCarousel } from "./cards";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export default function ViewListing({ properties }: { properties: any[] }) {
+export default function ViewListing({ properties, numberofpages }: { properties: any[]; numberofpages: number }) {
   const [isGridView, setIsGridView] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [budgetRange, setBudgetRange] = useState([0, 100000000]);
   const [bedrooms, setBedrooms] = useState("");
   const [propertyType, setPropertyType] = useState("");
-  const totalPages = 10;
+
+
+  // acces the searchparams
+  const searchparams = useSearchParams()
+  const limit = searchparams.get("limit")
+  const page = searchparams.get("page")
 
   const router = useRouter();
 
@@ -136,6 +141,14 @@ export default function ViewListing({ properties }: { properties: any[] }) {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+    const searchparams = useSearchParams()
+
+    const url = new URLSearchParams(searchparams)
+    url.set("limit", "200"),
+    url.set("page", page.toString())
+
+    router.replace(`/listing?${url}`)
+
   };
 
   const filteredProperties = properties.filter(
@@ -380,11 +393,10 @@ export default function ViewListing({ properties }: { properties: any[] }) {
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
           variants={containerVariants}
-          className={`grid gap-6 w-full ${
-            isGridView
-              ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-              : "grid-cols-1"
-          }`}
+          className={`grid gap-6 w-full ${isGridView
+            ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+            : "grid-cols-1"
+            }`}
         >
           {filteredProperties.map((property) => (
             <motion.div
@@ -461,7 +473,7 @@ export default function ViewListing({ properties }: { properties: any[] }) {
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+          {Array.from({ length: numberofpages }, (_, i) => i + 1).map((page) => (
             <Button
               key={page}
               variant={currentPage === page ? "default" : "outline"}
@@ -475,7 +487,7 @@ export default function ViewListing({ properties }: { properties: any[] }) {
             variant="outline"
             size="icon"
             onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
+            disabled={currentPage === numberofpages}
           >
             <ChevronRight className="h-4 w-4" />
           </Button>

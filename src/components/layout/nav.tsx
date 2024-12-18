@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { ChevronDown, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
 const Nav = () => {
@@ -13,8 +13,15 @@ const Nav = () => {
     const [scrolled, setScrolled] = useState(false)
     const path = usePathname()
 
+    const searchparams = useSearchParams()
 
-    if(path.startsWith("/intimehomes")) return null
+    const url = new URLSearchParams(searchparams)
+    url.set("limit", "200"),
+        url.set("page", "0")
+
+
+
+    if (path.startsWith("/intimehomes")) return null
 
 
 
@@ -91,7 +98,7 @@ const Nav = () => {
                             title="Properties To Let"
                             items={["Townhouses/Villas For Rent", "Studio Apartments For Rent", "Office Spaces For Rent"]}
                         />
-                        <NavItem href="/listing">listing</NavItem>
+                        <NavItem href={`/listing?${url}`}>listing</NavItem>
                         {/* <NavItem href="/#testimonials">Testimonials</NavItem> */}
                         <NavItem href="/blogs">Blogs</NavItem>
                         <NavItem href="/contact">Contact</NavItem>

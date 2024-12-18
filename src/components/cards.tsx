@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/carousel";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Component({ properties }: { properties: any[] }) {
   const [visibleProperties, setVisibleProperties] = useState(
@@ -51,6 +51,13 @@ export default function Component({ properties }: { properties: any[] }) {
       },
     },
   };
+
+  // created encoded url params
+  const searchparams= useSearchParams()
+
+  const url =  new URLSearchParams(searchparams)
+  url.set("limit", "200"),
+  url.set("page", "0")
 
   // const properties = [
   //   {

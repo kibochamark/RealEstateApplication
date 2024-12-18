@@ -25,10 +25,11 @@ const testimonials = [
 
 export default async function Home() {
   const properties = await getproperties() ?? []
+  console.dir(properties, "props")
   return (
     <>
       <HeroSection />
-      <Component properties={properties}/>
+      <Component properties={properties["properties"] || []}/>
       <div className="">
         <Aboutus />
       </div>
