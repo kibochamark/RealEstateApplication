@@ -21,7 +21,7 @@ export default {
                 },
             },
             authorize: async (credentials) => {
-                console.log(credentials)
+         
                 let user = null
 
                 // call our server action 
@@ -30,12 +30,13 @@ export default {
                     password:credentials.password as string
                 })
 
-                console.log(data, status)
-
                 if(status == 200) user= data
                 if(status == 400)  throw new Error(data)
                 return user
             },
         }),
     ],
+    pages:{
+        signIn: '/intimehomes/sign-in',
+    }
 }

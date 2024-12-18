@@ -139,13 +139,18 @@ export default function ViewListing({ properties, numberofpages }: { properties:
   //     }
   // ]
 
+
+  const url = new URLSearchParams(searchparams)
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    const searchparams = useSearchParams()
+   
 
-    const url = new URLSearchParams(searchparams)
+
     url.set("limit", "200"),
     url.set("page", page.toString())
+    console.log(url, "url");
+    
 
     router.replace(`/listing?${url}`)
 
@@ -422,16 +427,19 @@ export default function ViewListing({ properties, numberofpages }: { properties:
                   </div>
                   <div className="absolute bottom-4 left-4">
                     <div className="text-white font-bold text-xl">
-                      {property.price}
+                      {new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "KES",
+                      }).format(property.price)}{" "}
                     </div>
                   </div>
                 </div>
                 <Link href={`/listing/${property.id}`}>
                   <CardContent className="p-4">
-                    <h3 className="font-semibold mb-2">{property.title}</h3>
+                    <h3 className="font-semibold mb-2">{property.name}</h3>
                     <div className="flex items-center text-muted-foreground mb-2">
                       <MapPin className="w-4 h-4 mr-1" />
-                      {property.location}
+                      {property.area}
                     </div>
                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
                       {property.bedrooms && (
