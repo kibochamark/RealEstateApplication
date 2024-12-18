@@ -418,7 +418,7 @@ export default function ViewListing({ properties, numberofpages }: { properties:
                     {property.featured && (
                       <Badge className="bg-green-500">FEATURED</Badge>
                     )}
-                    <Badge variant="secondary">{property.status}</Badge>
+                    <Badge variant="secondary">{property.saleType}</Badge>
                   </div>
                   <div className="absolute bottom-4 left-4">
                     <div className="text-white font-bold text-xl">
