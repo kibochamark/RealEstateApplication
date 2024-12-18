@@ -139,13 +139,18 @@ export default function ViewListing({ properties, numberofpages }: { properties:
   //     }
   // ]
 
+
+  const url = new URLSearchParams(searchparams)
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    const searchparams = useSearchParams()
+   
 
-    const url = new URLSearchParams(searchparams)
+
     url.set("limit", "200"),
     url.set("page", page.toString())
+    console.log(url, "url");
+    
 
     router.replace(`/listing?${url}`)
 
