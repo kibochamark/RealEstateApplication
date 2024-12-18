@@ -27,6 +27,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { PropertyCarousel } from "./cards";
 import { useInView } from "react-intersection-observer";
+import toast, { ToastBar, Toaster } from "react-hot-toast";
 
 // Fix for default marker icon
 // delete L.Icon.Default.prototype
@@ -38,25 +39,87 @@ L.Icon.Default.mergeOptions({
   shadowUrl:
     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png",
 });
+export interface ImageData {
+  id: number;
+  url: string;
+  publicId: string;
+  propertyId: number;
+  createdAt: string;
+  updatedAt: string;
+}
+export interface PropertyFeature {
+  id: number;
+  name: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+}
+export interface PropertyType {
+  id: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+}
+export interface PropertyData {
+  id: number;
+  name: string;
+  description: string;
+  streetAddress: string;
+  city: string;
+  area: string;
+  state: string;
+  country: string;
+  county: string;
+  latitude: string;
+  longitude: string;
+  saleType: string;
+  featured: boolean;
+  propertyTypeId: number;
+  size: string;
+  distance: string;
+  price: number;
+  pricePerMonth: number;
+  bedrooms: number;
+  createdAt: string;
+  updatedAt: string;
+  propertyToFeatures: PropertyFeature[];
+  propertyType: PropertyType;
+}
 
-export default function PropertyDetail({ property }: { property: any }) {
+export interface PropertyResponse {
+  status: string;
+  data: {
+    property: PropertyData;
+    images: ImageData[];
+  };
+}
+
+export default function PropertyDetail({
+  property,
+}: {
+  property: PropertyResponse;
+}) {
   const [selectedImage, setSelectedImage] = useState(0);
   const position: [number, number] = [-1.2345, 36.80271]; // Latitude and Longitude for Runda, Nairobi
   const [isGridView, setIsGridView] = useState(true);
+  const [isShared, setIsShared] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
 
-  const images = ["/14.jpg", "/11.jpg", "/12.jpg"];
+  const images = property?.data?.images?.map((image: any) => image.url) || [];
 
-  const features = [
-    { icon: "CCTV", label: "24 Hour CCTV" },
-    { icon: "Generator", label: "Backup Generator" },
-    { icon: "Balcony", label: "Balcony" },
-    { icon: "Water", label: "Borehole Water" },
-    { icon: "Gym", label: "Gym" },
-    { icon: "Intercom", label: "Intercom" },
-    { icon: "Lift", label: "Lift" },
-    { icon: "Parking", label: "Parking" },
-    { icon: "Pool", label: "Swimming Pool" },
-  ];
+  // const features = [
+  //   { icon: "CCTV", label: "24 Hour CCTV" },
+  //   { icon: "Generator", label: "Backup Generator" },
+  //   { icon: "Balcony", label: "Balcony" },
+  //   { icon: "Water", label: "Borehole Water" },
+  //   { icon: "Gym", label: "Gym" },
+  //   { icon: "Intercom", label: "Intercom" },
+  //   { icon: "Lift", label: "Lift" },
+  //   { icon: "Parking", label: "Parking" },
+  //   { icon: "Pool", label: "Swimming Pool" },
+  // ];
+
+  const features = property?.data?.property?.propertyToFeatures || []; 
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -84,49 +147,92 @@ export default function PropertyDetail({ property }: { property: any }) {
     },
   };
 
-  // const property = {
-  //   id: 1,
-  //   title: "2 Bedroom Apartment",
-  //   price: 7900000,
-  //   location: "Kilimani, Nairobi, Kenya",
-  //   beds: 2,
-  //   baths: 1,
-  //   sqft: "80 sq m",
-  //   type: "APARTMENT",
-  //   featured: true,
-  //   status: "FOR SALE",
-  //   images: ["/1.jpg?height=300&width=400", "/2.jpg?height=300&width=400", "/3.jpg?height=300&width=400"]
-  // }
+  const property1 = {
+    id: 1,
+    title: "2 Bedroom Apartment",
+    price: 7900000,
+    location: "Kilimani, Nairobi, Kenya",
+    beds: 2,
+    baths: 1,
+    sqft: "80 sq m",
+    type: "APARTMENT",
+    featured: true,
+    status: "FOR SALE",
+    images: [
+      "/1.jpg?height=300&width=400",
+      "/2.jpg?height=300&width=400",
+      "/3.jpg?height=300&width=400",
+    ],
+  };
+
+  const handleShare = () => {
+    const url = window.location.href; // You can replace this with the property URL you want to share
+    if (navigator.share) {
+      navigator
+        .share({
+          title: property?.data?.property?.name || "Property",
+          text: `Check out this property: ${property?.data?.property?.name}`,
+          url: url,
+        })
+        .then(() => setIsShared(true))
+        .catch((error) => console.log("Error sharing:", error));
+    } else {
+      // Fallback: Copy link to clipboard if sharing is not supported
+      navigator.clipboard.writeText(url).then(() => {
+        setIsShared(true);
+        toast.success("Link copied to clipboard!");
+      });
+    }
+  };
 
   return (
     <div className="mx-auto ">
       <div className="grid lg:grid-cols-[1fr_400px] gap-8 px-4 py-8 container">
         <div className="space-y-6">
           {/* Header */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Badge className="bg-green-500 hover:bg-green-600">
-                FEATURED
-              </Badge>
-              <Badge variant="secondary">FOR SALE</Badge>
-            </div>
-            <h1 className="text-3xl font-bold">
-              2 and 3 Bedroom Apartments for Sale in Riverside
-            </h1>
-            <div className="flex items-center text-muted-foreground">
-              <MapPin className="w-4 h-4 mr-2" />
-              Riverside Drive, Nairobi, Kenya
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="text-3xl font-bold">
-                From <span className="text-primary">Kshs.13,500,000</span>
+          {property?.data?.property && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                {property.data.property.featured && (
+                  <Badge className="bg-green-500 hover:bg-green-600">
+                    FEATURED
+                  </Badge>
+                )}
+                <Badge variant="secondary">
+                  {property.data.property.saleType}
+                </Badge>
               </div>
-              <Button variant="outline" className="gap-2">
-                <Share2 className="w-4 h-4" />
-                Share
-              </Button>
+              <h1 className="text-3xl font-bold">
+                {property.data.property.name}
+              </h1>
+              <div className="flex items-center text-muted-foreground">
+                <MapPin className="w-4 h-4 mr-2" />
+                {`${property.data.property.streetAddress}, ${property.data.property.city}, ${property.data.property.state}, ${property.data.property.country}`}
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold">
+                  From{" "}
+                  <span className="text-primary">
+                    {new Intl.NumberFormat("en-US", {
+                      style: "currency",
+                      currency: "KES",
+                    }).format(property.data.property.price)}
+                  </span>
+                </div>
+                <Button
+                  variant="outline"
+                  className="gap-2"
+                  onClick={handleShare}
+                >
+                  <Share2 className="w-4 h-4" />
+                  {isSharing ? "Sharing..." : "Share"}
+                </Button>
+                {isShared && (
+                  <span className="text-green-500">Link Shared!</span>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Image Gallery */}
           <div className="space-y-2">
@@ -172,7 +278,7 @@ export default function PropertyDetail({ property }: { property: any }) {
                     <p className="text-sm text-muted-foreground">
                       Property Type
                     </p>
-                    <p className="font-medium">Apartment</p>
+                    <p className="font-medium">{property?.data?.property?.propertyType?.name}</p>
                   </div>
                 </div>
               </CardContent>
@@ -183,7 +289,9 @@ export default function PropertyDetail({ property }: { property: any }) {
                   <Bed className="w-4 h-4 text-muted-foreground" />
                   <div className="space-y-1">
                     <p className="text-sm text-muted-foreground">Bedrooms</p>
-                    <p className="font-medium">2</p>
+                    <p className="font-medium">
+                      {property?.data?.property?.bedrooms}
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -196,7 +304,9 @@ export default function PropertyDetail({ property }: { property: any }) {
                     <p className="text-sm text-muted-foreground">
                       Square Meters
                     </p>
-                    <p className="font-medium">101</p>
+                    <p className="font-medium">
+                      {property?.data?.property?.size}
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -243,48 +353,66 @@ export default function PropertyDetail({ property }: { property: any }) {
           <div className="space-y-4 my-10 px-4 py-8 ">
             <h2 className="text-2xl font-semibold">Description</h2>
             <p className="text-muted-foreground">
-              Located along Riverside Drive near Riverside Square. Flexible
-              payment plans with 20% deposit.
+              {property?.data?.property?.description}
             </p>
             <div className="space-y-2">
               <h3 className="font-semibold">Prices:</h3>
               <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                <li>2 Bedroom (101 sqm, master en-suite) - KSh 13.5M</li>
-                <li>3 Bedroom (DSQ/168 sqm) - KSh 20.5M</li>
+                <li>{`${property?.data?.property?.bedrooms} Bedroom (${
+                  property?.data?.property?.size
+                }, ${
+                  property?.data?.property?.propertyToFeatures
+                    ? "master en-suite"
+                    : ""
+                }) -  ${new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "KES",
+                }).format(property?.data?.property.price)}`}</li>
+                {/* <li>3 Bedroom (DSQ/168 sqm) - KSh 20.5M</li> */}
               </ul>
             </div>
           </div>
           <div className="space-y-4 my-10 px-4 py-8">
             <h3 className="text-lg font-semibold">Details</h3>
             <div className="text-sm text-muted-foreground">
-              Updated on October 6, 2023 at 2:31 pm
+              Updated on{" "}
+              {property?.data?.property.updatedAt
+                ? new Date(property?.data?.property?.updatedAt).toLocaleString()
+                : "N/A"}
             </div>
             <div className="grid gap-4 rounded-lg bg-muted p-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <div className="font-medium">Price:</div>
-                  <div className="text-2xl font-bold">$3,500/mo</div>
+                  <div className="text-2xl font-bold">
+                    {property?.data?.property?.price
+                      ? `${new Intl.NumberFormat("en-US", {
+                          style: "currency",
+                          currency: "KES",
+                        }).format(property?.data?.property.price)}`
+                      : "N/A"}
+                  </div>
                 </div>
                 <div>
                   <div className="font-medium">Property Type:</div>
-                  <div>Villa</div>
+                  <div>{property?.data?.property?.propertyType?.name || "N/A"}</div>
                 </div>
               </div>
               <Separator />
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <div className="font-medium">Bedrooms:</div>
-                  <div>4</div>
+                  <div>{property?.data?.property?.bedrooms || "N/A"}</div>
                 </div>
                 <div>
                   <div className="font-medium">Property Status:</div>
-                  <div>For Rent</div>
+                  <div>{property?.data?.property?.saleType || "N/A"}</div>
                 </div>
               </div>
               <Separator />
               <div>
                 <div className="font-medium">Bathrooms:</div>
-                <div>5</div>
+                <div>{property?.data?.property?.bathrooms || "N/A"}</div>
               </div>
             </div>
           </div>
@@ -297,7 +425,7 @@ export default function PropertyDetail({ property }: { property: any }) {
               {features.map((feature, idx) => (
                 <div key={idx} className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-green-500" />
-                  <span>{feature.label}</span>
+                  <span>{feature?.name}</span>
                 </div>
               ))}
             </div>
@@ -305,11 +433,24 @@ export default function PropertyDetail({ property }: { property: any }) {
         </div>
 
         {/* address and maps */}
-        <div className="md:container bg-secondary50/90 ">
-          <Card className="border-none bg-transaparent shadow-none md:px-4 md:py-8 ">
+        <div className="md:container bg-secondary50/90">
+          <Card className="border-none bg-transparent shadow-none md:px-4 md:py-8">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Address</CardTitle>
-              <Button variant="secondary">
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  const { city, area, county, country, latitude, longitude } =
+                    property?.data?.property || {};
+                  const address = `${city}, ${area}, ${county}, ${country}`;
+                  const mapsUrl =
+                    latitude && longitude
+                      ? `https://www.google.com/maps?q=${latitude},${longitude}`
+                      : `https://www.google.com/maps/search/?q=${address}`;
+
+                  window.open(mapsUrl, "_blank");
+                }}
+              >
                 <MapPin className="mr-2 h-4 w-4" />
                 Open on Google Maps
               </Button>
@@ -321,13 +462,13 @@ export default function PropertyDetail({ property }: { property: any }) {
                     <div className="text-sm font-medium text-muted-foreground">
                       City
                     </div>
-                    <div>Nairobi</div>
+                    <div>{property?.data?.property?.city}</div>
                   </div>
                   <div>
                     <div className="text-sm font-medium text-muted-foreground">
                       Area
                     </div>
-                    <div>Runda</div>
+                    <div>{property?.data?.property?.area}</div>
                   </div>
                 </div>
                 <Separator />
@@ -336,13 +477,13 @@ export default function PropertyDetail({ property }: { property: any }) {
                     <div className="text-sm font-medium text-muted-foreground">
                       State/county
                     </div>
-                    <div>Nairobi Province</div>
+                    <div>{property?.data?.property?.county}</div>
                   </div>
                   <div>
                     <div className="text-sm font-medium text-muted-foreground">
                       Country
                     </div>
-                    <div>Kenya</div>
+                    <div>{property?.data?.property?.country}</div>
                   </div>
                 </div>
               </div>
@@ -369,7 +510,6 @@ export default function PropertyDetail({ property }: { property: any }) {
       </div>
 
       {/* similar listings */}
-
       <div className="bg-white my-10">
         <div className="px-4 py-8 container">
           <h3 className="text-3xl font-semibold my-6">Similar Listings</h3>
@@ -384,55 +524,57 @@ export default function PropertyDetail({ property }: { property: any }) {
                 : "grid-cols-1"
             }`}
           >
-            <motion.div key={property.propertyId} variants={itemVariants}>
+            <motion.div key={property1.id} variants={{}}>
               <Card className="overflow-hidden shadow-none border-none">
                 <div className="relative">
-                <PropertyCarousel
-  images={
-    Array.isArray(property?.images) 
-      ? property.images.map((image: { url: string }) => image.url)
-      : [] 
-  }
-  propertyId={property?.id}
-/>
+                  {/* Carousel */}
+                  <PropertyCarousel
+                    images={property1.images}
+                    propertyId={property1.id}
+                  />
 
+                  {/* Badges */}
                   <div className="absolute top-4 left-4 flex gap-2">
-                    {property.featured && (
+                    {property1.featured && (
                       <Badge className="bg-green-500">FEATURED</Badge>
                     )}
-                    <Badge variant="secondary">{property.status}</Badge>
+                    <Badge variant="secondary">{property1.status}</Badge>
                   </div>
+
+                  {/* Price */}
                   <div className="absolute bottom-4 left-4">
                     <div className="text-white font-bold text-xl">
-                      {property.price}
+                      KES {property1.price.toLocaleString()}
                     </div>
                   </div>
                 </div>
-                <Link href={`/listing/${property.id}`}>
+
+                {/* Card Content */}
+                <Link href={`/listing/${property1.id}`}>
                   <CardContent className="p-4">
-                    <h3 className="font-semibold mb-2">{property.name}</h3>
+                    <h3 className="font-semibold mb-2">{property1.title}</h3>
                     <div className="flex items-center text-muted-foreground mb-2">
                       <MapPin className="w-4 h-4 mr-1" />
-                      {property.area}
+                      {property1.location}
                     </div>
                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      {property.bedrooms && (
+                      {property1.beds && (
                         <div className="flex items-center">
                           <Bed className="w-4 h-4 mr-1" />
-                          {property.bedrooms}
+                          {property1.beds} Beds
                         </div>
                       )}
-                      {property.size && (
+                      {property1.sqft && (
                         <div className="flex items-center">
                           <Maximize2 className="w-4 h-4 mr-1" />
-                          {property.size}
+                          {property1.sqft}
                         </div>
                       )}
                     </div>
-                    {property.propertyType && (
+                    {property1.type && (
                       <div className="mt-4 pt-4 border-t border-gray-200">
                         <p className="text-sm text-muted-foreground">
-                          {property.propertyType.name}
+                          {property1.type}
                         </p>
                       </div>
                     )}

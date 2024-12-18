@@ -17,6 +17,7 @@ import { FeatureBadges } from "./features";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import { postProperty } from "@/actions/property";
 import toast from "react-hot-toast";
+import { Loader } from "lucide-react";
 
 interface PropertyImage {
   url: string;
@@ -678,7 +679,9 @@ export default function AddProperty({
           </div>
           {isLoading ? (
             <Button type="submit" className="w-full" disabled>
-              Creating Property.. ..{" "}
+              {/* Creating Property.. ..{" "} */}
+              <Loader className="animate-spin text-blue-500 w-8 h-8" />{" "}
+
             </Button>
           ) : (
             <Button type="submit" className="w-full">

@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Bed, Maximize2, MapPin, Expand } from "lucide-react";
+import { Bed, Maximize2, MapPin, Expand, Loader } from "lucide-react";
 import Image from "next/image";
 import {
   Carousel,
@@ -19,7 +19,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function Component({ properties }: { properties: any[] }) {
-  const [visibleProperties, setVisibleProperties] = useState(properties.slice(0, 4));
+  const [visibleProperties, setVisibleProperties] = useState(
+    properties.slice(0, 4)
+  );
   const [loading, setLoading] = useState(false);
   const [ref, inView] = useInView({
     triggerOnce: true,
@@ -101,19 +103,22 @@ export default function Component({ properties }: { properties: any[] }) {
   //   }
   // ]
 
-   // Function to load more properties
-   const loadMoreProperties = () => {
+  // Function to load more properties
+  const loadMoreProperties = () => {
     setLoading(true);
     setTimeout(() => {
       const remainingProperties = properties.slice(visibleProperties.length);
-      const nextProperties = properties.slice(visibleProperties.length, visibleProperties.length + 4);
-      setVisibleProperties([...visibleProperties, ...nextProperties]); 
+      const nextProperties = properties.slice(
+        visibleProperties.length,
+        visibleProperties.length + 4
+      );
+      setVisibleProperties([...visibleProperties, ...nextProperties]);
       setLoading(false);
-    }, 1000); 
+    }, 1000);
   };
   const all = properties.length;
-    // Check if all properties have been loaded
-    const allPropertiesLoaded = visibleProperties.length >= properties.length;
+  // Check if all properties have been loaded
+  const allPropertiesLoaded = visibleProperties.length >= properties.length;
 
   return (
     <div className="container mx-auto px-4 py-16">
@@ -156,19 +161,24 @@ export default function Component({ properties }: { properties: any[] }) {
           >
             <Card className="overflow-hidden shadow-none border-none">
               <div className="relative">
-              <PropertyCarousel
-          images={property.images.map((image: { url: any; }) => image.url)} // Extract URLs from images
-          propertyId={property.id}
-        />
+                <PropertyCarousel
+                  images={property.images.map(
+                    (image: { url: any }) => image.url
+                  )} // Extract URLs from images
+                  propertyId={property.id}
+                />
                 <div className="absolute top-4 left-4 flex gap-2">
                   {property.featured && (
                     <Badge className="bg-green-500">FEATURED</Badge>
                   )}
-                  <Badge variant="secondary">{property.status}</Badge>
+                  <Badge variant="secondary">{property.saleType}</Badge>
                 </div>
                 <div className="absolute bottom-4 left-4">
                   <div className="text-white font-bold text-xl">
-                    {property.price}
+                    {new Intl.NumberFormat("en-US", {
+                      style: "currency",
+                      currency: "KES",
+                    }).format(property.price)}
                   </div>
                 </div>
               </div>
@@ -209,13 +219,21 @@ export default function Component({ properties }: { properties: any[] }) {
       </motion.div>
 
       <div className="flex justify-center gap-4 mt-8">
-
-        <button 
-        onClick={loadMoreProperties}
-        disabled={allPropertiesLoaded || loading}
-        className="px-4 py-2 border border-primary300 rounded-none transition-all duration-300 hover:bg-primary300 hover:text-white cursor-pointer text-primary500 bg-white">
-          {loading ? "Loading..." : allPropertiesLoaded ? "No More Properties" : "Load More"}
-          </button>
+        <button
+          onClick={loadMoreProperties}
+          disabled={allPropertiesLoaded || loading}
+          className="px-4 py-2 border border-primary300 rounded-none transition-all duration-300 hover:bg-primary300 hover:text-white cursor-pointer text-primary500 bg-white"
+        >
+          {loading ? (
+            <div className="flex">
+              <Loader className="animate-spin text-blue-500 w-8 h-8" />{" "}
+            </div>
+          ) : allPropertiesLoaded ? (
+            "No More Properties"
+          ) : (
+            "Load More"
+          )}
+        </button>
         <Link href="/listing">
           <button className="px-4 py-2 bg-primary300 transition-all rounded-none duration-300 hover:bg-white hover:text-primary500 text-white ">
             View All Listings
@@ -259,7 +277,7 @@ export function PropertyCarousel({
         <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2" />
         <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2" />
       </Carousel>
-      
+
       {/* Dialog to view full image */}
       <Dialog>
         <DialogTrigger asChild>

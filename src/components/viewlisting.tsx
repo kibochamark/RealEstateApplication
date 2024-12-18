@@ -410,16 +410,19 @@ export default function ViewListing({ properties }: { properties: any[] }) {
                   </div>
                   <div className="absolute bottom-4 left-4">
                     <div className="text-white font-bold text-xl">
-                      {property.price}
+                      {new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "KES",
+                      }).format(property.price)}{" "}
                     </div>
                   </div>
                 </div>
                 <Link href={`/listing/${property.id}`}>
                   <CardContent className="p-4">
-                    <h3 className="font-semibold mb-2">{property.title}</h3>
+                    <h3 className="font-semibold mb-2">{property.name}</h3>
                     <div className="flex items-center text-muted-foreground mb-2">
                       <MapPin className="w-4 h-4 mr-1" />
-                      {property.location}
+                      {property.area}
                     </div>
                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
                       {property.bedrooms && (
@@ -436,12 +439,12 @@ export default function ViewListing({ properties }: { properties: any[] }) {
                       )}
                     </div>
                     {property.propertyType && (
-                    <div className="mt-4 pt-4 border-t border-gray-200">
-                      <p className="text-sm text-muted-foreground">
-                        {property.propertyType.name}
-                      </p>
-                    </div>
-                  )}
+                      <div className="mt-4 pt-4 border-t border-gray-200">
+                        <p className="text-sm text-muted-foreground">
+                          {property.propertyType.name}
+                        </p>
+                      </div>
+                    )}
                   </CardContent>
                 </Link>
               </Card>
