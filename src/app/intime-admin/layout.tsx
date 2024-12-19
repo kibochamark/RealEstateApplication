@@ -3,6 +3,7 @@ import ReduxProvider from "@/providers/reduxProvider";
 import type { Metadata } from "next";
 import { Jost } from "next/font/google"; // Import Google Font
 import Script from 'next/script'
+import NextAuthSessionProvider from "./NextAuthSessionProvider";
 
 
 
@@ -25,11 +26,13 @@ export default function DashboardLayout({
 }>) {
   return (
     <div className="relative h-screen bg-white m-0" >
-      <AdminLayout>
-        <ReduxProvider>
-          {children}
-        </ReduxProvider>
-      </AdminLayout>
+      <NextAuthSessionProvider>
+        <AdminLayout>
+          <ReduxProvider>
+            {children}
+          </ReduxProvider>
+        </AdminLayout>
+      </NextAuthSessionProvider>
 
     </div >
 

@@ -33,19 +33,19 @@ import {
 import { LogoutLink, useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 
 export function NavBarDropDown() {
     const router = useRouter()
-    const { getUser } = useKindeBrowserClient();
-    const user = getUser()
-    console.log(user, "user")
+    const { data:session } = useSession();
+    console.log(session, "user")
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            <DropdownMenuTrigger asChild className="cursor-pointer transition-all duration-300">
                 <Avatar>
                     <AvatarImage src="" />
-                    <AvatarFallback>{user?.given_name?.charAt(0).toUpperCase()}</AvatarFallback>
+                    <AvatarFallback>{session?.user.username?.charAt(0).toUpperCase()}</AvatarFallback>
                 </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">

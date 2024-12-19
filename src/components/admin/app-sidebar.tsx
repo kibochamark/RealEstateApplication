@@ -19,14 +19,14 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
+import { useSession } from "next-auth/react"
 
 
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const pathname = usePathname()
-  const { getUser } = useKindeBrowserClient();
-  const user = getUser()
+  const { data:session } = useSession();
 
   // This is sample data.
   const data = {
@@ -168,14 +168,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <Link href="#" className="flex items-center gap-2 bg-white p-4 hover:bg-gray-50">
             <Avatar>
               <AvatarImage src="" />
-              <AvatarFallback>{user?.given_name?.charAt(0).toUpperCase()}</AvatarFallback>
+              <AvatarFallback>{session?.user?.username?.charAt(0).toUpperCase()}</AvatarFallback>
             </Avatar>
 
             <div>
               <p className="text-xs">
-                <strong className="block font-medium">{user?.username}</strong>
+                <strong className="block font-medium">{session?.user?.username ?? "user"}</strong>
 
-                <span> {user?.email}</span>
+                <span> {session?.user?.email ?? "user@intimehome.com"}</span>
               </p>
             </div>
           </Link>

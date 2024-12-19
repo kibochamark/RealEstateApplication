@@ -6,16 +6,16 @@ import * as Yup from "yup"
 import React from 'react'
 import toast from 'react-hot-toast'
 import { signIn, SignInOptions } from "next-auth/react"
-import { Loader } from 'lucide-react'
+import { ArrowLeftIcon, Loader } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 const SignInComponent = () => {
-    
+
     const router = useRouter();
     const searchParams = useSearchParams();
     const callbackUrl = searchParams.get("callbackUrl");
 
-    
+
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -46,19 +46,33 @@ const SignInComponent = () => {
             return await signIn('credentials', options)
         },
         onSuccess(data, variables, context) {
-            toast.success("Welcome back")
+            console.log(data, "data")
+            if (data && data.error) {
+                toast.error("Invalid credentials")
+                
+            } else {
+                if(callbackUrl )
+                toast.success("Welcome back")
+
+            }
             // router.push(callbackUrl ?? '/intime-admin');
-            window.location.href = callbackUrl ?? "/intime-admin"
+            // window.location.href = callbackUrl ?? "/intime-admin"
 
 
         },
         onError(error, variables, context) {
+            console.log(error)
             toast.error(error.message)
         },
     })
 
     return (
         <>
+        <div className='absolute top-4 left-4'>
+            <Button className='border border-secondary300 bg-white text-primary300 hover:bg-white flex items-center justify-start gap-2' onClick={()=> router.push("/")}>
+                <ArrowLeftIcon className='w-4 h-4'/>
+                Back home</Button>
+        </div>
             <form action="" className="mt-20 lg:mt-10 w-full lg:w-3/4" onSubmit={formik.handleSubmit}>
                 <div className="flex flex-col gap-4">
                     <div className="grid gap-2 col-span-1 mb-4">

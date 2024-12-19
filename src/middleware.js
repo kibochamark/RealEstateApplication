@@ -16,6 +16,9 @@ export default auth(async(req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
 
+
+  console.log(isLoggedIn, "logged")
+
   
   
 
