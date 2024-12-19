@@ -73,75 +73,19 @@ const Contact: React.FC = () => {
         <div className="form-container">
           <h2>Contact Us</h2>
           <p>Fill out the form below and we’ll get back to you as soon as possible.</p>
-          <form className="contact-form">
-            <input type="text" placeholder="Your Name" required />
-            <input type="email" placeholder="Your Email" required />
-            <textarea placeholder="Your Message" required />
+          <form className="contact-form space-y-4">
+            <input type="text" placeholder="Your Name" className='p-4' required />
+            <input type="email" placeholder="Your Email" className='p-4' required />
+            <textarea placeholder="Your Message" className='p-4' required />
             <button type="submit" className="cta-button">Send Message</button>
           </form>
         </div>
       </section>
 
-      {/* Third Section: Map Integration */}
-      <section className="map-section">
-        <h2>Visit Us</h2>
-        <p>Our office is located at [Your Address]. Feel free to come by!</p>
-        <div className="map-container">
-          <iframe 
-            title="Office Location"
-            width="100%" 
-            height="400" 
-            src="https://www.google.com/maps/embed/v1/place?q=Your+Office+Address&key=YOUR_GOOGLE_MAPS_API_KEY"
-            frameBorder="0" 
-            allowFullScreen 
-            aria-hidden="false" 
-            
-          ></iframe>
-        </div>
-      </section>
 
-      {/* Fourth Section: Contact Numbers */}
-      <section className="contact-numbers-section">
-        <h2>Call Us on Our Local Lines</h2>
-        <div className="contact-cards">
-          <div className="contact-card">
-            <i className="phone-icon"></i>
-            <p className="contact-number">+1 (123) 456-7890</p>
-          </div>
-          <div className="contact-card">
-            <i className="phone-icon"></i>
-            <p className="contact-number">+1 (321) 654-0987</p>
-          </div>
-          <div className="contact-card">
-            <i className="phone-icon"></i>
-            <p className="contact-number">+1 (555) 123-4567</p>
-          </div>
-        </div>
-      </section>
 
       {/* Fifth Section: Testimonials */}
-      <section className="testimonials-section">
-        <h2>What Our Clients Say</h2>
-        <div className="testimonials-container" style={{ animationPlayState: paused ? 'paused' : 'running' }}>
-          {testimonials.map((testimonial, index) => (
-            <div className="testimonial-card" key={index}>
-              <img src={testimonial.image} alt={testimonial.name} className="testimonial-image" />
-              <div className="testimonial-overlay">
-                <p className="testimonial-text">"{testimonial.testimonial}"</p>
-                <div className="testimonial-footer">
-                  <span className="testimonial-name">{testimonial.name}</span>
-                  <span className="testimonial-likes">
-                    {/* <FaHeart style={{ color: 'red' }} /> {testimonial.likes} */}
-                  </span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-        <button className="pause-button" onClick={togglePause}>
-          {paused ? 'Resume' : 'Pause'}
-        </button>
-      </section>
+  
     </div>
   );
 };

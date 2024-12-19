@@ -25,7 +25,6 @@ const testimonials = [
 
 export default async function Home() {
   const properties = await getproperties() ?? []
-  console.dir(properties, "props")
   return (
     <>
       <HeroSection />
