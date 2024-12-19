@@ -48,6 +48,19 @@ export const getPropertyById = async (id: number) => {
 };
 
 
+export const getSimilarPropertyById = async (id: number) => {
+  
+  try {
+    
+    const response = await axios.get(baseUrl + `/${id}/similarproperties`);
+    if(response.status !== 200) throw new Error(response.data)
+    return response?.data ?? []; 
+  } catch (e: any) {
+    return [e.message, 400]; 
+  }
+};
+
+
 
 export const getpropertyfeatures = async () => {
   try {
