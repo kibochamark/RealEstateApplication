@@ -48,7 +48,7 @@ export default {
                     access_token: user?.token.access_token,
                     refresh_token: user?.token.refresh_token,
                     email: user.user.email,
-                    userid:user.user.userid,
+                    userid:user.user.id,
                     username: user.user.username,
                     companyId: user.user.companyId
                 }

@@ -19,10 +19,11 @@ declare module "next-auth" {
 
     interface User {
         user: {
+
             email:string;
             companyId: number;
             username: string;
-            userid:number;
+            id:number;
 
         }
         token: {
