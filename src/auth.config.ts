@@ -48,6 +48,7 @@ export default {
                     access_token: user?.token.access_token,
                     refresh_token: user?.token.refresh_token,
                     email: user.user.email,
+                    userid:user.user.userid,
                     username: user.user.username,
                     companyId: user.user.companyId
                 }
@@ -66,6 +67,7 @@ export default {
             session = {
               
                 user: {
+                    userid:token.userid,
                     access_token: token.access_token as string,
                     refresh_token: token.refresh_token as string,
                     companyId: token.companyId as number,
