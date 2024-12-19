@@ -57,7 +57,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         url: "/intime-admin/manage-property-types",
         icon: "/list.png",
 
+      },
+      {
+
+        title: "Blogs",
+        url: "/intime-admin/blogs",
+        icon: "/blog.png",
+
+      },
+      {
+
+        title: "Testimonials",
+        url: "/intime-admin/testimonial",
+        icon: "/testim.png",
+
       }
+      
     ],
   }
   return (
