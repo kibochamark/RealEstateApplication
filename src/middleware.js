@@ -4,6 +4,9 @@ import authConfig from "./auth.config";
 
 const publicroutes = ["/", "/listing", "/contact", "/blogs", "/testimonials"];
 
+// Dynamic routes pattern: matches `/listing/:id` and similar
+const dynamicPublicRoutes = [/^\/listing\/\d+$/];
+
 export const authroutes = ["/sign-in", "/signup"];
 
 const apiAuthPrefix = "/api/auth";
@@ -12,19 +15,16 @@ const DEFAULT_LOGIN_REDIRECT = "/intime-admin";
 
 const { auth } = NextAuth(authConfig);
 
-export default auth(async(req) => {
+export default auth(async (req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
 
-
-  // console.log(isLoggedIn, "logged")
-
-  
-  
+  // Check if the route is a public route
+  const isPublicRoute =
+    publicroutes.includes(nextUrl.pathname) ||
+    dynamicPublicRoutes.some((pattern) => pattern.test(nextUrl.pathname));
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
-  const isPublicRoute = publicroutes.includes(nextUrl.pathname);
-
   const isAuthRoute = authroutes.includes(nextUrl.pathname);
 
   if (isApiAuthRoute) {
@@ -46,5 +46,16 @@ export default auth(async(req) => {
 });
 
 export const config = {
-  matcher: ["/(api|trpc)(.*)", "/", "/blogs", "/contact", "/testimonials",  "/listing/:path*", "/intime-admin/:path*", "/login", "/signup"],
+  matcher: [
+    "/(api|trpc)(.*)",
+    "/",
+    "/blogs",
+    "/contact",
+    "/testimonials",
+    "/listing",
+    "/listing/:path*",
+    "/intime-admin/:path*",
+    "/login",
+    "/signup",
+  ],
 };

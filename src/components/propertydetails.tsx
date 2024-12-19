@@ -60,6 +60,17 @@ export interface PropertyType {
   createdAt: string;
   updatedAt: string;
 }
+export type SimilarPropertyData = {
+  id: number;
+  name: string;
+  county: string;
+  images: ImageData[];
+  bedrooms:number;
+  size:string;
+  saleType:string;
+  price:number;
+  propertyType: PropertyType;
+}
 export interface PropertyData {
   id: number;
   name: string;
@@ -80,6 +91,7 @@ export interface PropertyData {
   price: number;
   pricePerMonth: number;
   bedrooms: number;
+  bathrooms: number;
   createdAt: string;
   updatedAt: string;
   propertyToFeatures: PropertyFeature[];
@@ -94,16 +106,26 @@ export interface PropertyResponse {
   };
 }
 
+export interface SimilarProperty {
+  status: string;
+  data: SimilarPropertyData[]
+}
+
+
 export default function PropertyDetail({
   property,
+  similarproperties
 }: {
   property: PropertyResponse;
+  similarproperties: SimilarProperty
 }) {
   const [selectedImage, setSelectedImage] = useState(0);
   const position: [number, number] = [-1.2345, 36.80271]; // Latitude and Longitude for Runda, Nairobi
   const [isGridView, setIsGridView] = useState(true);
   const [isShared, setIsShared] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
+
+  // console.log(similarproperties)
 
   const images = property?.data?.images?.map((image: any) => image.url) || [];
 
@@ -119,7 +141,7 @@ export default function PropertyDetail({
   //   { icon: "Pool", label: "Swimming Pool" },
   // ];
 
-  const features = property?.data?.property?.propertyToFeatures || []; 
+  const features = property?.data?.property?.propertyToFeatures || [];
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -227,9 +249,9 @@ export default function PropertyDetail({
                   <Share2 className="w-4 h-4" />
                   {isSharing ? "Sharing..." : "Share"}
                 </Button>
-                {isShared && (
+                {/* {isShared && (
                   <span className="text-green-500">Link Shared!</span>
-                )}
+                )} */}
               </div>
             </div>
           )}
@@ -358,16 +380,14 @@ export default function PropertyDetail({
             <div className="space-y-2">
               <h3 className="font-semibold">Prices:</h3>
               <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                <li>{`${property?.data?.property?.bedrooms} Bedroom (${
-                  property?.data?.property?.size
-                }, ${
-                  property?.data?.property?.propertyToFeatures
+                <li>{`${property?.data?.property?.bedrooms} Bedroom (${property?.data?.property?.size
+                  }, ${property?.data?.property?.propertyToFeatures
                     ? "master en-suite"
                     : ""
-                }) -  ${new Intl.NumberFormat("en-US", {
-                  style: "currency",
-                  currency: "KES",
-                }).format(property?.data?.property.price)}`}</li>
+                  }) -  ${new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "KES",
+                  }).format(property?.data?.property.price)}`}</li>
                 {/* <li>3 Bedroom (DSQ/168 sqm) - KSh 20.5M</li> */}
               </ul>
             </div>
@@ -387,9 +407,9 @@ export default function PropertyDetail({
                   <div className="text-2xl font-bold">
                     {property?.data?.property?.price
                       ? `${new Intl.NumberFormat("en-US", {
-                          style: "currency",
-                          currency: "KES",
-                        }).format(property?.data?.property.price)}`
+                        style: "currency",
+                        currency: "KES",
+                      }).format(property?.data?.property.price)}`
                       : "N/A"}
                   </div>
                 </div>
@@ -518,70 +538,78 @@ export default function PropertyDetail({
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
             variants={containerVariants}
-            className={`grid gap-6 w-full ${
-              isGridView
-                ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-                : "grid-cols-1"
-            }`}
+            className={`grid gap-6 w-full ${isGridView
+              ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+              : "grid-cols-1"
+              }`}
           >
-            <motion.div key={property1.id} variants={{}}>
-              <Card className="overflow-hidden shadow-none border-none">
-                <div className="relative">
-                  {/* Carousel */}
-                  <PropertyCarousel
-                    images={property1.images}
-                    propertyId={property1.id}
-                  />
+            {similarproperties.data.length > 0 ? similarproperties.data.map((property) => (
 
-                  {/* Badges */}
-                  <div className="absolute top-4 left-4 flex gap-2">
-                    {property1.featured && (
-                      <Badge className="bg-green-500">FEATURED</Badge>
-                    )}
-                    <Badge variant="secondary">{property1.status}</Badge>
-                  </div>
 
-                  {/* Price */}
-                  <div className="absolute bottom-4 left-4">
-                    <div className="text-white font-bold text-xl">
-                      KES {property1.price.toLocaleString()}
-                    </div>
-                  </div>
-                </div>
+              <motion.div key={property.id} variants={itemVariants}>
+                <Card className="overflow-hidden shadow-none border-none">
+                  <div className="relative">
+                    {/* Carousel */}
+                    <PropertyCarousel
+                      images={property.images.flatMap((img)=> img.url)}
+                      propertyId={property.id}
+                    />
 
-                {/* Card Content */}
-                <Link href={`/listing/${property1.id}`}>
-                  <CardContent className="p-4">
-                    <h3 className="font-semibold mb-2">{property1.title}</h3>
-                    <div className="flex items-center text-muted-foreground mb-2">
-                      <MapPin className="w-4 h-4 mr-1" />
-                      {property1.location}
-                    </div>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      {property1.beds && (
-                        <div className="flex items-center">
-                          <Bed className="w-4 h-4 mr-1" />
-                          {property1.beds} Beds
-                        </div>
+                    {/* Badges */}
+                    <div className="absolute top-4 left-4 flex gap-2">
+                      {property1.featured && (
+                        <Badge className="bg-green-500">FEATURED</Badge>
                       )}
-                      {property1.sqft && (
-                        <div className="flex items-center">
-                          <Maximize2 className="w-4 h-4 mr-1" />
-                          {property1.sqft}
-                        </div>
-                      )}
+                      <Badge variant="secondary">{property.saleType}</Badge>
                     </div>
-                    {property1.type && (
-                      <div className="mt-4 pt-4 border-t border-gray-200">
-                        <p className="text-sm text-muted-foreground">
-                          {property1.type}
-                        </p>
+
+                    {/* Price */}
+                    <div className="absolute bottom-4 left-4">
+                      <div className="text-white font-bold text-xl">
+                        {new Intl.NumberFormat("en-US", {
+                          style: "currency",
+                          currency: "KES",
+                        }).format(property.price)}{" "}
                       </div>
-                    )}
-                  </CardContent>
-                </Link>
-              </Card>
-            </motion.div>
+                    </div>
+                  </div>
+
+                  {/* Card Content */}
+                  <Link href={`/listing/${property1.id}`}>
+                    <CardContent className="p-4">
+                      <h3 className="font-semibold mb-2">{property1.title}</h3>
+                      <div className="flex items-center text-muted-foreground mb-2">
+                        <MapPin className="w-4 h-4 mr-1" />
+                        {property.county}
+                      </div>
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                        {property1.beds && (
+                          <div className="flex items-center">
+                            <Bed className="w-4 h-4 mr-1" />
+                            {property.bedrooms} Beds
+                          </div>
+                        )}
+                        {property1.sqft && (
+                          <div className="flex items-center">
+                            <Maximize2 className="w-4 h-4 mr-1" />
+                            {property.size}
+                          </div>
+                        )}
+                      </div>
+                      {property1.type && (
+                        <div className="mt-4 pt-4 border-t border-gray-200">
+                          <p className="text-sm text-muted-foreground">
+                            {property.propertyType.name}
+                          </p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Link>
+                </Card>
+              </motion.div>
+            )) : <p className="text-gray-600">No similar listings found</p>
+            }
+
           </motion.div>
         </div>
       </div>

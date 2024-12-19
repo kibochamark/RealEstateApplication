@@ -11,15 +11,20 @@ declare module "next-auth" {
             refresh_token: string;
             companyId: number;
             email: string;
+            userid:number;
+
             username: string;
         };
     }
 
     interface User {
         user: {
+
             email:string;
             companyId: number;
             username: string;
+            id:number;
+
         }
         token: {
             access_token: string;
@@ -33,6 +38,7 @@ declare module "next-auth" {
         access_token: string;
         refresh_token: string;
         companyId: number;
+        userid:number;
         email: string | null;
         username: string;
     }
@@ -43,6 +49,7 @@ declare module "next-auth/jwt" {
         access_token: string;
         refresh_token: string;
         companyId: number;
+        userid:number;
         email: string | null;
         username: string;
     }
