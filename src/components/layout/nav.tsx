@@ -21,23 +21,33 @@ const Nav = () => {
 
 
 
-    if (path.startsWith("/intimehomes")) return null
 
 
+
+     // Ensure these hooks run only on the client-side
+     useEffect(() => {
+        if (typeof window === "undefined") return; // Skip effect during SSR
+
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile(); // Initial check
+        window.addEventListener("resize", checkMobile);
+
+        return () => {
+            window.removeEventListener("resize", checkMobile);
+        };
+    }, []);
 
     useEffect(() => {
-        const checkMobile = () => setIsMobile(window.innerWidth < 768)
-        checkMobile()
-        window.addEventListener('resize', checkMobile)
-        return () => window.removeEventListener('resize', checkMobile)
-    }, [])
+        if (typeof window === "undefined") return; // Skip effect during SSR
 
-    useEffect(() => {
-        const handleScroll = () => setScrolled(window.scrollY > 50)
-        window.addEventListener("scroll", handleScroll)
-        return () => window.removeEventListener("scroll", handleScroll)
-    }, [])
+        const handleScroll = () => setScrolled(window.scrollY > 50);
+        window.addEventListener("scroll", handleScroll);
 
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
+    }, []);
+    
     const isHomePage = path === "/"
     // const navTextColor = !isHomePage || scrolled || !isMobile ? "text-black bg-white" : "text-white"
 
@@ -64,7 +74,7 @@ const Nav = () => {
         </div>
     )
 
-    if (path.includes("intime-admin")) {
+    if (path.includes("intime-admin") || path.startsWith("/intimehomes")) {
         return null
     }
 

@@ -17,12 +17,12 @@ export function BlogCard({ id, title, description, image, date, author }: BlogCa
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-white border-none outline-none overflow-hidden"
+      className="border-none outline-none overflow-hidden"
     >
-      <div className="relative h-48">
+      <div className="relative h-64">
         <Image src={image} alt={title} layout="fill" objectFit="cover" />
       </div>
-      <div className="p-6">
+      <div className="py-6">
         <h3 className="text-xl text-secondary500 font-semibold mb-2">{title}</h3>
         <p className="text-gray-600 mb-4 line-clamp-3">{description}</p>
         <div className="flex justify-between items-center">
@@ -33,10 +33,12 @@ export function BlogCard({ id, title, description, image, date, author }: BlogCa
           <motion.a
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="inline-block mt-4 px-4 py-2 bg-primary300 text-white  hover:bg-primary400 transition-colors"
+            className="inline-block mt-4  py-2 text-primary300  italic transition-colors"
           >
             Read More
           </motion.a>
+          <hr />
+          <hr />
         </Link>
       </div>
     </motion.div>

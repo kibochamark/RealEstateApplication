@@ -128,7 +128,7 @@ export default function Component({ properties }: { properties: any[] }) {
   const allPropertiesLoaded = visibleProperties.length >= properties.length;
 
   return (
-    <div className="container mx-auto px-4 py-16">
+    <div className="container  mx-auto px-4 py-16">
       <motion.div
         initial="hidden"
         animate="visible"

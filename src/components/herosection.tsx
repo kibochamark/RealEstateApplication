@@ -34,7 +34,7 @@ export default function HeroSection() {
           backgroundImage: 'url("/home.jpg?height=1080&width=1920")',
         }}
       >
-        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 bg-black/70" />
       </div>
 
       {/* Content */}
