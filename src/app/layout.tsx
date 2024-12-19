@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Jost } from "next/font/google"; // Import Google Font
 import Nav from "@/components/layout/nav";
-import Footer from "@/components/layout/footer";
 import { AuthProvider } from "@/providers/auth-provider";
 import { Toaster } from "react-hot-toast"
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
+import Footer from "@/components/layout/enhancedfooter";
 
 
 // Import the Lato font from Google Fonts

@@ -13,7 +13,7 @@ const Process = () => {
             transition={{ duration: 0.5 }}
             ref={ref}
 
-            className='container p-10 flex flex-col gap-8'>
+            className='container p-10 px-4x0 flex flex-col gap-8'>
             <div
              className='flex items-center justify-center my-4'>
                 <h3 className='text-4xl w-[60]'> <span className='text-secondary300 font-semibold'>Buying</span> or <span className='text-secondary300 font-semibold'>Renting</span> a property is as simple as <span className='text-6xl'>&#8229;</span> </h3>

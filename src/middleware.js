@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import NextAuth from "next-auth";
 import authConfig from "./auth.config";
 
-const publicroutes = ["/", "/listing", "/contact", "/blog", "/testimonials"];
+const publicroutes = ["/", "/listing", "/contact", "/blogs", "/testimonials"];
 
 export const authroutes = ["/sign-in", "/signup"];
 
@@ -17,7 +17,7 @@ export default auth(async(req) => {
   const isLoggedIn = !!req.auth;
 
 
-  console.log(isLoggedIn, "logged")
+  // console.log(isLoggedIn, "logged")
 
   
   

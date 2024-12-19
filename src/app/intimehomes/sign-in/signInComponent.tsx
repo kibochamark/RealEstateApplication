@@ -49,14 +49,16 @@ const SignInComponent = () => {
             console.log(data, "data")
             if (data && data.error) {
                 toast.error("Invalid credentials")
-                
+
+
             } else {
-                if(callbackUrl )
+
                 toast.success("Welcome back")
+                window.location.href = "/intime-admin"
 
             }
             // router.push(callbackUrl ?? '/intime-admin');
-            // window.location.href = callbackUrl ?? "/intime-admin"
+
 
 
         },
@@ -68,11 +70,12 @@ const SignInComponent = () => {
 
     return (
         <>
-        <div className='absolute top-4 left-4'>
-            <Button className='border border-secondary300 bg-white text-primary300 hover:bg-white flex items-center justify-start gap-2' onClick={()=> router.push("/")}>
-                <ArrowLeftIcon className='w-4 h-4'/>
-                Back home</Button>
-        </div>
+            <div className='absolute top-4 left-4'>
+                <Button className='border border-secondary300 bg-white text-primary300 hover:bg-white flex items-center justify-start gap-2' onClick={() =>                 window.location.href = "/"
+}>
+                    <ArrowLeftIcon className='w-4 h-4' />
+                    Back home</Button>
+            </div>
             <form action="" className="mt-20 lg:mt-10 w-full lg:w-3/4" onSubmit={formik.handleSubmit}>
                 <div className="flex flex-col gap-4">
                     <div className="grid gap-2 col-span-1 mb-4">

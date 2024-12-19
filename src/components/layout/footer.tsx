@@ -7,9 +7,7 @@ const Footer = () => {
   const path = usePathname();
   const [details, setDetails] = useState<any[]>([]);
 
-  if (path.includes("intime-admin") || path.startsWith("intimehomes")) {
-    return null;
-  }
+  
   useEffect(() => {
     const fetchDetails = async () => {
       const fetchedDetails = await getCompanies();
@@ -17,7 +15,10 @@ const Footer = () => {
     };
     fetchDetails();
   }, []);
-  console.log(details);
+
+  if (path.includes("intime-admin") || path.startsWith("/intimehomes")) {
+    return null;
+  }
 
   return (
     <div className="w-full">
