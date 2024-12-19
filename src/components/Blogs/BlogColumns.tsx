@@ -81,25 +81,10 @@ export type Property = {
     
         id: number;
         name: string;
-        description: string;
         street_address: string;
-        city: string;
-        area: string;
-        state: string;
-        country: string;
-        saleType: string;
-        featured: boolean;
-        propertyType: {
-            name:string;
-        };
-        size: string;
-        distance: string;
-        price: number;
-        pricepermonth: number;
-        bedrooms: string;
-        features: {
-            name:string;
-        },        
+        shortDescription: string;
+        description: string;
+               
         images: {
             url:string;
         }
@@ -172,7 +157,22 @@ export const BlogColumns: ColumnDef<Property>[] = [
     //     },
     // },
     {
-        accessorKey: "area",
+        accessorKey: "shortDescription",
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Short Description" />
+        ),
+        cell: ({ row }) => {
+            return (
+                <div className="flex space-x-2">
+                    <span className="max-w-[500px] truncate font-medium">
+                        {row.original?.shortDescription}
+                    </span>
+                </div>
+            )
+        },
+    },
+    {
+        accessorKey: "description",
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="description" />
         ),
@@ -180,27 +180,12 @@ export const BlogColumns: ColumnDef<Property>[] = [
             return (
                 <div className="flex space-x-2">
                     <span className="max-w-[500px] truncate font-medium">
-                        {row.original?.area}
+                        {row.original?.description}
                     </span>
                 </div>
             )
         },
     },
-    // {
-    //     accessorKey: "propertytype.name",
-    //     header: ({ column }) => (
-    //         <DataTableColumnHeader column={column} title="Property type" />
-    //     ),
-    //     cell: ({ row }) => {
-    //         return (
-    //             <div className="flex space-x-2">
-    //                 <span className="max-w-[500px] truncate font-medium">
-    //                     {row.original?.propertyType?.name}
-    //                 </span>
-    //             </div>
-    //         )
-    //     },
-    // },
     // {
     //     accessorKey: "price",
     //     header: ({ column }) => (

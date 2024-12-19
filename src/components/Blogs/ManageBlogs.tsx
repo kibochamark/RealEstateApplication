@@ -12,7 +12,7 @@ import AddBlogs from './AddBlogs'
 import EditBlog from './EditBlog'
 import { BlogColumns } from './BlogColumns'
 
-const ManageBlogs = ({ properties, features, propertytypes }: { properties: any; features:any; propertytypes:any; }) => {
+const ManageBlogs = ({ blogs, features, propertytypes }: { blogs: any; features:any; propertytypes:any; }) => {
     const editdata = useSelector((state: RootState) => state.property.editdata)
     const isedit = useSelector((state: RootState) => state.property.isedit)
     const isadd = useSelector((state: RootState) => state.property.isadd)
@@ -40,7 +40,7 @@ const ManageBlogs = ({ properties, features, propertytypes }: { properties: any;
                     <AddBlogs/>
                 ) : isedit ? (<EditBlog />) : (
                     <div className='overflow-hidden'>
-                        <DataTable columns={BlogColumns} data={properties ?? []} searchColumn="name"/>
+                        <DataTable columns={BlogColumns} data={blogs ?? []} searchColumn="name"/>
                     </div>
                 )}
 

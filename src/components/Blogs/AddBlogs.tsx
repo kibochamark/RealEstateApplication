@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useFormik } from 'formik';
@@ -8,10 +9,12 @@ import { Button } from '../ui/button';
 import { postBlogData } from '@/actions/Blog';
 import toast from 'react-hot-toast';
 import { auth } from '@/auth';
+import { useSession } from 'next-auth/react';
 
 export default function AddBlogs() {
   const [uploadedImages, setUploadedImages] = useState<{ url: string; Image: File }[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const {data: session} =  useSession();
 
   const formik = useFormik({
     initialValues: {
@@ -29,8 +32,10 @@ export default function AddBlogs() {
         setIsLoading(true);
     
         // Get session data
-        const session = await auth(); // Ensure auth() returns session with userId
-        const userId = session?.user?.companyId;
+        // const session = await auth(); // Ensure auth() returns session with userId
+        const userId = session?.user?.userid;
+        console.log(session, userId, "Session data");
+        
     
         if (!userId) {
           toast.error("User ID not found. Please log in.");
