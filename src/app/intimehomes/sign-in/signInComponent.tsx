@@ -10,12 +10,12 @@ import { Loader } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 const SignInComponent = () => {
-    
+
     const router = useRouter();
     const searchParams = useSearchParams();
     const callbackUrl = searchParams.get("callbackUrl");
 
-    
+
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -46,13 +46,22 @@ const SignInComponent = () => {
             return await signIn('credentials', options)
         },
         onSuccess(data, variables, context) {
-            toast.success("Welcome back")
+            console.log(data, "data")
+            if (data && data.error) {
+                toast.error("Invalid credentials")
+                
+            } else {
+                if(callbackUrl )
+                toast.success("Welcome back")
+
+            }
             // router.push(callbackUrl ?? '/intime-admin');
-            window.location.href = callbackUrl ?? "/intime-admin"
+            // window.location.href = callbackUrl ?? "/intime-admin"
 
 
         },
         onError(error, variables, context) {
+            console.log(error)
             toast.error(error.message)
         },
     })
