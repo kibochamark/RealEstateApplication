@@ -7,7 +7,7 @@ const Footer = () => {
   const path = usePathname();
   const [details, setDetails] = useState<any[]>([]);
 
-  if (path.includes("intime-admin")) {
+  if (path.includes("intime-admin") || path.startsWith("intimehomes")) {
     return null;
   }
   useEffect(() => {
