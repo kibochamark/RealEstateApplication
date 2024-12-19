@@ -147,7 +147,7 @@ export default function ViewListing({ properties, numberofpages }: { properties:
    
 
 
-    url.set("limit", "200"),
+    url.set("limit", "5"),
     url.set("page", page.toString())
     console.log(url, "url");
     
@@ -473,15 +473,15 @@ export default function ViewListing({ properties, numberofpages }: { properties:
           <Button
             variant="outline"
             size="icon"
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
+            onClick={() => handlePageChange(parseInt(url.get('page') as string) - 1)}
+            disabled={parseInt(url.get('page') as string) === 1}
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
           {Array.from({ length: numberofpages }, (_, i) => i + 1).map((page) => (
             <Button
               key={page}
-              variant={currentPage === page ? "default" : "outline"}
+              variant={parseInt(url.get('page') as string) === page ? "default" : "outline"}
               onClick={() => handlePageChange(page)}
               className="w-8 h-8 p-0"
             >
@@ -491,8 +491,8 @@ export default function ViewListing({ properties, numberofpages }: { properties:
           <Button
             variant="outline"
             size="icon"
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === numberofpages}
+            onClick={() => handlePageChange(parseInt(url.get('page') as string) + 1)}
+            disabled={parseInt(url.get('page') as string) === numberofpages}
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
