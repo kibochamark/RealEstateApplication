@@ -7,6 +7,7 @@ import { Suspense } from "react"
 import { Loader } from "lucide-react"
 
 
+export const dynamic = "force-dynamic"
 
 
 const page = () => {
