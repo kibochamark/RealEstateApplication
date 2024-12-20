@@ -1,6 +1,7 @@
 import { getPropertyById, getSimilarPropertyById } from '@/actions/property';
 import PropertyDetail from '@/components/propertydetails';
-import React from 'react';
+import { Loader } from 'lucide-react';
+import React, { Suspense } from 'react';
 
 interface PageProps {
   params: { id: number };
@@ -11,14 +12,16 @@ const Page = async ({ params }: PageProps) => {
   const [property, similarProperties] = await Promise.all([
     getPropertyById(id),
     getSimilarPropertyById(id)
-]);
+  ]);
 
-  console.log(property, 'propertypage');
 
   return (
     <div className="w-full">
       <div className="mt-20">
-        <PropertyDetail property={property} similarproperties={similarProperties} />
+        <Suspense fallback={<Loader className='animate animate-spin text-secondary400' />}>
+
+          <PropertyDetail property={property} similarproperties={similarProperties} />
+        </Suspense>
       </div>
     </div>
   );

@@ -522,10 +522,10 @@ export default function EditProperty({
               features={features}
               selectedFeatures={formik.values.features}
               onFeatureToggle={function (feature: string): void {
-                if (formik.values.features?.find((f) => f == feature)) {
+                if (formik.values.features?.find((f:string) => f == feature)) {
                   formik.setFieldValue(
                     "features",
-                    formik.values.features.filter((f) => f !== feature)
+                    formik.values.features.filter((f:string) => f !== feature)
                   );
                 } else {
                   formik.setFieldValue("features", [

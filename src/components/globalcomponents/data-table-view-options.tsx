@@ -64,7 +64,7 @@ export function DataTableViewOptions<TData>({
   const handleDelete = () => {
     const selectedRows = table
       .getSelectedRowModel()
-      .rows.map((row) => row.original.id) // Assuming each row has an `id`
+      .rows.map((row:any) => row.original.id) // Assuming each row has an `id`
     if (selectedRows.length > 0) {
       mutation.mutate(selectedRows)
     } else {

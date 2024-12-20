@@ -5,6 +5,8 @@ import Component from "@/components/cards";
 import HeroSection from "@/components/herosection";
 import Process from "@/components/Process";
 import { TestimonialSlider } from "@/components/TestimonialSlider";
+import { Loader } from "lucide-react";
+import { Suspense } from "react";
 
 const testimonials = [
   {
@@ -23,10 +25,14 @@ const testimonials = [
 ]
 
 
+export const dynamic = "force-dynamic"
+
+
+
 export default async function Home() {
   const properties = await getproperties() ?? []
   return (
-    <>
+    <Suspense fallback={<Loader className="animate animate-spin text-secondary400"/>}>
       <HeroSection />
       <Component properties={properties["properties"] || []}/>
       <div className="">
@@ -42,7 +48,7 @@ export default async function Home() {
       <div className="bg-primary300/10">
       <RecentBlogs />
       </div>
-    </>
+    </Suspense>
 
   );
 }

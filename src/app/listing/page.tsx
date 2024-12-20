@@ -1,7 +1,8 @@
 import ViewListing from '@/components/viewlisting'
-import React from 'react'
+import React, { Suspense } from 'react'
 import type { Metadata } from "next";
 import { getproperties } from '@/actions/property';
+import { Loader } from 'lucide-react';
 
 
 
@@ -10,6 +11,9 @@ const metadata: Metadata = {
     title: "Listings - Intime Homes",
     description: "The better way to buy real estate",
 };
+
+export const dynamic = "force-dynamic"
+
 
 const page = async (props: {
     searchParams?: Promise<{
@@ -24,7 +28,11 @@ const page = async (props: {
     return (
         <div className='w-full bg-primary50'>
             <div className='py-24'>
-                <ViewListing properties={properties["properties"] || []} numberofpages={properties["totalpages"] || 0} />
+                <Suspense fallback={<Loader className='animate animate-spin text-secondary400' />}>
+
+                    <ViewListing properties={properties["properties"] || []} numberofpages={properties["totalpages"] || 0} />
+                </Suspense>
+
             </div>
         </div>
     )
