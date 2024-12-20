@@ -41,3 +41,20 @@ export const postBlogData = async (data: any) => {
       return [e.message, 400];
     }
   };
+  export const getRecentBlogs = async (take:number) => {
+    try {
+     
+      const data = await axios.get(baseUrl + "recentblogs", {
+        params:{
+          take:take
+        }
+      });
+  
+  
+      // console.log(data, data.data)
+  
+      return data?.data?.data ?? [];
+    } catch (e: any) {
+      return [e.message, 400];
+    }
+  };

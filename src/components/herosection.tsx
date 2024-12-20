@@ -164,7 +164,7 @@ export default function HeroSection({ propertytypes }: { propertytypes: any[] })
                     id: number;
                     name: string;
                   }) => (
-                    <SelectItem value={p.id.toString()} className="font-semibold cursor-pointer">{p.name}</SelectItem>
+                    <SelectItem key={p.id} value={p.id.toString()} className="font-semibold cursor-pointer">{p.name}</SelectItem>
                   ))}
 
                 </SelectContent>

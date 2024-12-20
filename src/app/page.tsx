@@ -1,3 +1,4 @@
+import { getRecentBlogs } from "@/actions/Blog";
 import { getproperties } from "@/actions/property";
 import { getpropertytypes } from "@/actions/propertytype";
 import Aboutus from "@/components/aboutus";
@@ -32,9 +33,10 @@ export const dynamic = "force-dynamic"
 
 export default async function Home() {
 
-  const [propertiesResult, propertyTypesResult] = await Promise.allSettled([
+  const [propertiesResult, propertyTypesResult, blogresult] = await Promise.allSettled([
     getproperties(),
     getpropertytypes(),
+    getRecentBlogs(3)
   ]);
 
   const properties =
@@ -42,13 +44,14 @@ export default async function Home() {
   const propertyTypes =
     propertyTypesResult.status === "fulfilled" ? propertyTypesResult.value : [];
 
+  const blogs = blogresult.status === "fulfilled" ? blogresult.value : [];
 
-    console.dir(propertyTypes)
-    
+
+
   return (
-    <Suspense fallback={<Loader className="animate animate-spin text-secondary400"/>}>
+    <Suspense fallback={<Loader className="animate animate-spin text-secondary400" />}>
       <HeroSection propertytypes={propertyTypes} />
-      <Component properties={properties["properties"] || []}/>
+      <Component properties={properties["properties"] || []} />
       <div className="">
         <Aboutus />
       </div>
@@ -60,7 +63,7 @@ export default async function Home() {
         <TestimonialSlider testimonials={testimonials} />
       </section>
       <div className="bg-primary300/10">
-      <RecentBlogs />
+        <RecentBlogs blogs={blogs} />
       </div>
     </Suspense>
 

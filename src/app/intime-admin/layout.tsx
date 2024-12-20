@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Jost } from "next/font/google"; // Import Google Font
 import Script from 'next/script'
 import NextAuthSessionProvider from "./NextAuthSessionProvider";
+import { Suspense } from "react";
 
 
 
@@ -29,7 +30,9 @@ export default function DashboardLayout({
       <NextAuthSessionProvider>
         <AdminLayout>
           <ReduxProvider>
-            {children}
+            <Suspense>
+              {children}
+            </Suspense>
           </ReduxProvider>
         </AdminLayout>
       </NextAuthSessionProvider>
