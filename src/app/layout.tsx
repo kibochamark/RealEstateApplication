@@ -6,6 +6,8 @@ import { AuthProvider } from "@/providers/auth-provider";
 import { Toaster } from "react-hot-toast"
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import Footer from "@/components/layout/enhancedfooter";
+import { Suspense } from "react";
+import { Loader } from "lucide-react";
 
 
 // Import the Lato font from Google Fonts
@@ -30,28 +32,32 @@ export default function RootLayout({
         className={`${lato.className} antialiased min-h-screen`}
       >
         <div className="relative">
-          <AuthProvider>
-            <ReactQueryProvider>
-              <Toaster
-                position="top-center"
-                reverseOrder={false}
-                gutter={8}
-                containerClassName=""
-                containerStyle={{}}
-                toastOptions={{
-                  // Define default options
-                  className: '',
-                  duration: 5000,
+          <Suspense fallback={<Loader className='animate animate-spin text-secondary400' />}>
 
-                }}
-              />
-              <div className="top-0">
-                <Nav />
-              </div>
-              {children}
-              <Footer />
-            </ReactQueryProvider>
-          </AuthProvider>
+            <AuthProvider>
+              <ReactQueryProvider>
+                <Toaster
+                  position="top-center"
+                  reverseOrder={false}
+                  gutter={8}
+                  containerClassName=""
+                  containerStyle={{}}
+                  toastOptions={{
+                    // Define default options
+                    className: '',
+                    duration: 5000,
+
+                  }}
+                />
+                <div className="top-0">
+                  <Nav />
+                </div>
+                {children}
+                <Footer />
+              </ReactQueryProvider>
+            </AuthProvider>
+          </Suspense>
+
         </div>
 
       </body>

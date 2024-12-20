@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 // import { Testimonial } from "@/components/testimonial"
 // import { PropertyPieChart } from "@/components/property-pie-chart"
 // import { QuickPropertySearch } from "@/components/quick-property-search"
+export const dynamic = "force-dynamic"
+
 
 export default function DashboardPage() {
   return (
