@@ -65,8 +65,9 @@ export default {
         },
         session: async ({ session, token }) => {
             session = {
-              
+                ...session,
                 user: {
+                    ...session.user,
                     userid:token.userid,
                     access_token: token.access_token as string,
                     refresh_token: token.refresh_token as string,
