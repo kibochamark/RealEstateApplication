@@ -4,14 +4,17 @@ import { motion } from 'framer-motion'
 
 interface BlogCardProps {
   id: string
-  title: string
-  description: string
-  image: string
-  date: string
-  author: string
+  name: string
+  shortDescription: string
+  imageUrl: string
+  createdAt: string
+  user:{
+    firstname: string
+    lastname: string
+  }
 }
 
-export function BlogCard({ id, title, description, image, date, author }: BlogCardProps) {
+export function BlogCard({ id, name, shortDescription, imageUrl, createdAt, user }: BlogCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -19,15 +22,16 @@ export function BlogCard({ id, title, description, image, date, author }: BlogCa
       transition={{ duration: 0.5 }}
       className="border-none outline-none overflow-hidden"
     >
-      <div className="relative h-64">
-        <Image src={image} alt={title} layout="fill" objectFit="cover" />
+      <div className="relative h-64 group">
+        <Image src={imageUrl.length > 0 ? imageUrl : "/9.jpg"} alt={name} className='group-hover:scale-105 transition-transform cursor-pointer
+        ' layout="fill" objectFit="cover" />
       </div>
       <div className="py-6">
-        <h3 className="text-xl text-secondary500 font-semibold mb-2">{title}</h3>
-        <p className="text-gray-600 mb-4 line-clamp-3">{description}</p>
+        <h3 className="text-xl text-secondary500 font-semibold mb-2">{name}</h3>
+        <p className="text-gray-600 mb-4 line-clamp-3">{shortDescription}</p>
         <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-500">{date}</span>
-          <span className="text-sm text-secondary500">{author}</span>
+          <span className="text-sm text-gray-500">{new Date(createdAt).toLocaleString()}</span>
+          <span className="text-sm text-secondary500">{user.firstname} {user.lastname}</span>
         </div>
         <Link href={`/blogs/${id}`} passHref>
           <motion.a

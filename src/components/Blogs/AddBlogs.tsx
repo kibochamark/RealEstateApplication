@@ -58,9 +58,9 @@ export default function AddBlogs() {
         const formData = new FormData();
     
         // Append uploaded images to `FormData`
-        uploadedImages.forEach((image) => {
-          formData.append(`images`, image.Image); // Assuming `Image` contains the actual `File` object
-        });
+        
+          formData.append(`image`, uploadedImages[0].Image); // Assuming `Image` contains the actual `File` object
+       
     
         // Append JSON data as a string to `FormData`
         formData.append("json", JSON.stringify(Object.fromEntries(formattedValues)));
@@ -91,12 +91,19 @@ export default function AddBlogs() {
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    if (files) {
-      const newImages = Array.from(files).map((file) => ({
-        url: URL.createObjectURL(file),
-        Image: file,
-      }));
-      setUploadedImages((prevImages) => [...prevImages, ...newImages]);
+    if (files && files.length > 0) {
+      if (files.length > 1) {
+        // Display error message
+        toast.error("Only one image is required. Please select a single image.");
+      } else {
+        // Clear error and update the image
+        const file = files[0];
+        const newImage = {
+          url: URL.createObjectURL(file),
+          Image: file,
+        };
+        setUploadedImages([newImage]);
+      }
     }
   };
 
