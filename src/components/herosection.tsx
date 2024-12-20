@@ -74,7 +74,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.8 }}
-            className="w-fit md:w-full md:max-w-6xl mt-16 p-6 mb-12 lg:rounded-full bg-white/10 backdrop-blur-sm flex flex-col md:flex-row items-center gap-4 justify-between"
+            className="w-fit lg:w-full md:max-w-6xl mt-16 p-6 mb-12 lg:rounded-full bg-white/10 backdrop-blur-sm flex flex-col md:flex-row items-center gap-4 justify-between"
           >
             <Select>
               <SelectTrigger className="w-[200px] bg-transparent text-white border-white/20">
