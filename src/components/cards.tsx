@@ -56,7 +56,7 @@ export default function Component({ properties }: { properties: any[] }) {
   const searchparams= useSearchParams()
 
   const url =  new URLSearchParams(searchparams)
-  url.set("limit", "200"),
+  url.set("limit", "5"),
   url.set("page", "0")
 
   // const properties = [
@@ -241,7 +241,7 @@ export default function Component({ properties }: { properties: any[] }) {
             "Load More"
           )}
         </button>
-        <Link href="/listing">
+        <Link href={`/listing?${url}`}>
           <button className="px-4 py-2 bg-primary300 transition-all rounded-none duration-300 hover:bg-white hover:text-primary500 text-white ">
             View All Listings
           </button>
