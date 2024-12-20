@@ -16,16 +16,23 @@ const Nav = () => {
     const searchparams = useSearchParams()
 
     const url = new URLSearchParams(searchparams)
+
+    // clear all serachparams
+    url.forEach((v, k) => {
+        url.delete(k)
+    })
+
+    // now set or search params
     url.set("limit", "200"),
-        url.set("page", "0")
+    url.set("page", "0")
 
 
 
 
 
 
-     // Ensure these hooks run only on the client-side
-     useEffect(() => {
+    // Ensure these hooks run only on the client-side
+    useEffect(() => {
         if (typeof window === "undefined") return; // Skip effect during SSR
 
         const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -47,7 +54,7 @@ const Nav = () => {
             window.removeEventListener("scroll", handleScroll);
         };
     }, []);
-    
+
     const isHomePage = path === "/"
     // const navTextColor = !isHomePage || scrolled || !isMobile ? "text-black bg-white" : "text-white"
 
@@ -64,7 +71,7 @@ const Nav = () => {
             <div className="absolute left-0 mt-2 w-48 rounded-md z-20 bg-secondary600 backdrop-blur-lg opacity-80 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
                 {items.map((item, index) => (
                     <div key={index}>
-                        <Link href="#" className="block px-4 py-2 text-sm text-white hover:bg-secondary300 ">
+                        <Link href={`/property/${item}`} className="block px-4 py-2 text-sm text-white hover:bg-secondary300 ">
                             {item}
                         </Link>
                         {index < items.length - 1 && <hr className="border-white/20" />}

@@ -1,4 +1,5 @@
 import { getproperties } from "@/actions/property";
+import { getpropertytypes } from "@/actions/propertytype";
 import Aboutus from "@/components/aboutus";
 import { RecentBlogs } from "@/components/Blogs/RecentBlogs";
 import Component from "@/components/cards";
@@ -30,10 +31,23 @@ export const dynamic = "force-dynamic"
 
 
 export default async function Home() {
-  const properties = await getproperties() ?? []
+
+  const [propertiesResult, propertyTypesResult] = await Promise.allSettled([
+    getproperties(),
+    getpropertytypes(),
+  ]);
+
+  const properties =
+    propertiesResult.status === "fulfilled" ? propertiesResult.value : [];
+  const propertyTypes =
+    propertyTypesResult.status === "fulfilled" ? propertyTypesResult.value : [];
+
+
+    console.dir(propertyTypes)
+    
   return (
     <Suspense fallback={<Loader className="animate animate-spin text-secondary400"/>}>
-      <HeroSection />
+      <HeroSection propertytypes={propertyTypes} />
       <Component properties={properties["properties"] || []}/>
       <div className="">
         <Aboutus />
