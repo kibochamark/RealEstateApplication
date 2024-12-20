@@ -19,18 +19,18 @@ const page = async (props: {
     searchParams?: Promise<{
         limit?: string;
         page?: string;
+        propertytype: string;
     }>;
 }) => {
     const searchParams = await props.searchParams;
     const limit = searchParams?.limit || '';
     const currentPage = Number(searchParams?.page) || 1;
     const properties = await getproperties(parseInt(limit), currentPage) ?? []
-    console.log(properties)
-
     return (
         <div className='w-full bg-primary50'>
             <div className='py-24'>
                 <Suspense fallback={<Loader className='animate animate-spin text-secondary400' />}>
+                    {(await props.searchParams)?.propertytype}
 
                     <ViewListing properties={properties["properties"] || []} numberofpages={properties["totalpages"] || 0} />
                 </Suspense>

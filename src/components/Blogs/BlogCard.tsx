@@ -23,7 +23,7 @@ export function BlogCard({ id, name, shortDescription, imageUrl, createdAt, user
       className="border-none outline-none overflow-hidden"
     >
       <div className="relative h-64 group">
-        <Image src={imageUrl.length > 0 ? imageUrl : "/9.jpg"} alt={name} className='group-hover:scale-105 transition-transform cursor-pointer
+        <Image src={imageUrl?.length > 0 ? imageUrl : "/9.jpg"} alt={name} className='group-hover:scale-105 transition-transform cursor-pointer
         ' layout="fill" objectFit="cover" />
       </div>
       <div className="py-6">
@@ -31,7 +31,7 @@ export function BlogCard({ id, name, shortDescription, imageUrl, createdAt, user
         <p className="text-gray-600 mb-4 line-clamp-3">{shortDescription}</p>
         <div className="flex justify-between items-center">
           <span className="text-sm text-gray-500">{new Date(createdAt).toLocaleString()}</span>
-          <span className="text-sm text-secondary500">{user.firstname} {user.lastname}</span>
+          <span className="text-sm text-secondary500">{user?.firstname} {user?.lastname}</span>
         </div>
         <Link href={`/blogs/${id}`} passHref>
           <motion.a

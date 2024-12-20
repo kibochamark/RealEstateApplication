@@ -32,35 +32,38 @@ export default function RootLayout({
         className={`${lato.className} antialiased min-h-screen`}
       >
         <div className="relative">
-          <Suspense fallback={<Loader className='animate animate-spin text-secondary400' />}>
 
-            <AuthProvider>
-              <ReactQueryProvider>
-                <Toaster
-                  position="top-center"
-                  reverseOrder={false}
-                  gutter={8}
-                  containerClassName=""
-                  containerStyle={{}}
-                  toastOptions={{
-                    // Define default options
-                    className: '',
-                    duration: 5000,
+          <AuthProvider>
+            <ReactQueryProvider>
+              <Toaster
+                position="top-center"
+                reverseOrder={false}
+                gutter={8}
+                containerClassName=""
+                containerStyle={{}}
+                toastOptions={{
+                  // Define default options
+                  className: '',
+                  duration: 5000,
 
-                  }}
-                />
-                <div className="top-0">
-                  <Nav />
-                </div>
+                }}
+              />
+              <div className="top-0">
+                <Nav />
+              </div>
+              <Suspense fallback={<Loader className='animate animate-spin text-secondary400' />}>
+
                 {children}
+              </Suspense>
+              <div className="bottom-0">
                 <Footer />
-              </ReactQueryProvider>
-            </AuthProvider>
-          </Suspense>
+              </div>
+            </ReactQueryProvider>
+          </AuthProvider>
 
         </div>
 
       </body>
-    </html>
+    </html >
   );
 }
