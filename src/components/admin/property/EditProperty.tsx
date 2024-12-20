@@ -31,7 +31,7 @@ export default function EditProperty({
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [value, setValue] = useState(null);
 
-  console.log(editdata, "edit");
+  // console.log(editdata, "edit");
 
   //   useEffect(() => {
   //     dispatch(fetchFeatures());
@@ -61,14 +61,12 @@ export default function EditProperty({
       images: uploadedImages, // You can keep this in sync with the state
     },
     onSubmit: (values) => {
-        console.log("Updated values:", values);
         try{
             patchProperty(values); 
             toast.success("Property updated successfully")
             router.push("/intime-admin/managelisting"); // Navigate after submission
         }catch(e){
             toast.error("Error updating property");
-            console.log(e);
         }
         // Submit to updateData function
       },

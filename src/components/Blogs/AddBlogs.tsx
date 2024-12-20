@@ -34,7 +34,6 @@ export default function AddBlogs() {
         // Get session data
         // const session = await auth(); // Ensure auth() returns session with userId
         const userId = session?.user?.userid;
-        console.log(session, userId, "Session data");
         
     
         if (!userId) {
@@ -52,7 +51,6 @@ export default function AddBlogs() {
         // Remove unwanted data (e.g., `images` key from `values`)
         const formattedValues = Object.entries(updatedValues).filter(([key]) => key !== "images");
     
-        console.log(Object.fromEntries(formattedValues), "Submitting form Blog");
     
         // Prepare `FormData`
         const formData = new FormData();
@@ -71,16 +69,16 @@ export default function AddBlogs() {
         // Handle the response
         setIsLoading(false);
         if (!response[0]) {
-          console.log("Blog successfully posted:", response);
+          //console.log("Blog successfully posted:", response);
           toast.success("Blog successfully posted");
           formik.resetForm();
           setUploadedImages([]);
         } else {
-          console.error("Error posting blog:", response);
+          //console.error("Error posting blog:", response);
           toast.error("Error posting blog");
         }
       } catch (error) {
-        console.error("Error posting blog:", error);
+        //console.error("Error posting blog:", error);
         setIsLoading(false);
         toast.error("Error posting blog");
       }
