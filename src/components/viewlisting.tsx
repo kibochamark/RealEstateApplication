@@ -149,7 +149,7 @@ export default function ViewListing({ properties, numberofpages }: { properties:
 
     url.set("limit", "5"),
     url.set("page", page.toString())
-    console.log(url, "url");
+    //console.log(url, "url");
     
 
     router.replace(`/listing?${url}`)

@@ -39,7 +39,7 @@ import { useSession } from "next-auth/react";
 export function NavBarDropDown() {
     const router = useRouter()
     const { data:session } = useSession();
-    console.log(session, "user")
+    //console.log(session, "user")
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild className="cursor-pointer transition-all duration-300">
