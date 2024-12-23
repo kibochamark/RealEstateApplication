@@ -145,7 +145,11 @@ export default function ViewListing({ properties, numberofpages, propertytypes }
 
 
     url.set("limit", "5"),
+
+    
+
       url.set("page", page.toString())
+
 
 
     router.replace(`/listing?${url}`)

@@ -6,8 +6,8 @@ export const dynamic = "force-dynamic"
 
 const page = async () => {
   const blogs = await getAllBlogs();
-  console.log(blogs, "Blogs");
-
+  //console.log(blogs, "Blogs");
+  
   return (
     <div className="col-span-3 md:container">
       <Suspense>

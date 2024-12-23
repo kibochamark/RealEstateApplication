@@ -58,7 +58,7 @@ export const updateproperty = async (propertytype: {
 
 export const removefeature = async (feature: any) => {
     const { isAuthenticated } = getKindeServerSession()
-    console.log(feature, "fetures")
+   // console.log(feature, "fetures")
 
     let url = `${feature[0]}/feature`
 

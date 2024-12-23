@@ -103,12 +103,12 @@ export default function AddProperty({
         // Handle the response
         setIsLoading(false);
         if (!response[0]) {
-          console.log("Property successfully posted:", response);
+         // console.log("Property successfully posted:", response);
           toast.success("Property successfully posted");
           formik.resetForm();
           setUploadedImages([]);
         } else {
-          console.error("Error posting property:", response[0]);
+          //console.error("Error posting property:", response[0]);
           toast.error("Error posting property");
         }
       } catch (error) {
