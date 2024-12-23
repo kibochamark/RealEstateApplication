@@ -78,10 +78,13 @@ export const priorities = [
     },
 ]
 
-export type Property = {
+export type UserData = {
     
         id: number;
-        name: string;
+        username: string;
+        firstname: string;
+        lastname: string;
+        email: string;
         street_address: string;
         shortDescription: string;
         description: string;
@@ -95,7 +98,7 @@ export type Property = {
 
 
 
-export const columns: ColumnDef<Property>[] = [
+export const columns: ColumnDef<UserData>[] = [
     
     {
         id: "select",
@@ -121,22 +124,22 @@ export const columns: ColumnDef<Property>[] = [
     {
         accessorKey: "id",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Blog ID" />
+            <DataTableColumnHeader column={column} title="User ID" />
         ),
         cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
         enableSorting: false,
         enableHiding: false,
     },
     {
-        accessorKey: "name",
+        accessorKey: "username",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Blog Name" />
+            <DataTableColumnHeader column={column} title="user Name" />
         ),
         cell: ({ row }) => {
             return (
                 <div className="flex space-x-2">
                     <span className="max-w-[500px] truncate font-medium">
-                        {row.getValue("name")}
+                        {row.getValue("username")}
                     </span>
                 </div>
             )
@@ -158,30 +161,30 @@ export const columns: ColumnDef<Property>[] = [
     //     },
     // },
     {
-        accessorKey: "shortDescription",
+        accessorKey: "firstname",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Short Description" />
+            <DataTableColumnHeader column={column} title="firstname" />
         ),
         cell: ({ row }) => {
             return (
                 <div className="flex space-x-2">
                     <span className="max-w-[500px] truncate font-medium">
-                        {row.original?.shortDescription}
+                        {row.original?.firstname}
                     </span>
                 </div>
             )
         },
     },
     {
-        accessorKey: "description",
+        accessorKey: "email",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="description" />
+            <DataTableColumnHeader column={column} title="Email" />
         ),
         cell: ({ row }) => {
             return (
                 <div className="flex space-x-2">
                     <span className="max-w-[500px] truncate font-medium">
-                        {row.original?.description}
+                        {row.original?.email}
                     </span>
                 </div>
             )

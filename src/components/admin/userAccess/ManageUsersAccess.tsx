@@ -7,12 +7,11 @@ import React, { Suspense } from 'react'
 import { useSelector } from 'react-redux'
 import { useAppDispatch } from '@/store/hooks'
 import { clearEditData, setIsAdd } from '@/store/slices/PropertySlice'
-import AddUsers from './AddUsers'
 import EditUser from './EditUser'
-import Link from 'next/link'
+import AddUsersAccess from './AddUsersAccess'
 import { columns } from './columns'
 
-const ManageUsers = ({ UserData, features, propertytypes }: { UserData: any; features:any; propertytypes:any; }) => {
+const ManageUsersAccess = ({ accessdata, features, propertytypes }: { accessdata: any; features:any; propertytypes:any; }) => {
     const editdata = useSelector((state: RootState) => state.property.editdata)
     const isedit = useSelector((state: RootState) => state.property.isedit)
     const isadd = useSelector((state: RootState) => state.property.isadd)
@@ -22,9 +21,8 @@ const ManageUsers = ({ UserData, features, propertytypes }: { UserData: any; fea
     return (
         <div className='flex flex-col w-full'>
             <div className='flex justify-between my-4'>
-                <h1 className="text-2xl font-bold mb-5">Manage Users</h1>
-                <div className="flex grid-cols-2 gap-2">
-                <Button onClick={() => {
+                <h1 className="text-2xl font-bold mb-5">Manage Users Access</h1>
+                {/* <Button onClick={() => {
                     if (isedit) {
                         dispatch(clearEditData())
                     } else {
@@ -32,22 +30,17 @@ const ManageUsers = ({ UserData, features, propertytypes }: { UserData: any; fea
 
                     }
                 }} className='bg-primary500 text-white rounded-none' >
-                    {isadd || isedit ? "back" : "add user"}
-                </Button>
-                <Link href={'/intime-admin/requestaccess'}>
-                
-                <Button className='bg-primary500 text-white rounded-none' onClick={()=>{ }}>Requested Access</Button>
-                </Link>
-                </div>
+                    {isadd || isedit ? "back" : "add user access"}
+                </Button> */}
             </div>
 
             <Suspense fallback={<Loader className='animate animate-spin text-secondary300' />}>
 
                 {isadd ? (
-                    <AddUsers/>
+                    <AddUsersAccess/>
                 ) : isedit ? (<EditUser />) : (
                     <div className='overflow-hidden'>
-                        <DataTable columns={columns} data={UserData ?? []} searchColumn="username"/>
+                        <DataTable columns={columns} data={accessdata ?? []} searchColumn="name"/>
                     </div>
                 )}
 
@@ -59,4 +52,4 @@ const ManageUsers = ({ UserData, features, propertytypes }: { UserData: any; fea
     )
 }
 
-export default ManageUsers
+export default ManageUsersAccess
