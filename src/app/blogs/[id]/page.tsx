@@ -59,7 +59,7 @@ export default function BlogPost() {
   }
 
   return (
-    <div className=" mx-auto px-4 bg-gray-100 py-8 mt-20">
+    <div className=" mx-auto px-4 min-h-[50vh] bg-gray-100 py-8 mt-20">
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}

@@ -34,7 +34,7 @@ const page = async (props: {
     const currentPage = Number(searchParams?.page) || 1;
     const properties = await getproperties(parseInt(limit), currentPage, searchParams?.filters) ?? []
     return (
-        <div className='w-full bg-primary50'>
+        <div className='w-full min-h-[50vh] bg-primary50'>
             <div className='py-24'>
                 <Suspense fallback={<Loader className='animate animate-spin text-secondary400' />}>
                     

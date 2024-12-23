@@ -42,10 +42,10 @@ const page = async (props: {
         console.log(propertytypes[0].split("%")[0])
         const fetchedpropertytype = await getpropertytypebyname(propertytypes[0].split("%")[0])
         console.log(Array.isArray(fetchedpropertytype[0]), "fet")
-        if (fetchedpropertytype) {
+        if (fetchedpropertytype[0]?.id) {
             filters = {
                 ...filters,
-                propertyTypeId: fetchedpropertytype[0].id
+                propertyTypeId: fetchedpropertytype[0]?.id
             }
         }
 
@@ -58,7 +58,7 @@ const page = async (props: {
 
     
     return (
-        <div className='w-full bg-primary50'>
+        <div className='w-full min-h-[50vh] bg-primary50'>
             <div className='py-24'>
                 <Suspense fallback={<Loader className='animate animate-spin text-secondary400' />}>
 

@@ -49,7 +49,7 @@ export default async function Home() {
 
 
   return (
-    <Suspense fallback={<Loader className="animate animate-spin text-secondary400" />}>
+    <Suspense fallback={<Loader className="animate min-h-[50vh] animate-spin text-secondary400" />}>
       <HeroSection propertytypes={propertyTypes} />
       <Component properties={properties["properties"] || []} />
       <div className="">

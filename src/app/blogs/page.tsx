@@ -10,7 +10,7 @@ export default async function BlogList() {
 
 
     return (
-        <div className="bg-gray-100 mx-auto px-4 py-8 mt-20">
+        <div className="bg-gray-100 mx-auto px-4 min-h-[50vh] py-8 mt-20">
             
 
             <BlogComponent blogdetails={blogdetails} />

@@ -91,7 +91,6 @@ export default function HeroSection({ propertytypes }: { propertytypes: any[] })
           budget: values.from + "-" + values.to,
       }));
 
-      console.log(search)
 
       router.push(`/s?${search}`)
 
