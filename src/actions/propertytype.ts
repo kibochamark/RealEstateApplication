@@ -113,6 +113,24 @@ export const getpropertytypes = async()=>{
     
 
 }
+export const getpropertytypebyname = async(name:string)=>{
+  
+
+        try {
+
+            const data = await axios.get(baseUrl + `${name}/propertytypebyname`)
+            console.log(data)
+
+        
+            return [data?.data?.data, data.status]
+
+        } catch (e: any) {
+            return [e.message, 400]
+        }
+
+    
+
+}
 
 
 

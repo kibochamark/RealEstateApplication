@@ -91,7 +91,6 @@ export default function HeroSection({ propertytypes }: { propertytypes: any[] })
           budget: values.from + "-" + values.to,
       }));
 
-      console.log(search)
 
       router.push(`/s?${search}`)
 
@@ -164,7 +163,7 @@ export default function HeroSection({ propertytypes }: { propertytypes: any[] })
                     id: number;
                     name: string;
                   }) => (
-                    <SelectItem value={p.id.toString()} className="font-semibold cursor-pointer">{p.name}</SelectItem>
+                    <SelectItem key={p.id} value={p.id.toString()} className="font-semibold cursor-pointer">{p.name}</SelectItem>
                   ))}
 
                 </SelectContent>

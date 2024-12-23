@@ -109,7 +109,7 @@ const Nav = () => {
                         <NavItem href="/">Home</NavItem>
                         <DropdownNavItem
                             title="Properties For Sale"
-                            items={["Houses For Sale", "Apartments For Sale", "Land For Sale"]}
+                            items={["Houses For Sale", "Apartment For Sale", "Land For Sale"]}
                         />
                         <DropdownNavItem
                             title="Properties To Let"
