@@ -78,7 +78,7 @@ export default function HeroSection({ propertytypes }: { propertytypes: any[] })
     //   propertyTypeId:Yup.string().required()
     // }),
     onSubmit(values, formikHelpers) {
-      console.log(values, "dsjf;lj")
+      // console.log(values, "dsjf;lj")
       search.set('limit',  '10');
       search.set('page', '0');
       search.set('filters', JSON.stringify({
