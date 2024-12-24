@@ -5,8 +5,7 @@ import React, { Suspense } from 'react'
 export const dynamic = "force-dynamic"
 
 const page = async () => {
-  const blogs = await getAllBlogs();
-  //console.log(blogs, "Blogs");
+  const blogs = await getAllBlogs() ?? [];
   
   return (
     <div className="col-span-3 md:container">
