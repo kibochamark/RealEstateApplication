@@ -23,7 +23,6 @@ const ManageUsers = ({ UserData, features, propertytypes }: { UserData: any; fea
         <div className='flex flex-col w-full'>
             <div className='flex justify-between my-4'>
                 <h1 className="text-2xl font-bold mb-5">Manage Users</h1>
-                <div className="flex grid-cols-2 gap-2">
                 <Button onClick={() => {
                     if (isedit) {
                         dispatch(clearEditData())
@@ -33,12 +32,8 @@ const ManageUsers = ({ UserData, features, propertytypes }: { UserData: any; fea
                     }
                 }} className='bg-primary500 text-white rounded-none' >
                     {isadd || isedit ? "back" : "add user"}
-                </Button>
-                <Link href={'/intime-admin/requestaccess'}>
+                    </Button>
                 
-                <Button className='bg-primary500 text-white rounded-none' onClick={()=>{ }}>Requested Access</Button>
-                </Link>
-                </div>
             </div>
 
             <Suspense fallback={<Loader className='animate animate-spin text-secondary300' />}>
