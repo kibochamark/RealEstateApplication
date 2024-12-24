@@ -19,7 +19,7 @@ const ManageBlogs = ({ blogs, features, propertytypes }: { blogs: any; features:
 
     const dispatch = useAppDispatch()
     return (
-        <div className='flex flex-col w-full'>
+        <div className='flex flex-col w-full '>
             <div className='flex justify-between my-4'>
                 <h1 className="text-2xl font-bold mb-5">Manage Blog</h1>
                 <Button onClick={() => {
@@ -34,7 +34,7 @@ const ManageBlogs = ({ blogs, features, propertytypes }: { blogs: any; features:
                 </Button>
             </div>
 
-            <Suspense fallback={<Loader className='animate animate-spin text-secondary300' />}>
+            <Suspense fallback={<Loader className='animate animate-spin text-secondary300 z-0' />}>
 
                 {isadd ? (
                     <AddBlogs/>

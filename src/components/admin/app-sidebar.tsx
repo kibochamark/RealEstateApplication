@@ -76,7 +76,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
         title: "Users",
         url: "/intime-admin/users",
-        icon: "/testim.png",
+        icon: "/users.png",
 
       }
       

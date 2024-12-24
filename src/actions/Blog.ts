@@ -11,7 +11,7 @@ export const postBlogData = async (data: any) => {
   
       // Check for successful response
       if (res.status === 201) {
-        // revalidatePath("/intime-admin/managelisting");
+        revalidatePath("/intime-admin/blogs");
         return [null, res.data];  // Return the data directly
       }
   
@@ -38,7 +38,7 @@ export const postBlogData = async (data: any) => {
   
       return data?.data?.data ?? [];
     } catch (e: any) {
-      return [e.message, 400];
+      return [];
     }
   };
   export const getRecentBlogs = async (take:number) => {
@@ -58,3 +58,16 @@ export const postBlogData = async (data: any) => {
       return [e.message, 400];
     }
   };
+
+  export const getBlogByID = async (id: number) => {
+    try {
+     
+      const data = await axios.get(baseUrl + id + "/blog");
+  
+      console.log(data, "data.data")
+  
+      return data?.data?.data ?? [];
+    } catch (e: any) {
+      return [];
+    }
+  }
