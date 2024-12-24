@@ -47,6 +47,9 @@ export default async function Home() {
   const blogs = blogresult.status === "fulfilled" ? blogresult.value : [];
 
 
+  console.log(propertyTypes, "pp")
+
+
 
   return (
     <Suspense fallback={<Loader className="animate min-h-[50vh] animate-spin text-secondary400" />}>

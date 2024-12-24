@@ -159,12 +159,12 @@ export default function HeroSection({ propertytypes }: { propertytypes: any[] })
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="test">Select property type</SelectItem>
-                  {propertytypes[0]?.map((p: {
+                  {propertytypes[0].length > 0 ? propertytypes[0]?.map((p: {
                     id: number;
                     name: string;
                   }) => (
                     <SelectItem key={p.id} value={p.id.toString()} className="font-semibold cursor-pointer">{p.name}</SelectItem>
-                  ))}
+                  )): (<></>)}
 
                 </SelectContent>
               </Select>
