@@ -55,7 +55,7 @@ export const config = {
     "/listing",
     "/listing/:path*",
     "/intime-admin/:path*",
-    "/intimehomes/:path*",
+    "/intimehomes/sign-in",
     "/login",
     "/signup",
   ],

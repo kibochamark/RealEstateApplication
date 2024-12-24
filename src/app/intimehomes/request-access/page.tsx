@@ -1,13 +1,36 @@
+import { postAccess } from "@/actions/Access"
 import { signIn } from "@/auth"
 import { Button } from "@/components/ui/button"
 import { ActivityLogIcon } from "@radix-ui/react-icons"
+import { revalidatePath } from "next/cache"
 import Image from "next/image"
+import Link from "next/link"
 import { Suspense } from "react"
+import toast from "react-hot-toast"
+import RequestComponent from "./RequestComponent"
 
 export const dynamic = "force-dynamic"
 
 
-const page = () => {
+const page = async () => {
+
+    async function createrequest(formData: FormData) {
+        'use server'
+
+        const rawFormData = {
+            email: formData.get('email'),
+        }
+
+        const res = await postAccess(rawFormData.email as string)
+
+        if (res[1] == 201) {
+            revalidatePath("/intimehomes/request-access")
+        }
+
+
+        // mutate data
+        // revalidate cache
+    }
     return (
         <Suspense >
             <div className="h-screen w-full flex flex-col gap-6">
@@ -27,22 +50,9 @@ const page = () => {
                                 </div>
 
                                 <div className="flex flex-col  items-center justify-center  w-full">
-
-                                    <form action="" className="mt-20 lg:mt-10 w-full lg:w-3/4">
-                                        <div className="flex flex-col gap-4">
-                                            <div className="grid gap-2 col-span-1 mb-4">
-                                                <label htmlFor="first_name" className="block mb-2 text-md font-semibold text-secondary400 dark:text-white">Your Email</label>
-                                                <input type="email" id="first_name" className=" border-2 h-12 border-primary50   text-gray-900 text-md tracking-wide rounded-lg focus:ring-primary500 focus:border-primary500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary500 dark:focus:border-primary500" placeholder="Johndoe@mail.com" required />
-                                            </div>
-
-                                            <div>
-                                                <Button className="w-full bg-secondary300  hover:bg-secondary100 h-10 hover:text-black">Request Access</Button>
-                                            </div>
-
-                                        </div>
-                                    </form>
+                                    <RequestComponent />
                                     <div className="text-start mt-4">
-                                        <p>already  have an account? {' '} <span className="text-primary400 font-bold cursor-pointer">Sign in</span></p>
+                                        <p>already  have an account? {' '} <Link href={"/intimehomes/sign-in"} className="text-primary400 font-bold cursor-pointer">Sign in</Link></p>
                                     </div>
                                 </div>
 

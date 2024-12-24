@@ -5,6 +5,7 @@ import Image from "next/image"
 import SignInComponent from "./signInComponent"
 import { Suspense } from "react"
 import { Loader } from "lucide-react"
+import Link from "next/link"
 
 
 export const dynamic = "force-dynamic"
@@ -35,7 +36,7 @@ const page = () => {
 
                                     <SignInComponent />
                                     <div className="text-start mt-4">
-                                        <p>Don&apos;t  have an account? <span className="text-primary400 font-bold cursor-pointer">Request Access</span></p>
+                                        <p>Don&apos;t  have an account? <Link href={"/intimehomes/request-access"} className="text-primary400 font-bold cursor-pointer">Request Access</Link></p>
                                     </div>
                                 </div>
 
