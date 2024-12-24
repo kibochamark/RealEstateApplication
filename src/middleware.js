@@ -7,7 +7,7 @@ const publicroutes = ["/", "/listing", "/contact", "/blogs", "/testimonials"];
 // Dynamic routes pattern: matches `/listing/:id` and similar
 const dynamicPublicRoutes = [/^\/listing\/\d+$/];
 
-export const authroutes = ["/sign-in", "/signup"];
+export const authroutes = ["/intimehomes/sign-in", "intimehomes/signup"];
 
 const apiAuthPrefix = "/api/auth";
 
@@ -55,6 +55,7 @@ export const config = {
     "/listing",
     "/listing/:path*",
     "/intime-admin/:path*",
+    "/intimehomes/:path*",
     "/login",
     "/signup",
   ],
