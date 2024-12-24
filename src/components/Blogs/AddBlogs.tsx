@@ -127,14 +127,14 @@ export default function AddBlogs() {
 
           <form onSubmit={formik.handleSubmit} className="space-y-8 bg-white">
             {/* Title */}
-            <div className="space-y-2 z-0">
+            <div className="space-y-2 ">
               <label htmlFor="name" className="block text-sm font-medium">Title</label>
-              <div className="relative z-0">
-                <Suspense fallback={<div className="w-full bg-gray-100 rounded min-h-[100px]">Loading editor...</div>}>
+              <div className="">
+                <Suspense fallback={<div className="w-full bg-gray-100 rounded ">Loading editor...</div>}>
                   <QuillEditor
                     value={formik.values.name}
                     onChange={(content) => formik.setFieldValue("name", content)}
-                    className="w-full bg-white rounded min-h-[100px] border-none shadow-none z-1"
+                    className="w-full bg-white border-none shadow-none z-1"
                     style={{ zIndex: -1 }} 
                     modules={quillModules}  
                     formats={quillFormats}  
