@@ -118,22 +118,24 @@ export default function AddBlogs() {
   };
 
   return (
-    <div className="relative z-[1px]">
-      <Card className="w-full max-w-3xl mx-auto border-none shadow-none relative z-0">
+      <Card className="w-full border-none shadow-none">
         <CardHeader>
           <CardTitle className="text-2xl sm:text-3xl">Create New Blog</CardTitle>
         </CardHeader>
         <CardContent>
+
+
           <form onSubmit={formik.handleSubmit} className="space-y-8 bg-white">
             {/* Title */}
-            <div className="space-y-2">
+            <div className="space-y-2 z-0">
               <label htmlFor="name" className="block text-sm font-medium">Title</label>
-              <div className="relative">
+              <div className="relative z-0">
                 <Suspense fallback={<div className="w-full bg-gray-100 rounded min-h-[100px]">Loading editor...</div>}>
                   <QuillEditor
                     value={formik.values.name}
                     onChange={(content) => formik.setFieldValue("name", content)}
-                    className="w-full bg-white rounded min-h-[100px]"
+                    className="w-full bg-white rounded min-h-[100px] border-none shadow-none z-1"
+                    style={{ zIndex: -1 }} 
                     modules={quillModules}  
                     formats={quillFormats}  
                   />
@@ -217,8 +219,9 @@ export default function AddBlogs() {
               Create Blog
             </Button>
           </form>
+
+          
         </CardContent>
       </Card>
-    </div>
   );
 }

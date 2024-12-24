@@ -7,6 +7,7 @@ export function LatestProperties({ properties }: { properties: any[] }) {
   return (
     <div className="bg-white p-6 rounded-lg shadow">
       <h3 className="text-xl font-semibold mb-4">Latest Properties</h3>
+      {properties.length === 0 && <p>No properties found</p>}
       <div className="space-y-4">
         {/* Slice the first 4 properties */}
         {properties.slice(0, 4).map((property: any) => (
