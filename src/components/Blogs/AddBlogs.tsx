@@ -134,7 +134,7 @@ export default function AddBlogs() {
                   <QuillEditor
                     value={formik.values.name}
                     onChange={(content) => formik.setFieldValue("name", content)}
-                    className="w-full bg-white border-none shadow-none z-1"
+                    className="w-full bg-white border-none "
                     style={{ zIndex: -1 }} 
                     modules={quillModules}  
                     formats={quillFormats}  
