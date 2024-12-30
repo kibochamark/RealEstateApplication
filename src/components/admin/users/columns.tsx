@@ -13,8 +13,8 @@ import {
     QuestionMarkCircledIcon,
     StopwatchIcon,
 } from "@radix-ui/react-icons"
-import { DataTableRowActions } from "../property/data-table-row-actions"
 import { DataTableColumnHeader } from "../property/data-table-column-header"
+import { DataTableRowActions } from "./data-table-row-actions"
 
 
 export const labels = [
@@ -248,7 +248,7 @@ export const columns: ColumnDef<UserData>[] = [
     // },
     {
         id: "actions",
-        cell: ({ row }) => <DataTableRowActions row={row} page={"properties"} />,
+        cell: ({ row }) => <DataTableRowActions row={row} page={"users"} />,
     },
 ]
 
