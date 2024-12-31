@@ -108,13 +108,17 @@ const [rating, setRating] = useState(0);
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rating</label>
             <div className="flex gap-2">
               {[1, 2, 3, 4, 5].map((star) => (
-                <Star
-                  key={star}
-                  className={`cursor-pointer w-6 h-6 ${
-                    star <= rating ? 'text-yellow-500' : 'text-gray-400'
-                  }`}
-                  onClick={() => setRating(star)}
-                />
+               <Star
+               key={star}
+               className={`cursor-pointer w-6 h-6 ${
+                 star <= rating ? 'text-yellow-500' : 'text-gray-400'
+               }`}
+               onClick={() => {
+                 setRating(star);
+                 formik.setFieldValue('rating', star); // Update formik state
+               }}
+             />
+             
               ))}
             </div>
           </div>

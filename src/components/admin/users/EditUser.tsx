@@ -9,6 +9,8 @@ import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { baseUrl } from "@/lib/globalvariables";
+import { RevalidatePath } from "@/components/globalcomponents/RevalidateCustomPath";
 
 export default function EditUser({ userData }: { userData: any }) {
   const [uploadedImages, setUploadedImages] = useState<{ url: string; file: File | null }[]>([]);
@@ -25,7 +27,7 @@ export default function EditUser({ userData }: { userData: any }) {
       lastname: editdata.lastname || "",
       email: editdata.email || "",
       contact: editdata.contact || "",
-      password: editdata.password || "********",
+      // password: editdata.password || "********",
     },
     validationSchema: Yup.object().shape({
       username: Yup.string().required("Username is required"),
@@ -38,18 +40,19 @@ export default function EditUser({ userData }: { userData: any }) {
       try {
         setIsLoading(true);
 
-        // Mock API update call
-        const response = await fetch("/api/users/update", {
-          method: "POST",
+        const response = await fetch( baseUrl + "updateuser", {
+          method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ ...values, images: uploadedImages }),
+          body: JSON.stringify({ ...values, id: editdata.id, companyId: editdata.companyId }),
         });
 
         if (!response.ok) throw new Error("Failed to update user");
 
         toast.success("User successfully updated");
+        RevalidatePath("/intime-admin/users");
+        formik.resetForm();
       } catch (error) {
         toast.error("Error updating user");
       } finally {
@@ -148,7 +151,7 @@ export default function EditUser({ userData }: { userData: any }) {
             )}
           </div>
 
-          <div>
+          {/* <div>
             <label htmlFor="password" className="block mb-2 text-sm font-medium">
               Password
             </label>
@@ -159,9 +162,9 @@ export default function EditUser({ userData }: { userData: any }) {
               className="bg-gray-50 border text-sm rounded-lg w-full p-2.5"
               disabled
             />
-          </div>
+          </div> */}
 
-          <div>
+          {/* <div>
             <label htmlFor="images" className="block mb-2 text-sm font-medium">
               User Image
             </label>
@@ -188,7 +191,7 @@ export default function EditUser({ userData }: { userData: any }) {
                 </Button>
               </div>
             )}
-          </div>
+          </div> */}
 
           <div className="col-span-2">
             {isLoading ? (
