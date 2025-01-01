@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Loader } from 'lucide-react';
+import { Loader, Star } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 // ... (other imports, e.g., for formik, Yup, image upload handling, etc.)
 
 export default function AddTestimonials() {
 //   const [uploadedImages, setUploadedImages] = useState<PropertyImage[]>([]);
 const [uploadedImages, setUploadedImages] = useState<{ url: string; Image: File }[]>([]);
+const [rating, setRating] = useState(0);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -16,15 +17,20 @@ const [uploadedImages, setUploadedImages] = useState<{ url: string; Image: File 
     initialValues: {
       name: '',
       description: '',
+      rating: 0,
       // ... other fields you need
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required('testimonial name is required'),
       description: Yup.string().required('Description is required'),
+      rating: Yup.number().min(1, 'Please select a rating').required('Rating is required'), // Validation for rating
+
       // ... other validation rules
     }),
     onSubmit: async (values) => {
       setIsLoading(true);
+      console.log(values, 'testimonial');
+      
 
       // Handle image uploads and other form data here
       // ... (use the uploadedImages state and formik values)
@@ -95,6 +101,26 @@ const [uploadedImages, setUploadedImages] = useState<{ url: string; Image: File 
             {formik.touched.description && formik.errors.description && (
               <div className="text-red-500">{formik.errors.description}</div>
             )}
+          </div>
+
+           {/* Rating Section */}
+           <div>
+            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rating</label>
+            <div className="flex gap-2">
+              {[1, 2, 3, 4, 5].map((star) => (
+               <Star
+               key={star}
+               className={`cursor-pointer w-6 h-6 ${
+                 star <= rating ? 'text-yellow-500' : 'text-gray-400'
+               }`}
+               onClick={() => {
+                 setRating(star);
+                 formik.setFieldValue('rating', star); // Update formik state
+               }}
+             />
+             
+              ))}
+            </div>
           </div>
 
           <div>

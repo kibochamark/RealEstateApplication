@@ -1,3 +1,4 @@
+"use client";
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -160,7 +161,18 @@ export const columns: ColumnDef<accessdata>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
-          <span className="max-w-[500px] truncate font-medium">
+          <span
+            className={`${
+              row.original.status === "PENDING"
+                ? "text-orange-400"
+                : row.original.status === "REJECTED"
+                ? "text-red-500"
+                : row.original.status === "APPROVED"
+                ? "text-green-500"
+                : ""
+            } 
+                      max-w-[500px] truncate font-medium shadow-lg p-2 rounded-md`}
+          >
             {row.original?.status}
           </span>
         </div>
@@ -187,61 +199,70 @@ export const columns: ColumnDef<accessdata>[] = [
     id: "actions",
     header: "Actions",
     cell: ({ row }) => {
-        const handleStatusUpdate = async (status: string) => {
-            try {
-                const payload = {
-                    id: row.original.id,
-                    status: status.toUpperCase(), // Convert to uppercase
-                };
-        
-        
-                const response = await axios.patch(baseUrl + "/requestuseraccess", payload);
-        
-                if (response.status === 201) {
-                    toast.success(`Access ${status.toLowerCase()} successfully!`);
-                    RevalidatePath("/intime-admin/requestaccess");
-                    // alert(`Access ${status.toLowerCase()} successfully!`);
-                    row.original.status = status.toUpperCase(); // Update the row status locally
-                } else {
-                    toast.error(`Failed to update access status`);
-                    // alert(`Unexpected response: ${response.status}`);
-                }
-            } catch (error: any) {
-                const errorMessage =
-                    error.response?.data?.error?.[0] || // Log specific error details if available
-                    "Failed to update access status. Please try again later.";
-                console.error("Error updating access status:", error);
-                alert(errorMessage);
+      const handleStatusUpdate = async (status: string) => {
+        try {
+          const payload = {
+            id: row.original.id,
+            status: status.toUpperCase(), // Convert to uppercase
+          };
+
+          const response = await axios.patch(
+            baseUrl + "requestuseraccess",
+            payload
+          );
+
+          if (response.status === 201) {
+            toast.success(`Access ${status.toLowerCase()} successfully!`);
+            RevalidatePath("/intime-admin/requestaccess");
+            // alert(`Access ${status.toLowerCase()} successfully!`);
+            row.original.status = status.toUpperCase(); // Update the row status locally
+          } else {
+            toast.error(`Failed to update access status`);
+            // alert(`Unexpected response: ${response.status}`);
+          }
+        } catch (error: any) {
+          const errorMessage =
+            error.response?.data?.error?.[0] || // Log specific error details if available
+            "Failed to update access status. Please try again later.";
+          console.error("Error updating access status:", error);
+          alert(errorMessage);
+        }
+      };
+
+      return (
+        <div className="flex gap-2">
+          <button
+            onClick={() => handleStatusUpdate("approved")} // Uppercase
+            disabled={
+              row.original.status === "APPROVED" ||
+              row.original.status === "REJECTED"
             }
-        };
-        
-        return (
-            <div className="flex gap-2">
-                <button
-                    onClick={() => handleStatusUpdate("approved")} // Uppercase
-                    disabled={row.original.status === "APPROVED" || row.original.status === "REJECTED"}
-                    className={`px-3 py-1 rounded ${
-                        row.original.status === "APPROVED" || row.original.status === "REJECTED"
-                            ? "bg-gray-400 cursor-not-allowed"
-                            : "text-white bg-green-500 hover:bg-green-600"
-                    }`}
-                >
-                    Approve
-                </button>
-                <button
-                    onClick={() => handleStatusUpdate("rejected")} // Uppercase
-                    disabled={row.original.status === "APPROVED" || row.original.status === "REJECTED"}
-                    className={`px-3 py-1 rounded ${
-                        row.original.status === "APPROVED" || row.original.status === "REJECTED"
-                            ? "bg-gray-400 cursor-not-allowed"
-                            : "text-white bg-red-500 hover:bg-red-600"
-                    }`}
-                >
-                    Reject
-                </button>
-            </div>
-        );
-        
+            className={`px-3 py-1 rounded ${
+              row.original.status === "APPROVED" ||
+              row.original.status === "REJECTED"
+                ? "bg-gray-400 cursor-not-allowed"
+                : "text-white bg-green-500 hover:bg-green-600"
+            }`}
+          >
+            Approve
+          </button>
+          <button
+            onClick={() => handleStatusUpdate("rejected")} // Uppercase
+            disabled={
+              row.original.status === "APPROVED" ||
+              row.original.status === "REJECTED"
+            }
+            className={`px-3 py-1 rounded ${
+              row.original.status === "APPROVED" ||
+              row.original.status === "REJECTED"
+                ? "bg-gray-400 cursor-not-allowed"
+                : "text-white bg-red-500 hover:bg-red-600"
+            }`}
+          >
+            Reject
+          </button>
+        </div>
+      );
 
       return (
         <div className="flex gap-2">

@@ -40,7 +40,7 @@ const ManageUsers = ({ UserData, features, propertytypes }: { UserData: any; fea
 
                 {isadd ? (
                     <AddUsers/>
-                ) : isedit ? (<EditUser />) : (
+                ) : isedit ? (<EditUser userData={UserData}/>) : (
                     <div className='overflow-hidden'>
                         <DataTable columns={columns} data={UserData ?? []} searchColumn="username"/>
                     </div>

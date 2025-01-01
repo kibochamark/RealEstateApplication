@@ -38,14 +38,16 @@ export const postUserData = async (data: any) => {
     try {
   
       const response = await axios.get(baseUrl + `/${id}/companyusers`);
-      console.log(response.data , "response.data------");
+      // console.log(response.data , "response.data------");
 
       if (response.status !== 200) throw new Error(response.data)
-        console.log(response?.data?.data , "response.data")
+        // console.log(response?.data?.data , "response.data")
       return response?.data?.data ?? [];
-      console.log(response.data , "response.data");
       
     } catch (e: any) {
       return [e.message, 400];
     }
   };
+
+
+  

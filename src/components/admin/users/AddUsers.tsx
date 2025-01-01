@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -11,22 +11,36 @@ import { useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { postUserData } from '@/actions/Users';
 
+
+//generate random password
+const generateRandomPassword = (length = 12) => {
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+  let password = "";
+  for (let i = 0; i < length; i++) {
+    password += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return password;
+};
 export default function AddUsers() {
   const [uploadedImages, setUploadedImages] = useState<{ url: string; Image: File }[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [defaultPassword, setDefaultPassword] = useState("");
+
   const {data: session} =  useSession();
 
   const formik = useFormik({
     initialValues: {
-      username: 'nju',
+      username: '',
       firstname: '',  // You can set a random name here if necessary
       lastname: '',  // You can set a random name here if necessary
       email: '',  // You can set a random email here if necessary
       contact: '',  // You can set a random contact here if necessary
-      password: 'Nju12345678!',  // Default password
-      confimpassword: 'Nju12345678!',  // Default password
+      password: defaultPassword,  // Default password
+      confimpassword: defaultPassword,  // Default password
     //   confirmpassword: 'Nju12345678!',  // Confirm password
     },
+    enableReinitialize: true,
     validationSchema: Yup.object().shape({
       username: Yup.string().required('Username is required'),
       firstname: Yup.string().required('First name is required'),
@@ -77,6 +91,9 @@ export default function AddUsers() {
       },
       
   });
+  useEffect(() => {
+    setDefaultPassword(generateRandomPassword());
+  }, []);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -102,7 +119,7 @@ export default function AddUsers() {
         <CardTitle>Create New User</CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={formik.handleSubmit} className="md:grid gap-4 md:grid-cols-3 grid-cols-1">
+        <form onSubmit={formik.handleSubmit} className="md:grid gap-4 md:grid-cols-2 grid-cols-1">
           <div>
             <label htmlFor="username" className="block mb-2 text-sm font-medium">
               Username
@@ -171,6 +188,19 @@ export default function AddUsers() {
               <div className="text-red-500">{formik.errors.contact}</div>
             )}
           </div>
+          <div>
+            <label htmlFor="password" className="block mb-2 text-sm font-medium">
+              Default Password
+            </label>
+            <input
+              id="password"
+              type="text"
+              value={formik.values.password}
+              className="bg-gray-50 border text-sm rounded-lg w-full p-2.5"
+              disabled
+            />
+          </div>
+          
 
           <div>
             <label htmlFor="images" className="block mb-2 text-sm font-medium">
