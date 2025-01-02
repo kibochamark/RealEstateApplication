@@ -62,7 +62,7 @@ export const postBlogData = async (data: any) => {
   export const getBlogByID = async (id: number) => {
     try {
      
-      const data = await axios.get(baseUrl + id + "/blog");
+      const data = await axios.get(baseUrl + id + "blog");
   
       console.log(data, "data.data")
   
@@ -71,3 +71,32 @@ export const postBlogData = async (data: any) => {
       return [];
     }
   }
+
+  // export const updateBlogData = async (data: FormData) => {
+  //   try {
+  //     const res = await axios.patch(baseUrl + "blog", data);
+  //     return res.data;
+  //     } catch (e: any) {
+  //       return [e.message, 400];
+  //     }
+  // }
+  export const updateBlogData = async (formData: FormData) => {
+    try {
+    const response = await fetch(baseUrl + "blog", {
+      method: "PATCH",
+      body: formData,
+    });
+  
+    if (!response.ok) {
+      throw new Error("Failed to update testimonial");
+    }
+  
+    const responseData = await response.json();
+    revalidatePath("/intime-admin/testimonials");
+  
+    // console.log("Testimonial updated successfully:", responseData);
+  }catch (error) {
+    console.error("Error updating testimonial:", error);
+    return error;
+  }
+  };

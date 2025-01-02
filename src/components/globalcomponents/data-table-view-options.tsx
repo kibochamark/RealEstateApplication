@@ -20,7 +20,7 @@ import { RevalidatePath } from "./RevalidateCustomPath"
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>
-  deleteType: "propertytype" | "feature" | "property" | "blog" | "company" | "requestuser" // API endpoint type
+  deleteType: "propertytype" | "feature" | "property" | "blog" | "testimonial" | "company" | "requestuser" // API endpoint type
   pathname:string;
 }
 

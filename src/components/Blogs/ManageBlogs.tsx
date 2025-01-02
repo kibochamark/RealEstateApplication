@@ -38,7 +38,7 @@ const ManageBlogs = ({ blogs, features, propertytypes }: { blogs: any; features:
 
                 {isadd ? (
                     <AddBlogs/>
-                ) : isedit ? (<EditBlog />) : (
+                ) : isedit ? (<EditBlog blogs={blogs} />) : (
                     <div className='overflow-hidden'>
                         <DataTable columns={BlogColumns} data={blogs ?? []} searchColumn="name"/>
                     </div>
