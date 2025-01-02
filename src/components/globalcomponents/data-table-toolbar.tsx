@@ -21,7 +21,7 @@ export function DataTableToolbar<TData>({
   const pathname = usePathname() // Access the current path
 
   // Determine the correct deleteType based on the current path
-  let deleteType: "propertytype" | "feature" | "property" | "company" | "requestuser" | "blog" = "propertytype" // Default value
+  let deleteType: "propertytype" | "feature" | "property" | "company" | "testimonial" |"requestuser" | "blog" = "propertytype" // Default value
 
   if (pathname === "/intime-admin/manage-property-types") {
     deleteType = "propertytype"
@@ -35,6 +35,8 @@ export function DataTableToolbar<TData>({
     deleteType = "company"
   }else if(pathname === "/intime-admin/requestaccess"){
     deleteType = "requestuser"
+  }else if(pathname === "/intime-admin/testimonials"){
+    deleteType = "testimonial"
   }
 
   return (

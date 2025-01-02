@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import dynamic from "next/dynamic";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -9,7 +10,13 @@ import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { postTestimonialData } from "@/actions/Testimonial";
-// ... (other imports, e.g., for formik, Yup, image upload handling, etc.)
+import "react-quill/dist/quill.snow.css";
+
+// Dynamically import QuillEditor to avoid SSR issues
+const QuillEditor = dynamic(() => import("react-quill"), {
+  loading: () => <p>Loading editor...</p>,
+  ssr: false,
+});
 
 export default function AddTestimonials() {
   //   const [uploadedImages, setUploadedImages] = useState<PropertyImage[]>([]);
@@ -21,14 +28,42 @@ export default function AddTestimonials() {
   const [isLoading, setIsLoading] = useState(false);
   const { data: session } = useSession();
 
-  console.log(session, "sess")
+  const quillModules = {
+    toolbar: [
+      [{ font: [] }],
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      ["bold", "italic", "underline", "strike"],
+      [{ color: [] }, { background: [] }],
+      [{ list: "ordered" }, { list: "bullet" }],
+      [{ indent: "-1" }, { indent: "+1" }],
+      [{ align: [] }],
+      ["link", "image"],
+      ["clean"],
+    ],
+  };
+
+  const quillFormats = [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "bullet",
+    "link",
+    "image",
+    "align",
+    "color",
+    "code-block",
+  ];
 
   const formik = useFormik({
     initialValues: {
       name: "",
       description: "",
       rating: 0,
-      onBehalfOf: ""
+      onBehalfOf: "",
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required("testimonial name is required"),
@@ -54,23 +89,29 @@ export default function AddTestimonials() {
         if (uploadedImages.length === 1) {
           formData.append("image", uploadedImages[0].Image);
         }
+        const updated = {
+          ...values,
+          userId: session?.user?.userid,
+        };
 
-        formData.append("json", JSON.stringify(requestdata));
-        
+        formData.append("json", JSON.stringify(updated));
+        console.log(formData, "formdata");
 
-     
         const response = await postTestimonialData(formData);
 
         if (!response[0]) {
-          console.log("Testimonial submitted successfully");
+          // console.log("Testimonial submitted successfully");
+          toast.success("Testimonial added successfully");
           // Reset form and state
           formik.resetForm();
           setUploadedImages([]);
           setRating(0);
         } else {
-          console.error("Error submitting testimonial");
+          toast.error(" Testimonial already exist");
         }
       } catch (error) {
+        toast.error("Error submitting testimonial");
+
         console.error("Error posting testimonial:", error);
       } finally {
         setIsLoading(false);
@@ -118,11 +159,12 @@ export default function AddTestimonials() {
             >
               Name
             </label>
-            <input
-              {...formik.getFieldProps("name")}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
-              placeholder="james"
-              required
+            <QuillEditor
+              theme="snow"
+              modules={quillModules}
+              formats={quillFormats}
+              value={formik.values.name}
+              onChange={(content) => formik.setFieldValue("name", content)} // Update Formik state
             />
             {formik.touched.name && formik.errors.name && (
               <div className="text-red-500">{formik.errors.name}</div>
@@ -136,12 +178,15 @@ export default function AddTestimonials() {
             >
               Description
             </label>
-            <textarea
-              {...formik.getFieldProps("description")}
-              rows={4}
-              className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary300 focus:border-primary300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
-              placeholder="Write your thoughts here..."
-            ></textarea>
+            <QuillEditor
+              theme="snow"
+              modules={quillModules}
+              formats={quillFormats}
+              value={formik.values.description} // Bind to Formik state
+              onChange={(content) =>
+                formik.setFieldValue("description", content)
+              } // Update Formik state
+            />
             {formik.touched.description && formik.errors.description && (
               <div className="text-red-500">{formik.errors.description}</div>
             )}
@@ -172,20 +217,23 @@ export default function AddTestimonials() {
               htmlFor="onBehalfOf"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              onBehalfOf
+              On Behalf Of
             </label>
-            <input
-              {...formik.getFieldProps("onBehalfOf")}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
-              placeholder="james"
-              required
+            <QuillEditor
+              theme="snow"
+              modules={quillModules}
+              formats={quillFormats}
+              value={formik.values.onBehalfOf} // Bind to Formik state
+              onChange={(content) =>
+                formik.setFieldValue("onBehalfOf", content)
+              } // Update Formik state
             />
             {formik.touched.onBehalfOf && formik.errors.onBehalfOf && (
               <div className="text-red-500">{formik.errors.onBehalfOf}</div>
             )}
           </div>
 
-          <div>
+          <div className="space-y-2 mb-4">
             <label
               htmlFor="images"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"

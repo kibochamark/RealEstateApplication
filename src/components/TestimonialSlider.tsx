@@ -40,6 +40,7 @@ export function TestimonialSlider({ testimonials }: TestimonialSliderProps) {
 
   return (
     <div className="relative w-full max-w-3xl mx-auto">
+        {testimonials.length > 0 ? (
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {testimonials.map((testimonial, index) => (
@@ -58,8 +59,10 @@ export function TestimonialSlider({ testimonials }: TestimonialSliderProps) {
               </AnimatePresence>
             </div>
           ))}
-        </div>
       </div>
+        </div>):(
+          <p className="flex text-center w-full justify-center text-gray-500"> No Teastimonials yet</p>
+        )}
       <button
         className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md"
         onClick={scrollPrev}

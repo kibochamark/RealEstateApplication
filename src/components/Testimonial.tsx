@@ -31,15 +31,17 @@ export interface User {
   
 
 export function Testimonial({
-    name,
+  name,
   rating,
   imageUrl,
   description,
   user,
+  onBehalfOf,
 }: TestimonialProps) {
 
   return (
     <div className="flex flex-col items-center p-6 outline-none">
+
       {/* Stars */}
       <div className="flex mb-4">
         {[...Array(5)].map((_, i) => (
@@ -59,10 +61,10 @@ export function Testimonial({
         />
       </div>
       {/* Description */}
-      <p className="text-gray-600 dark:text-white text-center mb-4">{name}</p>
-      <p className="text-gray-600 dark:text-white text-center mb-4">{description}</p>
+      <p className="text-gray-600 dark:text-white text-center mb-4" dangerouslySetInnerHTML={{ __html: name }}></p>
+      <p className="text-gray-600 dark:text-white text-center mb-4" dangerouslySetInnerHTML={{ __html: description }}></p>
       {/* Username */}
-      <p className="font-semibold text-primary300">{user.username}</p>
+      <p className="font-semibold text-primary300" dangerouslySetInnerHTML={{ __html: onBehalfOf }}></p>
     </div>
   );
 }
