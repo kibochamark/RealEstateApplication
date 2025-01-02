@@ -1,6 +1,7 @@
 import { getRecentBlogs } from "@/actions/Blog";
 import { getproperties } from "@/actions/property";
 import { getpropertytypes } from "@/actions/propertytype";
+import { getTestimonials } from "@/actions/Testimonial";
 import Aboutus from "@/components/aboutus";
 import { RecentBlogs } from "@/components/Blogs/RecentBlogs";
 import Component from "@/components/cards";
@@ -10,21 +11,21 @@ import { TestimonialSlider } from "@/components/TestimonialSlider";
 import { Loader } from "lucide-react";
 import { Suspense } from "react";
 
-const testimonials = [
-  {
-    rating: 5,
-    image: '/5.jpg',
-    description: "I found my dream home thanks to this amazing platform!",
-    userName: "Alice Johnson"
-  },
-  {
-    rating: 4,
-    image: '/5.jpg',
-    description: "The process was smooth and the support team was incredibly helpful.",
-    userName: "Bob Smith"
-  },
-  // Add more testimonials...
-]
+// const testimonials = [
+//   {
+//     rating: 5,
+//     image: '/5.jpg',
+//     description: "I found my dream home thanks to this amazing platform!",
+//     userName: "Alice Johnson"
+//   },
+//   {
+//     rating: 4,
+//     image: '/5.jpg',
+//     description: "The process was smooth and the support team was incredibly helpful.",
+//     userName: "Bob Smith"
+//   },
+//   // Add more testimonials...
+// ]
 
 
 export const dynamic = "force-dynamic"
@@ -33,10 +34,11 @@ export const dynamic = "force-dynamic"
 
 export default async function Home() {
 
-  const [propertiesResult, propertyTypesResult, blogresult] = await Promise.allSettled([
+  const [propertiesResult, propertyTypesResult, blogresult, testimonialsResult] = await Promise.allSettled([
     getproperties(),
     getpropertytypes(),
-    getRecentBlogs(3)
+    getRecentBlogs(3),
+    getTestimonials() ,
   ]);
 
   const properties =
@@ -47,7 +49,8 @@ export default async function Home() {
   const blogs = blogresult.status === "fulfilled" ? blogresult.value : [];
 
 
-  console.log(propertyTypes, "pp")
+  const testimonials = testimonialsResult.status === "fulfilled" ? testimonialsResult.value : [];
+  console.log(testimonials, "pp")
 
 
 
