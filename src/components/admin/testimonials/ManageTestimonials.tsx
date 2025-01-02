@@ -13,10 +13,12 @@ import EditTestimanials from './EditTestimonials'
 import AddTestimonials from './AddTestimonials'
 import { testimonialcolumn } from './testimonialcolumn'
 
-const ManageTestimonials = ({ properties, features, propertytypes }: { properties: any; features:any; propertytypes:any; }) => {
+const ManageTestimonials = ({ testimonial, features, propertytypes }: { testimonial: any; features:any; propertytypes:any; }) => {
     const editdata = useSelector((state: RootState) => state.property.editdata)
     const isedit = useSelector((state: RootState) => state.property.isedit)
     const isadd = useSelector((state: RootState) => state.property.isadd)
+
+    
 
     const dispatch = useAppDispatch()
     return (
@@ -39,9 +41,9 @@ const ManageTestimonials = ({ properties, features, propertytypes }: { propertie
 
                 {isadd ? (
                     <AddTestimonials/>
-                ) : isedit ? (<EditTestimanials />) : (
+                ) : isedit ? (<EditTestimanials testimonial={testimonial}/>) : (
                     <div className='overflow-hidden'>
-                        <DataTable columns={testimonialcolumn} data={properties ?? []} searchColumn="name"/>
+                        <DataTable columns={testimonialcolumn} data={testimonial ?? []} searchColumn="name"/>
                     </div>
                 )}
 
