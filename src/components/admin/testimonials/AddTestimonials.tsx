@@ -21,13 +21,14 @@ export default function AddTestimonials() {
   const [isLoading, setIsLoading] = useState(false);
   const { data: session } = useSession();
 
+  console.log(session, "sess")
+
   const formik = useFormik({
     initialValues: {
       name: "",
       description: "",
       rating: 0,
-      onBehalfOf: "",
-      userId: session?.user?.userid,
+      onBehalfOf: ""
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required("testimonial name is required"),
@@ -42,6 +43,11 @@ export default function AddTestimonials() {
         setIsLoading(true);
         console.log(values, "submitted");
 
+        let requestdata={
+          ...values,
+          userId:session?.user.userid! as number
+        }
+
         const formData = new FormData();
 
         // Append image if available
@@ -49,14 +55,10 @@ export default function AddTestimonials() {
           formData.append("image", uploadedImages[0].Image);
         }
 
-        formData.append("json", JSON.stringify(values));
-        console.log(formData, "formdata");
+        formData.append("json", JSON.stringify(requestdata));
+        
 
-        // const response = await axios.post('http://localhost:8000/api/v1/testimonial', formData, {
-        //   headers: {
-        //     'Content-Type': 'multipart/form-data',
-        //   },
-        // });
+     
         const response = await postTestimonialData(formData);
 
         if (!response[0]) {
