@@ -105,18 +105,28 @@ export const postProperty = async (data: any) => {
 
 
 
-export const patchProperty = async (data: any) => {
+export const patchProperty = async (data: FormData) => {
   try {
-    const res = await axios.patch(baseUrl + `propertytype`, data, {
+    console.log("data", data);
+    
+    // Ensure the data is properly serialized if it's not already in JSON format
+    const res = await axios.patch(baseUrl + "property", data, {
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'multipart/form-data',  // Make sure the content is treated as JSON
       }
     });
 
-    return res?.data ?? [];
+    if (res.status === 201) {
 
+      revalidatePath("/intime-admin/managelisting")
+      return [null, res?.data ?? []]
+    }
+    throw new Error("Error posting property");
+
+    // Return response data or empty array if no data returned
   } catch (e: any) {
-    console.error("Error patching property:", e);
+    // Log the error and return a more descriptive error message
+    console.error("Error posting property:", e);
     return [e.response?.data?.message ?? e.message, e.response?.status ?? 400];
   }
 };

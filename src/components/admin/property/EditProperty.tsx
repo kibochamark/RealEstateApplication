@@ -18,6 +18,11 @@ import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import { patchProperty } from "@/actions/property";
 import toast from "react-hot-toast";
 
+interface PropertyImage {
+  url: string;
+  Image: File;
+}
+
 export default function EditProperty({
   features,
   propertytypes,
@@ -28,8 +33,13 @@ export default function EditProperty({
   //   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const { editdata } = useSelector((state: RootState) => state.property);
-  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [uploadedImages, setUploadedImages] = useState<PropertyImage[]>([]);
   const [value, setValue] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const formattedImages = uploadedImages.map((image) => image.Image);
+
+  console.log(editdata, "edit");
+  
 
   // console.log(editdata, "edit");
 
@@ -48,7 +58,7 @@ export default function EditProperty({
       city: editdata?.city || "",
       saleType: editdata?.saleType || "Sale", // default value "Sale"
       featured: editdata?.featured || false,
-      propertyType: editdata?.propertyType || "", 
+      propertyType: editdata?.propertyType || 0, 
       size: editdata?.size || "",
       distance: editdata?.distance || "",
       price: editdata?.price || 0,
@@ -59,41 +69,87 @@ export default function EditProperty({
       area: editdata?.area || "",
       bedrooms: editdata?.bedrooms || 0,
       images: uploadedImages, // You can keep this in sync with the state
+      longitude: editdata?.longitude || "",
+      latitude: editdata?.latitude || "",
+      county: editdata?.county || "",
     },
-    onSubmit: (values) => {
-        try{
-            patchProperty(values); 
-            toast.success("Property updated successfully")
-            router.push("/intime-admin/managelisting"); // Navigate after submission
-        }catch(e){
-            toast.error("Error updating property");
+    
+    onSubmit: async (values) => {
+      // convert features from an array to a string
+      let updatedvalues={
+        ...values,
+        features:values.features.join(","),
+        id: editdata.id,
+      }
+
+      // remove unwanted data from our post body and format it
+      let formattedValues = Object.entries(updatedvalues).filter(([key, value]) => { // Remove empty values
+        if (key === "images" || key === "Image") {
+          return false;
         }
-        // Submit to updateData function
-      },
+        return true;
+
+      });
+
+
+      console.log(Object.fromEntries(formattedValues), "Submitting form values");
+
+      try {
+        setIsLoading(true);
+        const formData = new FormData();
+        formattedImages.forEach((image, index) => {
+          formData.append(`images`, image);
+        });
+        formData.append("json", JSON.stringify(Object.fromEntries(formattedValues))); // Append JSON as a string to form data
+        console.log(Object.fromEntries(formData), "form form values");
+
+    
+
+        const response = await patchProperty(formData);
+
+        // Handle the response
+        setIsLoading(false);
+        if (!response[0]) {
+         // console.log("Property successfully posted:", response);
+          toast.success("Property successfully updated");
+          // formik.resetForm();
+          // setUploadedImages([]);
+        } else {
+          //console.error("Error posting property:", response[0]);
+          toast.error("Error updating property");
+        }
+      } catch (error) {
+        console.error("Error updating property:", error);
+      }
+    },
   });
 
-  const handleImageUpload = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    setFieldValue: (field: string, value: any) => void
-  ) => {
-    const files = event.target.files;
-    if (files) {
-      const newImages = Array.from(files).map((file) =>
-        URL.createObjectURL(file)
-      );
-      setUploadedImages((prevImages) => [...prevImages, ...newImages]);
-      setFieldValue("images", [...uploadedImages, ...newImages]);
-    }
-  };
-
-  const handleImageDelete = (
-    index: number,
-    setFieldValue: (field: string, value: any) => void
-  ) => {
-    const newImages = uploadedImages.filter((_, i) => i !== index);
-    setUploadedImages(newImages);
-    setFieldValue("images", newImages);
-  };
+ 
+   const handleImageUpload = (
+     event: React.ChangeEvent<HTMLInputElement>,
+     setFieldValue: (field: string, value: any) => void
+   ) => {
+     const files = event.target.files;
+     if (files) {
+       const newImages = Array.from(files).map((file) => {
+         return {
+           url: URL.createObjectURL(file),
+           Image: file,
+         };
+       });
+       setUploadedImages((prevImages) => [...prevImages, ...newImages]);
+       setFieldValue("images", [...uploadedImages, ...newImages]);
+     }
+   };
+ 
+   const handleImageDelete = (
+     index: number,
+     setFieldValue: (field: string, value: any) => void
+   ) => {
+     const newImages = uploadedImages.filter((_, i) => i !== index);
+     setUploadedImages(newImages);
+     setFieldValue("images", newImages);
+   };
 
   //   if (isLoading) {
   //     return <div>Loading...</div>;
@@ -271,6 +327,28 @@ export default function EditProperty({
               <div className="text-red-500">{formik.errors.city}</div>
             )} */}
           </div>
+          <div>
+            <label
+              htmlFor=""
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              county
+            </label>
+            <input
+              type="text"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              name="county"
+              defaultValue={formik.values.county}
+              id=""
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
+              placeholder="kiambu"
+              required
+            />
+            {/* {formik.errors.county && formik.touched.county && (
+              <div className="text-red-500">{formik.errors.county}</div>
+            )} */}
+          </div>
 
           <div>
             <label
@@ -315,6 +393,78 @@ export default function EditProperty({
             />
             {/* {formik.errors.country && formik.touched.country && (
               <div className="text-red-500">{formik.errors.country}</div>
+            )} */}
+          </div>
+          <div>
+            <label
+              htmlFor="long"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Longitude
+            </label>
+            {/* <select id="location"
+                            defaultValue={formik.values.location}
+
+                            name='location' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300">
+                            <option selected>Choose a country</option>
+                            <option value="US">United States</option>
+                            <option value="CA">Canada</option>
+                            <option value="FR">France</option>
+                            <option value="DE">Germany</option>
+                        </select> */}
+
+            {/* {formik.errors.location && formik.touched.location && (
+              <div className="text-red-500">{formik.errors.location}</div>
+            )} */}
+            <input
+              type="text"
+              id=""
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              name="longitude"
+              defaultValue={formik.values.longitude}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
+              placeholder=""
+              required
+            />
+            {/* {formik.errors.longitude && formik.touched.longitude && (
+              <div className="text-red-500">{formik.errors.longitude}</div>
+            )} */}
+          </div>
+          <div>
+            <label
+              htmlFor="lat"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Latitude
+            </label>
+            {/* <select id="location"
+                            defaultValue={formik.values.location}
+
+                            name='location' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300">
+                            <option selected>Choose a country</option>
+                            <option value="US">United States</option>
+                            <option value="CA">Canada</option>
+                            <option value="FR">France</option>
+                            <option value="DE">Germany</option>
+                        </select> */}
+
+            {/* {formik.errors.location && formik.touched.location && (
+              <div className="text-red-500">{formik.errors.location}</div>
+            )} */}
+            <input
+              type="text"
+              id=""
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              name="latitude"
+              defaultValue={formik.values.latitude}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
+              placeholder=""
+              required
+            />
+            {/* {formik.errors.latitude && formik.touched.latitude && (
+              <div className="text-red-500">{formik.errors.latitude}</div>
             )} */}
           </div>
 
@@ -556,7 +706,7 @@ export default function EditProperty({
               {uploadedImages.map((image, index) => (
                 <div key={index} className="relative">
                   <img
-                    src={image}
+                    src={image.url}
                     alt={`Uploaded ${index + 1}`}
                     className="w-full h-32 object-cover rounded"
                   />

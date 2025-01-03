@@ -94,20 +94,21 @@ export default function EditBlog({ blogs }: { blogs: any }) {
         }
 
         formData.append("json", JSON.stringify(updatedValues));
+        console.log(formData, "formdata..");
 
-        const response = await updateBlogData( formData);
-        console.log(formData, "formdata");
+        const response = await updateBlogData(formData);
+        // console.log(response, "res..");
+        // toast.success('blog updated');
         
-
         setIsLoading(false);
-        if (response) {
+        if (!response[0]) {
           toast.success("Blog successfully updated");
         } else {
           toast.error("Error updating blog");
         }
-      } catch (error) {
+      } catch (e:any) {
         setIsLoading(false);
-        toast.error("Error updating blog");
+        toast.error("Error updating blog", e);
       }
     },
   });

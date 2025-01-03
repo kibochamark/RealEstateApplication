@@ -4,10 +4,10 @@ import { baseUrl } from "@/lib/globalvariables";
 import axios from "axios";
 import { revalidatePath } from "next/cache";
 
-export const postBlogData = async (data: any) => {
+export const postBlogData = async (formData: FormData) => {
     try {
       // Send the FormData directly, letting Axios handle the Content-Type header
-      const res = await axios.post(baseUrl + "blog", data);
+      const res = await axios.post(baseUrl + "blog", formData);
   
       // Check for successful response
       if (res.status === 201) {
@@ -80,23 +80,49 @@ export const postBlogData = async (data: any) => {
   //       return [e.message, 400];
   //     }
   // }
+  // export const updateBlogData = async (formData: FormData) => {
+  //   try {
+  //   const response = await fetch(baseUrl + "blog", {
+  //     method: "PATCH",
+  //     body: formData,
+  //   });
+  //   console.log(response, "response---");
+  //   console.log(formData, "formdata---");
+    
+    
+  
+  //   if (!response.ok) {
+  //     throw new Error("Failed to update testimonial");
+  //   }
+  
+  //   const responseData = await response.json();
+  //   revalidatePath("/intime-admin/testimonials");
+  
+  //   // console.log("Testimonial updated successfully:", responseData);
+  // }catch (error) {
+  //   console.error("Error updating testimonial:", error);
+  //   return error;
+  // }
+  // };
+
   export const updateBlogData = async (formData: FormData) => {
     try {
-    const response = await fetch(baseUrl + "blog", {
-      method: "PATCH",
-      body: formData,
-    });
+      // Send the FormformData directly, letting Axios handle the Content-Type header
+      const res = await axios.patch(baseUrl + "blog", formData);
   
-    if (!response.ok) {
-      throw new Error("Failed to update testimonial");
+      // Check for successful response
+      if (res.status === 201) {
+        revalidatePath("/intime-admin/blogs");
+        return [null, res.data]; // Return the data directly
+      }
+  
+      // If not successful, throw an error
+      throw new Error("Error updating blogs");
+    } catch (e: any) {
+      // Log the full error object for debugging purposes
+      console.error("Error updating blogs:", e);
+  
+      // Return the error message and status code
+      return [e.response?.data?.message ?? e.message, e.response?.status ?? 400];
     }
-  
-    const responseData = await response.json();
-    revalidatePath("/intime-admin/testimonials");
-  
-    // console.log("Testimonial updated successfully:", responseData);
-  }catch (error) {
-    console.error("Error updating testimonial:", error);
-    return error;
-  }
   };

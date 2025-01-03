@@ -84,7 +84,7 @@ export default function EditTestimonials({
         };
         formData.append("json", JSON.stringify(updated));
     
-        console.log("FormData content:", Array.from(formData.entries()));
+        // console.log("FormData content:", Array.from(formData.entries()));
     
         // const response = await fetch(baseUrl + "testimonial", {
         //   method: "PATCH",
@@ -99,6 +99,7 @@ export default function EditTestimonials({
         // toast.success("Testimonial updated successfully");
         // console.log("Testimonial updated successfully:", data);
         const response = await updateTestimonial(formData);
+        
         toast.success("Testimonial updated successfully");
         RevalidatePath("/intime-admin/testimonials");
         router.push("/intime-admin/testimonials");
