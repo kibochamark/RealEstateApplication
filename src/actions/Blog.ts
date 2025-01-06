@@ -64,7 +64,7 @@ export const postBlogData = async (formData: FormData) => {
      
       const data = await axios.get(baseUrl + id + "blog");
   
-      console.log(data, "data.data")
+      // console.log(data, "data.data")
   
       return data?.data?.data ?? [];
     } catch (e: any) {

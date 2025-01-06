@@ -7,12 +7,13 @@ interface PageProps {
   params: { id: number };
 }
 
-const Page = async ({ params }: PageProps) => {
+const Editpage = async ({ params }: PageProps) => {
   const { id } = params; // Extract id from the route parameters
   const [property, similarProperties] = await Promise.all([
     getPropertyById(id),
     getSimilarPropertyById(id)
   ]);
+  
 
 
   return (
@@ -27,4 +28,4 @@ const Page = async ({ params }: PageProps) => {
   );
 };
 
-export default Page;
+export default Editpage;
