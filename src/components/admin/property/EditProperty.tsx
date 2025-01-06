@@ -796,7 +796,7 @@ export default function EditProperty({
               <p className="text-sm text-muted-foreground my-6">
                 <strong>Deleting Images:</strong> Below, you will find the
                 current images associated with this property. To delete an
-                image, click the "Delete" button on the image you want to
+                image, click the &quot;Delete&ldquo; button on the image you want to
                 remove. This action will permanently delete the image from the
                 gallery.
               </p>
@@ -838,7 +838,7 @@ export default function EditProperty({
                 <strong>Uploading Images:</strong> Use the file input below to
                 upload new images to the property gallery. You can select
                 multiple files at once. After selecting the images, click the
-                "Update Images" button to add them to the gallery.
+                &quot;Update Images&ldquo; button to add them to the gallery.
               </p>
               <form
                 action=""
