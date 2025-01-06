@@ -52,7 +52,7 @@ export function DataTableRowActions<TData>({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
         <DropdownMenuItem onClick={()=>{
-          dispatch(setEditData({data:property.id, page}))
+          // dispatch(setEditData({data:property.id, page}))
         }} className="text-center text-primary300"><Link href={`/intime-admin/managelisting/${(row.original as Property).id}`}>Edit</Link></DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
