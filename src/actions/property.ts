@@ -45,8 +45,11 @@ export const getAllproperties = async () => {
 export const getPropertyById = async (id: number) => {
 
   try {
-    const response = await axios.get(baseUrl + `/${id}/property`);
+    const response = await axios.get(baseUrl + `${id}/property`);
+    
     return response?.data ?? [];
+    
+    
   } catch (e: any) {
     return [e.message, 400];
   }
@@ -105,20 +108,94 @@ export const postProperty = async (data: any) => {
 
 
 
-export const patchProperty = async (data: any) => {
+export const patchProperty = async (data: FormData) => {
   try {
-    const res = await axios.patch(baseUrl + `propertytype`, data, {
+    // console.log("data", data);
+    
+    // Ensure the data is properly serialized if it's not already in JSON format
+    const res = await axios.patch(baseUrl + "property", data, {
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'multipart/form-data',  // Make sure the content is treated as JSON
       }
     });
 
-    return res?.data ?? [];
+    if (res.status === 201) {
 
+      revalidatePath("/intime-admin/managelisting")
+      return [null, res?.data ?? []]
+    }
+    throw new Error("Error posting property");
+
+    // Return response data or empty array if no data returned
   } catch (e: any) {
-    console.error("Error patching property:", e);
+    // Log the error and return a more descriptive error message
+    console.error("Error posting property:", e);
     return [e.response?.data?.message ?? e.message, e.response?.status ?? 400];
   }
 };
 
+
+
+
+
+
+
+
+
+
+
+
+
+export async function patchPropertyData(data: any) {
+  console.log(data, 'data for updating property');
+  
+  try {
+    const response = await fetch(baseUrl + "property", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    console.log(response, 'response---------------');
+    console.log(response.status, "status", response.statusText, 'response------------------');
+    console.log('Request Payload:', response.body, 'Request Payload-----------------');
+
+
+
+
+    if (!response.ok) {
+      throw new Error("Failed to update property data");
+    }
+
+    const result = await response.json();
+    // revalidatePath("/properties");
+    return { data: result, error: null, status: response.status };
+  } catch (error) {
+    console.error("Error updating property data:", error);
+    return { data: null, error: "Failed to update property data", status: 400 };
+  }
+}
+
+export async function updatePropertyImage(formData: FormData) {
+  try {
+    const response = await fetch(baseUrl + "propertyimage", {
+      method: "PATCH",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to upload images");
+    }
+    console.log(response, 'response');
+    
+
+    const result = await response.json();
+    // revalidatePath("/properties");
+    return { data: result, error: null ,status: response.status};
+  } catch (error) {
+    console.error("Error uploading images:", error);
+    return { data: null, error: "Failed to upload images",status: 400 };
+  }
+}
 

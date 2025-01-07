@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic"
 
 const page = async() => {
   const testimonial = await getTestimonials() || []
-  console.log(testimonial), "testimonials";
+  // console.log(testimonial), "testimonials";
   
   return (
     <div className="col-span-3 md:container">

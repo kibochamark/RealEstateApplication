@@ -10,11 +10,17 @@ import AddProperty from './AddProperty'
 import { useAppDispatch } from '@/store/hooks'
 import { clearEditData, setIsAdd } from '@/store/slices/PropertySlice'
 import EditProperty from './EditProperty'
+import Link from 'next/link'
 
-const PageView = ({ properties, features, propertytypes }: { properties: any; features:any; propertytypes:any; }) => {
+const PageView = ({ properties, features, propertytypes}: { properties: any; features:any; propertytypes:any;}) => {
     const editdata = useSelector((state: RootState) => state.property.editdata)
     const isedit = useSelector((state: RootState) => state.property.isedit)
     const isadd = useSelector((state: RootState) => state.property.isadd)
+    console.log(editdata, 'the data');
+    console.log(editdata.id, 'the data id');
+
+
+    
 
     const dispatch = useAppDispatch()
     return (
@@ -37,7 +43,7 @@ const PageView = ({ properties, features, propertytypes }: { properties: any; fe
 
                 {isadd ? (
                     <AddProperty features={features} propertytypes={propertytypes} />
-                ) : isedit ? (<EditProperty features={features} propertytypes={propertytypes} />) : (
+                ) : isedit ? (<p>tesst</p>) : (
                     <div className='overflow-hidden'>
                         <DataTable columns={columns} data={properties ?? []} searchColumn="name"/>
                     </div>

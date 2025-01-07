@@ -53,11 +53,10 @@ export default function Component({ properties }: { properties: any[] }) {
   };
 
   // created encoded url params
-  const searchparams= useSearchParams()
+  const searchparams = useSearchParams();
 
-  const url =  new URLSearchParams(searchparams)
-  url.set("limit", "5"),
-  url.set("page", "0")
+  const url = new URLSearchParams(searchparams);
+  url.set("limit", "5"), url.set("page", "0");
 
   // const properties = [
   //   {
@@ -140,7 +139,7 @@ export default function Component({ properties }: { properties: any[] }) {
           className="w-12 h-1 bg-primary300 mx-auto mb-6"
         />
         <motion.h1 variants={itemVariants} className="text-4xl font-bold mb-4">
-          FIND YOUR DREAM HOME 
+          FIND YOUR DREAM HOME
         </motion.h1>
         <motion.p variants={itemVariants} className="text-muted-foreground">
           Below are some of our real estate listings spread across Nairobi,
@@ -166,87 +165,100 @@ export default function Component({ properties }: { properties: any[] }) {
               // router.push(`/listing/${property.id}`)
             }}
           >
-            <Card className="overflow-hidden shadow-none border-none">
-              <div className="relative">
-                <PropertyCarousel
-                  images={property.images.map(
-                    (image: { url: any }) => image.url
-                  )} // Extract URLs from images
-                  propertyId={property.id}
-                />
-                <div className="absolute top-4 left-4 flex gap-2">
-                  {property.featured && (
-                    <Badge className="bg-green-500">FEATURED</Badge>
-                  )}
-                  <Badge variant="secondary">{property.saleType}</Badge>
-                </div>
-                <div className="absolute bottom-4 left-4">
-                  <div className="text-white font-bold text-xl">
-                    {new Intl.NumberFormat("en-US", {
-                      style: "currency",
-                      currency: "KES",
-                    }).format(property.price)}
-                  </div>
-                </div>
-              </div>
-
-              <Link href={`/listing/${property.id}`}>
-                <CardContent className="p-4">
-                  <h3 className="font-semibold mb-2">{property.name}</h3>
-                  <div className="flex items-center text-muted-foreground mb-2">
-                    <MapPin className="w-4 h-4 mr-1" />
-                    {property.area}
-                  </div>
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    {property.bedrooms && (
-                      <div className="flex items-center">
-                        <Bed className="w-4 h-4 mr-1" />
-                        {property.bedrooms}
-                      </div>
+            {visibleProperties.length >= 0 ? (
+              <Card className="overflow-hidden shadow-none border-none">
+                <div className="relative">
+                  <PropertyCarousel
+                    images={property.images.map(
+                      (image: { url: any }) => image.url
+                    )} // Extract URLs from images
+                    propertyId={property.id}
+                  />
+                  <div className="absolute top-4 left-4 flex gap-2">
+                    {property.featured && (
+                      <Badge className="bg-green-500">FEATURED</Badge>
                     )}
-                    {property.size && (
-                      <div className="flex items-center">
-                        <Maximize2 className="w-4 h-4 mr-1" />
-                        {property.size}
-                      </div>
-                    )}
+                    <Badge variant="secondary">{property.saleType}</Badge>
                   </div>
-                  {property.propertyType && (
-                    <div className="mt-4 pt-4 border-t border-gray-200">
-                      <p className="text-sm text-muted-foreground">
-                        {property.propertyType.name}
-                      </p>
+                  <div className="absolute bottom-4 left-4">
+                    <div className="text-white font-bold text-xl">
+                      {new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "KES",
+                      }).format(property.price)}
                     </div>
-                  )}
-                </CardContent>
-              </Link>
-            </Card>
+                  </div>
+                </div>
+
+                <Link href={`/listing/${property.id}`}>
+                  <CardContent className="p-4">
+                    <h3 className="font-semibold mb-2">{property.name}</h3>
+                    <div className="flex items-center text-muted-foreground mb-2">
+                      <MapPin className="w-4 h-4 mr-1" />
+                      {property.area}
+                    </div>
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      {property.bedrooms && (
+                        <div className="flex items-center">
+                          <Bed className="w-4 h-4 mr-1" />
+                          {property.bedrooms}
+                        </div>
+                      )}
+                      {property.size && (
+                        <div className="flex items-center">
+                          <Maximize2 className="w-4 h-4 mr-1" />
+                          {property.size}
+                        </div>
+                      )}
+                    </div>
+                    {property.propertyType && (
+                      <div className="mt-4 pt-4 border-t border-gray-200">
+                        <p className="text-sm text-muted-foreground">
+                          {property.propertyType.name}
+                        </p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Link>
+              </Card>
+            ) : (
+              <p className="flex text-center w-full justify-center text-gray-500">
+                {" "}
+                No Properties yet
+              </p>
+            )}
           </motion.div>
         ))}
       </motion.div>
-
-      <div className="flex justify-center gap-4 mt-8">
-        <button
-          onClick={loadMoreProperties}
-          disabled={allPropertiesLoaded || loading}
-          className="px-4 py-2 border border-primary300 rounded-none transition-all duration-300 hover:bg-primary300 hover:text-white cursor-pointer text-primary500 bg-white"
-        >
-          {loading ? (
-            <div className="flex">
-              <Loader className="animate-spin text-blue-500 w-8 h-8" />{" "}
-            </div>
-          ) : allPropertiesLoaded ? (
-            "No More Properties"
-          ) : (
-            "Load More"
-          )}
-        </button>
-        <Link href={`/listing?${url}`}>
-          <button className="px-4 py-2 bg-primary300 transition-all rounded-none duration-300 hover:bg-white hover:text-primary500 text-white ">
-            View All Listings
+      {visibleProperties.length > 0 ? (
+        <div className="flex justify-center gap-4 mt-8">
+          <button
+            onClick={loadMoreProperties}
+            disabled={allPropertiesLoaded || loading}
+            className="px-4 py-2 border border-primary300 rounded-none transition-all duration-300 hover:bg-primary300 hover:text-white cursor-pointer text-primary500 bg-white"
+          >
+            {loading ? (
+              <div className="flex">
+                <Loader className="animate-spin text-blue-500 w-8 h-8" />{" "}
+              </div>
+            ) : allPropertiesLoaded ? (
+              "No More Properties"
+            ) : (
+              "Load More"
+            )}
           </button>
-        </Link>
-      </div>
+          <Link href={`/listing?${url}`}>
+            <button className="px-4 py-2 bg-primary300 transition-all rounded-none duration-300 hover:bg-white hover:text-primary500 text-white ">
+              View All Listings
+            </button>
+          </Link>
+        </div>
+      ) : (
+        <p className="flex text-center w-full justify-center text-gray-500">
+          {" "}
+          No Properties posted yet
+        </p>
+      )}
     </div>
   );
 }

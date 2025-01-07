@@ -89,9 +89,9 @@ export default function AddBlogs() {
         } else {
           toast.error("Error posting blog");
         }
-      } catch (error) {
+      } catch (e:any) {
         setIsLoading(false);
-        toast.error("Error posting blog");
+        toast.error("Error posting blog", e);
       }
     },
   });

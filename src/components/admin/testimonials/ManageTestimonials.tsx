@@ -33,7 +33,7 @@ const ManageTestimonials = ({ testimonial, features, propertytypes }: { testimon
 
                     }
                 }} className='bg-primary500 text-white rounded-none' >
-                    {isadd || isedit ? "back" : "add testimony"}
+                    {isadd || isedit ? "back" : "add testimonial"}
                 </Button>
             </div>
 

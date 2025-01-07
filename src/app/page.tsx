@@ -50,7 +50,7 @@ export default async function Home() {
 
 
   const testimonials = testimonialsResult.status === "fulfilled" ? testimonialsResult.value : [];
-  console.log(testimonials, "pp")
+  // console.log(testimonials, "pp")
 
 
 

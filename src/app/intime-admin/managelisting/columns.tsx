@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 
 import { DataTableColumnHeader } from "../../../components/admin/property/data-table-column-header"
-import { DataTableRowActions } from "../../../components/admin/property/data-table-row-actions"
 
 import {
     ArrowDownIcon,
@@ -17,6 +16,7 @@ import {
     QuestionMarkCircledIcon,
     StopwatchIcon,
 } from "@radix-ui/react-icons"
+import { DataTableRowActions } from "@/components/admin/property/data-table-row-actions-property"
 
 export const labels = [
     {
@@ -261,7 +261,7 @@ export const columns: ColumnDef<Property>[] = [
     },
     {
         id: "actions",
-        cell: ({ row }) => <DataTableRowActions row={row} page={"properties"} />,
+        cell: ({ row }) => <DataTableRowActions row={row} page={"properties"} id={0} />,
     },
 ]
 
