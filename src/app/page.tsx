@@ -8,6 +8,8 @@ import Component from "@/components/cards";
 import HeroSection from "@/components/herosection";
 import Process from "@/components/Process";
 import { TestimonialSlider } from "@/components/TestimonialSlider";
+import HeroSearchBar from "@/components/UpdatedLayout/HeroSearchBar";
+import { FullScreenCarousel } from "@/components/UpdatedLayout/HeroSections";
 import { Loader } from "lucide-react";
 import { Suspense } from "react";
 
@@ -38,7 +40,7 @@ export default async function Home() {
     getproperties(),
     getpropertytypes(),
     getRecentBlogs(3),
-    getTestimonials() ,
+    getTestimonials(),
   ]);
 
   const properties =
@@ -56,7 +58,21 @@ export default async function Home() {
 
   return (
     <Suspense fallback={<Loader className="animate min-h-[50vh] animate-spin text-secondary400" />}>
-      <HeroSection propertytypes={propertyTypes} />
+      {/* <HeroSection propertytypes={propertyTypes} /> */}
+      <div className="h-screen relative w-full px-4">
+        <FullScreenCarousel />
+
+        {/* Search area */}
+        <div className="absolute -bottom-10 z-30 flex justify-center mx-auto inset-x-0">
+          <div className="w-fit bg-[#F0F8FF] py-2 px-4 rounded-lg shadow-lg backdrop-blur-lg">
+            <h3 className="text-labelLarge p-2 font-bold">Find you next dream house</h3>
+            <div className="my-2 p-2">
+              <HeroSearchBar/>
+            </div>
+          </div>
+        
+        </div>
+      </div>
       <Component properties={properties["properties"] || []} />
       <div className="">
         <Aboutus />

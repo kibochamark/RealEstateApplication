@@ -39,7 +39,7 @@ const page = async (props: {
         propertyTypesResult.status === "fulfilled" ? propertyTypesResult.value : [];
 
     return (
-        <div className='w-full min-h-[50vh] bg-primary50'>
+        <div className='w-full min-h-[50vh] bg-primary50 rounded-lg shadow-lg md:mx-2'>
             <div className='py-24'>
                 <Suspense fallback={<Loader className='animate animate-spin text-secondary400' />}>
 
