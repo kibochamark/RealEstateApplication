@@ -16,8 +16,8 @@ const PageView = ({ properties, features, propertytypes}: { properties: any; fea
     const editdata = useSelector((state: RootState) => state.property.editdata)
     const isedit = useSelector((state: RootState) => state.property.isedit)
     const isadd = useSelector((state: RootState) => state.property.isadd)
-    console.log(editdata, 'the data');
-    console.log(editdata.id, 'the data id');
+    // console.log(editdata, 'the data');
+    // console.log(editdata.id, 'the data id');
 
 
     
@@ -26,7 +26,7 @@ const PageView = ({ properties, features, propertytypes}: { properties: any; fea
     return (
         <div className='flex flex-col w-full'>
             <div className='flex justify-between my-4'>
-                <h1 className="text-2xl font-bold mb-5">Manage Properties</h1>
+                <h1 className="text-2xl font-bold mb-5">Manage Property Listing</h1>
                 <Button onClick={() => {
                     if (isedit) {
                         dispatch(clearEditData())
