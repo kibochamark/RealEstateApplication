@@ -9,6 +9,7 @@ import Footer from "@/components/layout/enhancedfooter";
 import { Suspense } from "react";
 import { Loader } from "lucide-react";
 import Navbar from "@/components/UpdatedLayout/Navbar";
+import {  FloatingNavDemo } from "@/components/layout/FloatingNav";
 
 
 // Import the Lato font from Google Fonts
@@ -53,11 +54,14 @@ export default function RootLayout({
                 />
                 <div className="top-0">
                   {/* <Nav /> */}
-                  <Navbar/>
+                  <Navbar />
                 </div>
 
+
                 {children}
-                <div className="bottom-0  mx-4 rounded-lg">
+                <FloatingNavDemo />
+
+                <div className="bottom-0  rounded-lg">
                   <Footer />
                 </div>
               </ReactQueryProvider>

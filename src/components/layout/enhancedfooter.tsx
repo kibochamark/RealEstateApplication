@@ -24,7 +24,7 @@ export default function Footer() {
     }
 
     return (
-        <footer className="w-full  my-4 text-black">
+        <footer className="w-full   bg-gray-900 text-white">
             <div className="container mx-auto px-4">
                 <div className="flex justify-end py-4">
                     <button
@@ -36,7 +36,7 @@ export default function Footer() {
                     </button>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-8 border-t border-b border-secondary500">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-8  border-secondary500">
                     <div>
                         <HousePlus className="text-displayLarge font-bold" />
                         <p className='text-headlineSmall text-secondary500 text-balance'>Intime Homes</p>

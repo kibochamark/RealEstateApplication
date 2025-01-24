@@ -5,8 +5,10 @@ import { getTestimonials } from "@/actions/Testimonial";
 import Aboutus from "@/components/aboutus";
 import { RecentBlogs } from "@/components/Blogs/RecentBlogs";
 import Component from "@/components/cards";
+import { Categories } from "@/components/Categories";
 import HeroSection from "@/components/herosection";
 import Process from "@/components/Process";
+import { AnimatedTestimonialsDemo } from "@/components/Testimonial";
 import { TestimonialSlider } from "@/components/TestimonialSlider";
 import HeroSearchBar from "@/components/UpdatedLayout/HeroSearchBar";
 import { FullScreenCarousel } from "@/components/UpdatedLayout/HeroSections";
@@ -52,38 +54,58 @@ export default async function Home() {
 
 
   const testimonials = testimonialsResult.status === "fulfilled" ? testimonialsResult.value : [];
-  // console.log(testimonials, "pp")
+  console.log(testimonials, "pp")
 
 
 
   return (
     <Suspense fallback={<Loader className="animate min-h-[50vh] animate-spin text-secondary400" />}>
-      {/* <HeroSection propertytypes={propertyTypes} /> */}
-      <div className="h-screen relative w-full px-4">
-        <FullScreenCarousel />
 
+
+      {/* <HeroSection propertytypes={propertyTypes} /> */}
+      <div className="h-[100vh] relative w-full px-6">
+        <FullScreenCarousel />
         {/* Search area */}
         <div className="absolute -bottom-10 z-30 flex justify-center mx-auto inset-x-0">
           <div className="w-fit bg-[#F0F8FF] py-2 px-4 rounded-lg shadow-lg backdrop-blur-lg">
             <h3 className="text-labelLarge p-2 font-bold">Find you next dream house</h3>
             <div className="my-2 p-2">
-              <HeroSearchBar/>
+              <HeroSearchBar />
             </div>
           </div>
-        
+
         </div>
       </div>
+
+
+      {/* featured properties */}
       <Component properties={properties["properties"] || []} />
+
+
+      {/* Available categories */}
+      <section id="testimonials" className="w-full py-12 bg-gray-900">
+        <h2 className="text-displayMedium font-semibold text-center pl-8 text-white mb-8">We Span a Versatile Of Categories</h2>
+        <Categories />
+      </section>
+
+
       <div className="">
         <Aboutus />
       </div>
+
+      {/* Sale or rental process */}
       <div className="bg-primary300/10">
         <Process />
       </div>
-      <section id="testimonials" className="w-full py-12 bg-transparent ">
-        <h2 className="text-2xl font-semibold text-center mb-8">What Our Customers Say</h2>
-        <TestimonialSlider testimonials={testimonials} />
+
+      {/* Testimonials */}
+      <section id="testimonials" className="w-full py-12 bg-gray-900">
+        <h2 className="text-displayMedium font-semibold text-center pl-8 text-white mb-8">What Our Customers Say</h2>
+        {/* <TestimonialSlider testimonials={testimonials} /> */}
+        <AnimatedTestimonialsDemo testimonials={testimonials} />
       </section>
+
+
       <div className="bg-primary300/10">
         <RecentBlogs blogs={blogs} />
       </div>

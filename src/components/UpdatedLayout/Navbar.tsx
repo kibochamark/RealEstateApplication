@@ -45,6 +45,7 @@ const Navbar = () => {
         };
     }, []);
 
+
     const NavItem = ({ href, children }: { href: string; children: React.ReactNode }) => (
         <Link href={href} className={`block py-2 text-labelLarge transition-all ${path.split("/")[1] == href.split("/")[1] && "bg-black rounded-full  text-white"} duration-300 px-2`}>{children}</Link>
     )
@@ -67,6 +68,9 @@ const Navbar = () => {
             </div>
         </div>
     )
+    if (path.includes("intime-admin") || path.startsWith("/intimehomes")) {
+        return null
+    }
     return (
         <div className='my-4 flex items-center justify-between gap-2 w-full px-8'>
 
@@ -88,9 +92,9 @@ const Navbar = () => {
                         >
                             <div className='flex gap-2 items-center justify-center'>
                                 <div className='flex flex-col gap-2'>
-                                <HousePlus className="text-displayLarge font-bold" />
-                                <p className='text-headlineSmall text-secondary500 text-balance'>Intime Homes</p>
-                            </div>
+                                    <HousePlus className="text-displayLarge font-bold" />
+                                    <p className='text-headlineSmall text-secondary500 text-balance'>Intime Homes</p>
+                                </div>
                                 <Button variant="ghost" size="icon" className="self-end justify-end items-end flex mb-4" onClick={() => setIsMenuOpen(false)}>
                                     <X className="h-6 w-6" />
                                 </Button>
@@ -108,7 +112,7 @@ const Navbar = () => {
                                 />
                             </div>
 
-                            <NavItem href={`/listing?`}>listing</NavItem>
+                            <NavItem href={`/listing`}>listing</NavItem>
                             <NavItem href="/#testimonials">Testimonials</NavItem>
                             <NavItem href="/blogs">Blogs</NavItem>
                             <NavItem href="/contact">Contact</NavItem>
@@ -141,7 +145,7 @@ const Navbar = () => {
                     title="Rentals"
                     items={["Townhouses/Villas For Rent", "Studio Apartments For Rent", "Office Spaces For Rent"]}
                 />
-                <NavItem href={`/listing?`}>listing</NavItem>
+                <NavItem href={`/listing`}>listing</NavItem>
                 {/* <NavItem href="/#testimonials">Testimonials</NavItem> */}
                 <NavItem href="/blogs">Blogs</NavItem>
                 {/* <NavItem href="/contact">Contact</NavItem> */}

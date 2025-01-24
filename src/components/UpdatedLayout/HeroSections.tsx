@@ -12,27 +12,31 @@ import { useRouter } from "next/navigation"
 
 
 const images = [
-    "/9.jpg?height=1080&width=1920",
-    "/10.jpg?height=1080&width=1920",
-    "/14.jpg?height=1080&width=1920",
-    "/15.jpg?height=1080&width=1920",
-    "/8.jpg?height=1080&width=1920",
-    "/12.jpg?height=1080&width=1920",
-    "/13.jpg?height=1080&width=1920",
+    "/FrontApartment.jpg?height=1080&width=1920",
+    "/dining.jpg?height=1080&width=1920",
+    "/bungalow.jpg?height=1080&width=1920",
+    "/villa.jpg?height=1080&width=1920",
+    "/apartment.jpg?height=1080&width=1920",
+    "/insideapartment.jpg?height=1080&width=1920",
+    "/apartment2.jpg?height=1080&width=1920",
 ]
 
 export function FullScreenCarousel() {
+    const autoplay = Autoplay({ stopOnInteraction: true, delay: 4000 });
+
     const router = useRouter()
     const [emblaRef, emblaApi] = useEmblaCarousel({
         loop: true,
         duration: 5,
-        skipSnaps: true,
-        dragFree: true,
+        skipSnaps: false,
+        dragFree: false,
         // containScroll: "trimSnaps",
-    }, [Autoplay()])
+    }, [autoplay])
     const [isPaused, setIsPaused] = useState(false)
     const [currentIndex, setCurrentIndex] = useState(0)
     const [autoPlayInterval, setAutoPlayInterval] = useState<NodeJS.Timeout | null>(null)
+
+
 
     const scrollPrev = useCallback(() => {
         if (emblaApi) emblaApi.scrollPrev()
@@ -87,6 +91,12 @@ export function FullScreenCarousel() {
             setAutoPlayInterval(null)
         }
     }, [isPaused, autoPlayInterval])
+
+    
+    // useEffect(() => {
+    //     if (!emblaApi) return;
+    //     autoplay.play(); // Ensure autoplay starts correctly after initialization.
+    // }, [emblaApi, autoplay]);
 
     return (
         <div className="relative h-full w-full rounded-lg shadow-lg backdrop-blur-sm overflow-hidden">
@@ -152,8 +162,9 @@ export function FullScreenCarousel() {
                             key={index}
                             className="relative h-full w-full flex-[0_0_100%] transition-all duration-700 ease-out"
                             style={{
-                                opacity: index === currentIndex ? 1 : 0.5,
-                                filter: index === currentIndex ? "blur(0)" : "blur(4px)",
+                                opacity: index === currentIndex ? 1 : 0.6, // Keep opacity consistent.
+                                transform: 'scale(1)', // Avoid scaling down for inactive slides.
+                                transition: 'opacity 0.5s ease', // Smooth opacity transition.
                             }}
                         >
                             <Image
