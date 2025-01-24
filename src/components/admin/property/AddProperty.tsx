@@ -1,44 +1,56 @@
-"use client";
+"use client"
 
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { FieldArray, useFormik } from "formik";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Select } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AppDispatch, RootState } from "@/store/store";
-import * as Yup from "yup";
-import { FeatureBadges } from "./features";
-import GooglePlacesAutocomplete from "react-google-places-autocomplete";
-import { postProperty } from "@/actions/property";
-import toast from "react-hot-toast";
-import { Loader } from "lucide-react";
+import type React from "react"
+import { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { FieldArray, useFormik } from "formik"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import {
+  Select,
+  SelectGroup,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectLabel,
+  SelectItem,
+  SelectSeparator,
+} from "@/components/ui/select"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Label } from "@/components/ui/label"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { AppDispatch, type RootState } from "@/store/store"
+import * as Yup from "yup"
+import { FeatureBadges } from "./features"
+import GooglePlacesAutocomplete from "react-google-places-autocomplete"
+import { postProperty } from "@/actions/property"
+import toast from "react-hot-toast"
+import { Loader } from "lucide-react"
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
 
 interface PropertyImage {
-  url: string;
-  Image: File;
+  url: string
+  Image: File
+  id: string // Added ID for drag and drop
 }
 
 export default function AddProperty({
   features,
   propertytypes,
 }: {
-  features: any;
-  propertytypes: any;
+  features: any
+  propertytypes: any
 }) {
   //   const dispatch = useDispatch<AppDispatch>();
-  const router = useRouter();
-  const { editdata } = useSelector((state: RootState) => state.property);
-  const [uploadedImages, setUploadedImages] = useState<PropertyImage[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [value, setValue] = useState(null);
+  const router = useRouter()
+  const { editdata } = useSelector((state: RootState) => state.property)
+  const [uploadedImages, setUploadedImages] = useState<PropertyImage[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [value, setValue] = useState(null)
 
-  const formattedImages = uploadedImages.map((image) => image.Image);
+  const formattedImages = uploadedImages.map((image) => image.Image)
   //   useEffect(() => {
   //     dispatch(fetchFeatures());
   //     dispatch(fetchPropertyTypes());
@@ -63,7 +75,7 @@ export default function AddProperty({
       features: [], // This must be an array of strings
       state: "",
       country: "",
-      county:"", 
+      county: "",
       // Ensure country is provided
       area: "",
       bedrooms: 0,
@@ -71,77 +83,85 @@ export default function AddProperty({
 
     onSubmit: async (values) => {
       // convert features from an array to a string
-      let updatedvalues={
+      const updatedvalues = {
         ...values,
-        features:values.features.join(",")
+        features: values.features.join(","),
       }
 
       // remove unwanted data from our post body and format it
-      let formattedValues = Object.entries(updatedvalues).filter(([key, value]) => { // Remove empty values
+      const formattedValues = Object.entries(updatedvalues).filter(([key, value]) => {
+        // Remove empty values
         if (key === "images" || key === "Image") {
-          return false;
+          return false
         }
-        return true;
+        return true
+      })
 
-      });
-
-
-      console.log(Object.fromEntries(formattedValues), "Submitting form values");
+      console.log(Object.fromEntries(formattedValues), "Submitting form values")
 
       try {
-        setIsLoading(true);
-        const formData = new FormData();
+        setIsLoading(true)
+        const formData = new FormData()
         formattedImages.forEach((image, index) => {
-          formData.append(`images`, image);
-        });
-        formData.append("json", JSON.stringify(Object.fromEntries(formattedValues))); // Append JSON as a string to form data
+          formData.append(`images`, image)
+        })
+        formData.append("json", JSON.stringify(Object.fromEntries(formattedValues))) // Append JSON as a string to form data
 
-    
-
-        const response = await postProperty(formData);
+        const response = await postProperty(formData)
 
         // Handle the response
-        setIsLoading(false);
+        setIsLoading(false)
         if (!response[0]) {
-         // console.log("Property successfully posted:", response);
-          toast.success("Property successfully posted");
-          formik.resetForm();
-          setUploadedImages([]);
+          // console.log("Property successfully posted:", response);
+          toast.success("Property successfully posted")
+          formik.resetForm()
+          setUploadedImages([])
         } else {
           //console.error("Error posting property:", response[0]);
-          toast.error("Error posting property");
+          toast.error("Error posting property")
         }
       } catch (error) {
-        console.error("Error posting property:", error);
+        console.error("Error posting property:", error)
       }
     },
-  });
+  })
 
   const handleImageUpload = (
     event: React.ChangeEvent<HTMLInputElement>,
-    setFieldValue: (field: string, value: any) => void
+    setFieldValue: (field: string, value: any) => void,
   ) => {
-    const files = event.target.files;
+    const files = event.target.files
     if (files) {
-      const newImages = Array.from(files).map((file) => {
+      const newImages = Array.from(files).map((file, index) => {
         return {
           url: URL.createObjectURL(file),
           Image: file,
-        };
-      });
-      setUploadedImages((prevImages) => [...prevImages, ...newImages]);
-      setFieldValue("images", [...uploadedImages, ...newImages]);
+          id: `image-${index + 1}`, // Assign unique ID
+        }
+      })
+      setUploadedImages((prevImages) => [...prevImages, ...newImages])
+      setFieldValue("images", [...uploadedImages, ...newImages])
     }
-  };
+  }
 
   const handleImageDelete = (
-    index: number,
-    setFieldValue: (field: string, value: any) => void
+    id: string, // Changed to accept ID
+    setFieldValue: (field: string, value: any) => void,
   ) => {
-    const newImages = uploadedImages.filter((_, i) => i !== index);
-    setUploadedImages(newImages);
-    setFieldValue("images", newImages);
-  };
+    const newImages = uploadedImages.filter((image) => image.id !== id)
+    setUploadedImages(newImages)
+    setFieldValue("images", newImages)
+  }
+
+  const onDragEnd = (result: any) => {
+    if (!result.destination) return
+
+    const items = Array.from(uploadedImages)
+    const [reorderedItem] = items.splice(result.source.index, 1)
+    items.splice(result.destination.index, 0, reorderedItem)
+
+    setUploadedImages(items)
+  }
 
   //   if (isLoading) {
   //     return <div>Loading...</div>;
@@ -157,15 +177,9 @@ export default function AddProperty({
         <CardTitle>Create New Property</CardTitle>
       </CardHeader>
       <CardContent>
-        <form
-          className="md:grid gap-4 md:grid-cols-3 grid-cols-1"
-          onSubmit={formik.handleSubmit}
-        >
+        <form className="md:grid gap-4 md:grid-cols-3 grid-cols-1" onSubmit={formik.handleSubmit}>
           <div>
-            <label
-              htmlFor="name"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
+            <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Property title
             </label>
             <input
@@ -179,16 +193,11 @@ export default function AddProperty({
               placeholder="John"
               required
             />
-            {formik.errors.name && formik.touched.name && (
-              <div className="text-red-500">{formik.errors.name}</div>
-            )}
+            {formik.errors.name && formik.touched.name && <div className="text-red-500">{formik.errors.name}</div>}
           </div>
 
           <div>
-            <label
-              htmlFor=""
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
+            <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Description
             </label>
             <textarea
@@ -208,10 +217,7 @@ export default function AddProperty({
           </div>
 
           <div>
-            <label
-              htmlFor=""
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
+            <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Select a sale type
             </label>
             <select
@@ -222,7 +228,7 @@ export default function AddProperty({
               defaultValue={formik.values.saleType}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
             >
-              <option >Choose a sale type</option>
+              <option>Choose a sale type</option>
               <option value="Sale">Sale</option>
               <option value="Rent">Rental</option>
             </select>
@@ -234,26 +240,9 @@ export default function AddProperty({
           <hr className="my-4 md:col-span-3 col-span-1" />
 
           <div>
-            <label
-              htmlFor="long"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
+            <label htmlFor="long" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Longitude
             </label>
-            {/* <select id="location"
-                            defaultValue={formik.values.location}
-
-                            name='location' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300">
-                            <option selected>Choose a country</option>
-                            <option value="US">United States</option>
-                            <option value="CA">Canada</option>
-                            <option value="FR">France</option>
-                            <option value="DE">Germany</option>
-                        </select> */}
-
-            {/* {formik.errors.location && formik.touched.location && (
-              <div className="text-red-500">{formik.errors.location}</div>
-            )} */}
             <input
               type="text"
               id=""
@@ -270,26 +259,9 @@ export default function AddProperty({
             )}
           </div>
           <div>
-            <label
-              htmlFor="lat"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
+            <label htmlFor="lat" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Latitude
             </label>
-            {/* <select id="location"
-                            defaultValue={formik.values.location}
-
-                            name='location' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300">
-                            <option selected>Choose a country</option>
-                            <option value="US">United States</option>
-                            <option value="CA">Canada</option>
-                            <option value="FR">France</option>
-                            <option value="DE">Germany</option>
-                        </select> */}
-
-            {/* {formik.errors.location && formik.touched.location && (
-              <div className="text-red-500">{formik.errors.location}</div>
-            )} */}
             <input
               type="text"
               id=""
@@ -307,10 +279,7 @@ export default function AddProperty({
           </div>
 
           <div>
-            <label
-              htmlFor=""
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
+            <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Street Address
             </label>
             <input
@@ -330,10 +299,7 @@ export default function AddProperty({
           </div>
 
           <div>
-            <label
-              htmlFor=""
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
+            <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               City
             </label>
             <input
@@ -347,16 +313,11 @@ export default function AddProperty({
               placeholder="Nairobi"
               required
             />
-            {formik.errors.city && formik.touched.city && (
-              <div className="text-red-500">{formik.errors.city}</div>
-            )}
+            {formik.errors.city && formik.touched.city && <div className="text-red-500">{formik.errors.city}</div>}
           </div>
 
           <div>
-            <label
-              htmlFor=""
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
+            <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               State
             </label>
             <input
@@ -370,15 +331,10 @@ export default function AddProperty({
               placeholder="kiambu"
               required
             />
-            {formik.errors.state && formik.touched.state && (
-              <div className="text-red-500">{formik.errors.state}</div>
-            )}
+            {formik.errors.state && formik.touched.state && <div className="text-red-500">{formik.errors.state}</div>}
           </div>
           <div>
-            <label
-              htmlFor=""
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
+            <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               county
             </label>
             <input
@@ -398,10 +354,7 @@ export default function AddProperty({
           </div>
 
           <div>
-            <label
-              htmlFor=""
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
+            <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Country
             </label>
             <input
@@ -421,10 +374,7 @@ export default function AddProperty({
           </div>
 
           <div>
-            <label
-              htmlFor=""
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
+            <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Area
             </label>
             <input
@@ -437,9 +387,7 @@ export default function AddProperty({
               placeholder="runda"
               required
             />
-            {formik.errors.area && formik.touched.area && (
-              <div className="text-red-500">{formik.errors.area}</div>
-            )}
+            {formik.errors.area && formik.touched.area && <div className="text-red-500">{formik.errors.area}</div>}
           </div>
 
           <hr className="my-4 col-span-3" />
@@ -455,19 +403,13 @@ export default function AddProperty({
               value=""
               className="w-4 h-4  text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-primary300 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
             />
-            <label
-              htmlFor="default-checkbox"
-              className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >
+            <label htmlFor="default-checkbox" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
               Featured
             </label>
           </div>
 
           <div>
-            <label
-              htmlFor=""
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
+            <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Select a property type
             </label>
             <select
@@ -479,15 +421,13 @@ export default function AddProperty({
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
             >
               <option>Choose a property type</option>
-              {propertytypes?.map(
-                (type: { name: string; id: number }, idx: number) => {
-                  return (
-                    <option value={type.id} key={idx}>
-                      {type.name}
-                    </option>
-                  );
-                }
-              )}
+              {propertytypes?.map((type: { name: string; id: number }, idx: number) => {
+                return (
+                  <option value={type.id} key={idx}>
+                    {type.name}
+                  </option>
+                )
+              })}
             </select>
             {formik.errors.propertyType && formik.touched.propertyType && (
               <div className="text-red-500">{formik.errors.propertyType}</div>
@@ -495,10 +435,7 @@ export default function AddProperty({
           </div>
 
           <div>
-            <label
-              htmlFor=""
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
+            <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Size
             </label>
             <input
@@ -513,16 +450,11 @@ export default function AddProperty({
               placeholder="0"
               required
             />
-            {formik.errors.size && formik.touched.size && (
-              <div className="text-red-500">{formik.errors.size}</div>
-            )}
+            {formik.errors.size && formik.touched.size && <div className="text-red-500">{formik.errors.size}</div>}
           </div>
 
           <div>
-            <label
-              htmlFor=""
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
+            <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Distance
             </label>
             <input
@@ -542,10 +474,7 @@ export default function AddProperty({
           </div>
 
           <div>
-            <label
-              htmlFor=""
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
+            <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Price
             </label>
             <input
@@ -559,16 +488,11 @@ export default function AddProperty({
               placeholder="0.00"
               required
             />
-            {formik.errors.price && formik.touched.price && (
-              <div className="text-red-500">{formik.errors.price}</div>
-            )}
+            {formik.errors.price && formik.touched.price && <div className="text-red-500">{formik.errors.price}</div>}
           </div>
 
           <div>
-            <label
-              htmlFor=""
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
+            <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Price per month
             </label>
             <input
@@ -588,10 +512,7 @@ export default function AddProperty({
           </div>
 
           <div>
-            <label
-              htmlFor=""
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
+            <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Bedrooms
             </label>
             <input
@@ -611,37 +532,28 @@ export default function AddProperty({
           </div>
 
           <div>
-            <label
-              htmlFor=""
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
+            <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Property features
             </label>
 
             <FeatureBadges
               features={features}
               selectedFeatures={formik.values.features}
-              onFeatureToggle={function (feature: string): void {
+              onFeatureToggle={(feature: string): void => {
                 if (formik.values.features?.find((f) => f == feature)) {
                   formik.setFieldValue(
                     "features",
-                    formik.values.features.filter((f) => f !== feature)
-                  );
+                    formik.values.features.filter((f) => f !== feature),
+                  )
                 } else {
-                  formik.setFieldValue("features", [
-                    ...formik.values.features,
-                    feature,
-                  ]);
+                  formik.setFieldValue("features", [...formik.values.features, feature])
                 }
               }}
             />
           </div>
 
           <div>
-            <label
-              htmlFor=""
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
+            <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Images
             </label>
             <input
@@ -650,38 +562,49 @@ export default function AddProperty({
               type="file"
               multiple
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
-              onChange={(event) =>
-                handleImageUpload(event, formik.setFieldValue)
-              }
+              onChange={(event) => handleImageUpload(event, formik.setFieldValue)}
             />
-            <div className="mt-4 grid grid-cols-3 gap-4">
-              {uploadedImages.map((image, index) => (
-                <div key={index} className="relative">
-                  <img
-                    src={image.url}
-                    alt={`Uploaded ${index + 1}`}
-                    className="w-full h-32 object-cover rounded"
-                  />
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    size="sm"
-                    className="absolute top-0 right-0 m-1"
-                    onClick={() =>
-                      handleImageDelete(index, formik.setFieldValue)
-                    }
-                  >
-                    Delete
-                  </Button>
-                </div>
-              ))}
-            </div>
+            <DragDropContext onDragEnd={onDragEnd}>
+              <Droppable droppableId="images" direction="horizontal">
+                {(provided) => (
+                  <div {...provided.droppableProps} ref={provided.innerRef} className="mt-4 grid grid-cols-3 gap-4">
+                    {uploadedImages.map((image, index) => (
+                      <Draggable key={image.id} draggableId={image.id} index={index}>
+                        {(provided) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            className="relative"
+                          >
+                            <img
+                              src={image.url || "/placeholder.svg"}
+                              alt={`Uploaded ${index + 1}`}
+                              className="w-full h-32 object-cover rounded"
+                            />
+                            <Button
+                              type="button"
+                              variant="destructive"
+                              size="sm"
+                              className="absolute top-0 right-0 m-1"
+                              onClick={() => handleImageDelete(image.id, formik.setFieldValue)} // Pass image ID
+                            >
+                              Delete
+                            </Button>
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
           </div>
           {isLoading ? (
             <Button type="submit" className="w-full" disabled>
               {/* Creating Property.. ..{" "} */}
               <Loader className="animate-spin text-blue-500 w-8 h-8" />{" "}
-
             </Button>
           ) : (
             <Button type="submit" className="w-full">
@@ -691,5 +614,6 @@ export default function AddProperty({
         </form>
       </CardContent>
     </Card>
-  );
+  )
 }
+
