@@ -9,7 +9,6 @@ import { Categories } from "@/components/Categories";
 import HeroSection from "@/components/herosection";
 import Process from "@/components/Process";
 import { AnimatedTestimonialsDemo } from "@/components/Testimonial";
-import { TestimonialSlider } from "@/components/TestimonialSlider";
 import HeroSearchBar from "@/components/UpdatedLayout/HeroSearchBar";
 import { FullScreenCarousel } from "@/components/UpdatedLayout/HeroSections";
 import { Loader } from "lucide-react";
