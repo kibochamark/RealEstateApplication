@@ -85,6 +85,8 @@ const Nav = () => {
         return null
     }
 
+    console.log(isMobile, isMenuOpen)
+
     return (
         <nav className={`flex items-center fixed justify-end top-0 z-50 w-full p-6 ${scrolled ? "bg-white" : path == "/" ? "bg-transparent text-white" : "bg-white text-black"}   transition-colors duration-300`}>
             <div className="flex-1 md:hidden">

@@ -8,6 +8,8 @@ import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import Footer from "@/components/layout/enhancedfooter";
 import { Suspense } from "react";
 import { Loader } from "lucide-react";
+import Navbar from "@/components/UpdatedLayout/Navbar";
+import {  FloatingNavDemo } from "@/components/layout/FloatingNav";
 
 
 // Import the Lato font from Google Fonts
@@ -29,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${lato.className} antialiased min-h-screen`}
+        className={`${lato.className} antialiased min-h-screen bg-[#FAF9F6]`}
       >
         <div className="relative">
           <Suspense fallback={<Loader className='animate animate-spin text-secondary400' />}>
@@ -51,11 +53,15 @@ export default function RootLayout({
                   }}
                 />
                 <div className="top-0">
-                  <Nav />
+                  {/* <Nav /> */}
+                  <Navbar />
                 </div>
 
+
                 {children}
-                <div className="bottom-0">
+                <FloatingNavDemo />
+
+                <div className="bottom-0  rounded-lg">
                   <Footer />
                 </div>
               </ReactQueryProvider>

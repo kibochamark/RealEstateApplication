@@ -24,11 +24,27 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { AppDispatch, type RootState } from "@/store/store"
 import * as Yup from "yup"
 import { FeatureBadges } from "./features"
-import GooglePlacesAutocomplete from "react-google-places-autocomplete"
 import { postProperty } from "@/actions/property"
 import toast from "react-hot-toast"
 import { Loader } from "lucide-react"
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { FieldArray, useFormik } from "formik";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AppDispatch, RootState } from "@/store/store";
+import * as Yup from "yup";
+import { FeatureBadges } from "./features";
+import { postProperty } from "@/actions/property";
+import toast from "react-hot-toast";
+import { Loader } from "lucide-react";
 
 interface PropertyImage {
   url: string

@@ -78,6 +78,11 @@ export default function AddTestimonials() {
         setIsLoading(true);
         console.log(values, "submitted");
 
+        let requestdata={
+          ...values,
+          userId:session?.user.userid! as number
+        }
+
         const formData = new FormData();
 
         // Append image if available

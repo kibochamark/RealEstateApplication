@@ -25,7 +25,7 @@ const Footer = () => {
       {details.map((detail) => (
         <footer
           key={detail.id}
-          className="bg-secondary300 lg:grid lg:grid-cols-5"
+          className="bg-black lg:grid lg:grid-cols-5"
         >
           <div className="relative block h-32 lg:col-span-2 lg:h-full">
             <img
