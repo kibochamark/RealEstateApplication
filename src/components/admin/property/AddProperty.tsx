@@ -14,7 +14,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AppDispatch, RootState } from "@/store/store";
 import * as Yup from "yup";
 import { FeatureBadges } from "./features";
-import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import { postProperty } from "@/actions/property";
 import toast from "react-hot-toast";
 import { Loader } from "lucide-react";
