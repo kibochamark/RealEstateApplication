@@ -53,7 +53,7 @@ export function TestimonialSlider({ testimonials }: TestimonialSliderProps) {
                     exit={{ opacity: 0, y: -50 }}
                     transition={{ duration: 0.5 }}
                   >
-                    {%<Testimonial {...testimonial} />%}
+                    {/* <Testimonial {...testimonial} />*/}
                   </motion.div>
                 )}
               </AnimatePresence>
