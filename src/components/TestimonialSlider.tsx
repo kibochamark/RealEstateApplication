@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { Testimonial, TestimonialProps } from './Testimonial'
+import { TestimonialProps } from './Testimonial'
 import Autoplay from 'embla-carousel-autoplay'
 
 
@@ -53,7 +53,7 @@ export function TestimonialSlider({ testimonials }: TestimonialSliderProps) {
                     exit={{ opacity: 0, y: -50 }}
                     transition={{ duration: 0.5 }}
                   >
-                    <Testimonial {...testimonial} />
+                    //<Testimonial {...testimonial} />
                   </motion.div>
                 )}
               </AnimatePresence>
