@@ -21,6 +21,8 @@ import { RevalidatePath } from "@/components/globalcomponents/RevalidateCustomPa
 import { useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { postUserData } from '@/actions/Users';
+import { useSession } from 'next-auth/react'
+
 
 
 // Helper function to generate random string
@@ -199,7 +201,11 @@ export const columns: ColumnDef<accessdata>[] = [
     header: "Actions",
     cell: ({ row }) => {
       const [isDialogOpen, setIsDialogOpen] = useState(false)
-      const [createdUser, setCreatedUser] = useState<any>(null)
+      const [createdUser, setCreatedUser] = useState<any>(null);
+
+      const {data: session} = useSession();
+      
+      const companyId = session?.user?.companyId;
 
       const handleStatusUpdate = async (status: string) => {
         try {
@@ -224,13 +230,13 @@ export const columns: ColumnDef<accessdata>[] = [
                 contact: generateRandomPhoneNumber(),
                 password: defaultPassword,
                 confimpassword: defaultPassword,
+                companyId: session?.user?.companyId,
               }
 
               try {
                 // Assuming you have a postUserData function defined elsewhere
-                await postUserData(updatedValues)
-                setCreatedUser(updatedValues)
-                alert(updatedValues)
+                await postUserData(updatedValues);
+                setCreatedUser(updatedValues);
                 setIsDialogOpen(true)
               } catch (error) {
                 console.error("Error creating user:", error)
