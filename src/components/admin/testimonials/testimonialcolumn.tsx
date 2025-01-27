@@ -78,18 +78,9 @@ export const priorities = [
 ];
 
 interface User {
-  id: number;
+
   username: string;
-  email: string;
-  password: string;
-  salt: string;
-  firstname: string;
-  lastname: string;
-  contact: string;
-  role: string;
-  createdAt: string;
-  updatedAt: string;
-  companyId: number;
+  
 }
 
 interface testimonial {
@@ -97,10 +88,8 @@ interface testimonial {
   name: string;
   imageUrl: string;
   public_id: string;
-  description: string;
+  quote: string;
   userId: number;
-  onBehalfOf: string;
-  rating: number;
   createdAt: string;
   updatedAt: string;
   user: User;
@@ -153,23 +142,9 @@ export const testimonialcolumn: ColumnDef<testimonial>[] = [
       );
     },
   },
+
   {
-    accessorKey: "rating",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Rating" />
-    ),
-    cell: ({ row }) => {
-      return (
-        <div className="flex space-x-2">
-          <span className="max-w-[500px] truncate font-medium">
-            {row.getValue("rating")}
-          </span>
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "area",
+    accessorKey: "quote",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="description" />
     ),
@@ -179,9 +154,9 @@ export const testimonialcolumn: ColumnDef<testimonial>[] = [
          <span
   className="max-w-[500px] truncate font-medium"
   dangerouslySetInnerHTML={{
-    __html: row.original?.description.length > 18 
-      ? row.original.description.slice(0, 18) + "..."
-      : row.original.description,
+    __html: row.original?.quote.length > 18 
+      ? row.original.quote.slice(0, 18) + "..."
+      : row.original.quote,
   }}
 ></span>
 
@@ -190,16 +165,16 @@ export const testimonialcolumn: ColumnDef<testimonial>[] = [
     },
   },
   {
-    accessorKey: "onBehalfOf",
+    accessorKey: "user.username",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="onBehalfOf" />
+      <DataTableColumnHeader column={column} title="Posted by" />
     ),
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
           <span
             className="max-w-[500px] truncate font-medium"
-            dangerouslySetInnerHTML={{ __html: row.original?.onBehalfOf }}
+            dangerouslySetInnerHTML={{ __html: row.original?.user.username }}
           ></span>
         </div>
       );
