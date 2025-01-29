@@ -1,8 +1,9 @@
 "use client";
 import React from "react";
 import { FloatingNav } from "../ui/floating-navbar";
-import { IconHome, IconList, IconMessage, IconUser } from "@tabler/icons-react";
+// import { IconHome, IconList, IconMessage, IconUser } from "@tabler/icons-react";
 import { usePathname } from "next/navigation";
+import { IconHome, IconList, IconMessage } from "@tabler/icons-react";
 export function FloatingNavDemo() {
     const path = usePathname()
     const navItems = [
