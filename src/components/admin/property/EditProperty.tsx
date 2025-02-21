@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import { RevalidatePath } from "@/components/globalcomponents/RevalidateCustomPath";
 import { useMutation } from "@tanstack/react-query";
+import { Reorder } from "framer-motion";
 
 interface PropertyImage {
   url: string;
@@ -859,7 +860,9 @@ export default function EditProperty({
                   }
                 />
                 <div className="grid grid-cols-3 gap-4 mt-4">
+                  <Reorder.Group axis="y" onReorder={setUploadedImages} values={uploadedImages} >
                   {uploadedImages.map((image, index) => (
+                    <Reorder.Item key={image.id} value={image} className="relative">
                     <div key={index} className="relative">
                       <img
                         src={image.url}
@@ -878,7 +881,9 @@ export default function EditProperty({
                         Delete
                       </Button>
                     </div>
+                    </Reorder.Item>
                   ))}
+                  </Reorder.Group>
                 </div>
                 <Button
                   type="submit"

@@ -15,7 +15,7 @@ export function FeatureBadges({ features, selectedFeatures, onFeatureToggle }: F
           key={feature.id}
           variant="outline"
           className={`cursor-pointer transition-colors ${
-            selectedFeatures.includes(feature.id.toString()) ? 'bg-primary300 text-primary-foreground' : 'bg-background'
+            selectedFeatures.includes(feature?.id.toString()) ? 'bg-primary300 text-primary-foreground' : 'bg-background'
           }`}
           onClick={() => onFeatureToggle(feature.id.toString())}
         >
