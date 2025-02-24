@@ -1,20 +1,24 @@
-"use client";
+"use client"
 
-import React, { FormEvent, useState } from "react";
-import { useFormik } from "formik";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FeatureBadges } from "./features";
-import { patchPropertyData, updatePropertyImage } from "@/actions/property";
-import toast from "react-hot-toast";
-import Link from "next/link";
-import { RevalidatePath } from "@/components/globalcomponents/RevalidateCustomPath";
-import { useMutation } from "@tanstack/react-query";
+import type React from "react"
+import { type FormEvent, useState } from "react"
+import { useFormik } from "formik"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { FeatureBadges } from "./features"
+import { patchPropertyData, updatePropertyImage } from "@/actions/property"
+import toast from "react-hot-toast"
+import Link from "next/link"
+import { RevalidatePath } from "@/components/globalcomponents/RevalidateCustomPath"
+import { useMutation } from "@tanstack/react-query"
+import { Reorder } from "framer-motion"
+import { updatePropertyImageOrder } from "@/actions/property"
 
 interface PropertyImage {
-  url: string;
-  Image: File;
+  url: string
+  Image: File
+  publicId?: string // Add publicId to interface
 }
 
 export default function EditProperty({
@@ -22,70 +26,71 @@ export default function EditProperty({
   propertytypes,
   propertyById,
 }: {
-  features: any;
-  propertytypes: any;
-  propertyById: any;
+  features: any
+  propertytypes: any
+  propertyById: any
 }) {
-  const router = useRouter();
-  const [uploadedImages, setUploadedImages] = useState<PropertyImage[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState("details");
+  const router = useRouter()
+  const [uploadedImages, setUploadedImages] = useState<PropertyImage[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [activeTab, setActiveTab] = useState("details")
+  const [items, setItems] = useState([0, 1, 2, 3])
+  const [existingImages, setExistingImages] = useState(propertyById?.data?.images || [])
+  const [isReordering, setIsReordering] = useState(false)
+
   // const router = useRouter();
 
-  const formattedImages = uploadedImages.map((image) => image.Image);
+  const formattedImages = uploadedImages.map((image) => image.Image)
 
   const updatePropertyData = async (values: any) => {
     const updatedValues = {
       ...values,
       features: values.features.join(","),
-    };
-    console.log(updatedValues, "updatedValues----");
+    }
+    console.log(updatedValues, "updatedValues----")
 
-    const response = await patchPropertyData(updatedValues);
-    console.log(response, response.status, "response------");
+    const response = await patchPropertyData(updatedValues)
+    console.log(response, response.status, "response------")
 
     if (response.status === 201) {
-      toast.success("Successfully updated property data");
-      console.log(response.data, "success: property data updated");
-      return true;
+      toast.success("Successfully updated property data")
+      console.log(response.data, "success: property data updated")
+      return true
     } else {
-      toast.error("Error updating property data");
-      console.log(response.data, "error: failed to update property data");
-      return false;
+      toast.error("Error updating property data")
+      console.log(response.data, "error: failed to update property data")
+      return false
     }
-  };
+  }
 
   const updateImages = async (propertyId: number, images: File[]) => {
     if (images.length > 0) {
-      const formData = new FormData();
+      const formData = new FormData()
       formData.append(
         "json",
         JSON.stringify({
           action: "delete",
           propertyId: propertyId,
-        })
-      );
+        }),
+      )
       images.forEach((image, index) => {
-        formData.append(`images`, image);
-      });
-      console.log(formData, "formData------");
+        formData.append(`images`, image)
+      })
+      console.log(formData, "formData------")
 
-      const imageUploadResponse = await updatePropertyImage(formData);
+      const imageUploadResponse = await updatePropertyImage(formData)
       if (imageUploadResponse.error) {
-        toast.error("Error uploading images");
-        console.log(
-          imageUploadResponse.error,
-          "error: failed to upload images"
-        );
-        return false;
+        toast.error("Error uploading images")
+        console.log(imageUploadResponse.error, "error: failed to upload images")
+        return false
       } else {
-        toast.success("Successfully uploaded images");
-        console.log(imageUploadResponse.data, "success: images uploaded");
-        return true;
+        toast.success("Successfully uploaded images")
+        console.log(imageUploadResponse.data, "success: images uploaded")
+        return true
       }
     }
-    return true;
-  };
+    return true
+  }
 
   const formik = useFormik({
     initialValues: {
@@ -113,53 +118,47 @@ export default function EditProperty({
     },
     onSubmit: async (values) => {
       try {
-        setIsLoading(true);
-        const propertyUpdated = await updatePropertyData(values);
-        setIsLoading(false);
+        setIsLoading(true)
+        const propertyUpdated = await updatePropertyData(values)
+        setIsLoading(false)
         if (propertyUpdated) {
-          toast.success("Property data updated successfully");
+          toast.success("Property data updated successfully")
         } else {
-          toast.error("Failed to update property data");
+          toast.error("Failed to update property data")
         }
       } catch (error) {
-        console.error("Error updating property:", error);
-        setIsLoading(false);
-        toast.error("Error updating property");
+        console.error("Error updating property:", error)
+        setIsLoading(false)
+        toast.error("Error updating property")
       }
     },
-  });
+  })
 
   const handleImageUpload = (
     event: React.ChangeEvent<HTMLInputElement>,
-    setFieldValue: (field: string, value: any) => void
+    setFieldValue: (field: string, value: any) => void,
   ) => {
-    const files = event.target.files;
+    const files = event.target.files
     if (files) {
       const newImages = Array.from(files).map((file) => ({
         url: URL.createObjectURL(file),
         Image: file,
-      }));
-      setUploadedImages((prevImages) => [...prevImages, ...newImages]);
+      }))
+      setUploadedImages((prevImages) => [...prevImages, ...newImages])
     }
-  };
+  }
 
-  const handleImageDelete = (
-    index: number,
-    setFieldValue: (field: string, value: any) => void
-  ) => {
-    const newImages = uploadedImages.filter((_, i) => i !== index);
-    setUploadedImages(newImages);
+  const handleImageDelete = (index: number, setFieldValue: (field: string, value: any) => void) => {
+    const newImages = uploadedImages.filter((_, i) => i !== index)
+    setUploadedImages(newImages)
     setFieldValue(
       "images",
-      newImages.map((img) => img.url)
-    );
-  };
+      newImages.map((img) => img.url),
+    )
+  }
 
-  const deleteImagefromCloud = async (
-    publicid: string,
-    action: "delete" | "new"
-  ) => {
-    const formData = new FormData();
+  const deleteImagefromCloud = async (publicid: string, action: "delete" | "new") => {
+    const formData = new FormData()
 
     formData.append(
       "json",
@@ -167,109 +166,137 @@ export default function EditProperty({
         publicId: publicid,
         action: action,
         propertyId: formik.values.id,
-      })
-    );
+      }),
+    )
 
     if (action == "new") {
       formattedImages.forEach((image, index) => {
-        formData.append(`images`, image);
-      });
+        formData.append(`images`, image)
+      })
     }
 
-    const res = await updatePropertyImage(formData);
+    const res = await updatePropertyImage(formData)
     if (res.status === 200) {
-      toast.success("image deleting successfully");
-      RevalidatePath(`/intime-admin/managelisting/${formik.values.id}`);
+      toast.success("image deleting successfully")
+      RevalidatePath(`/intime-admin/managelisting/${formik.values.id}`)
     } else {
-      toast.error("Error deleting image");
+      toast.error("Error deleting image")
     }
-  };
+  }
 
   const handleImageUpdate = async () => {
-    setIsLoading(true);
+    setIsLoading(true)
     const imagesUpdated = await updateImages(
       formik.values.id,
-      uploadedImages.map((img) => img.Image)
-    );
-    setIsLoading(false);
+      uploadedImages.map((img) => img.Image),
+    )
+    setIsLoading(false)
     if (imagesUpdated) {
-      toast.success("Images updated successfully");
+      toast.success("Images updated successfully")
     } else {
-      toast.error("Failed to update images");
+      toast.error("Failed to update images")
     }
-  };
+  }
   const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
-  };
+    setActiveTab(tab)
+  }
 
   const createNewImage = useMutation({
     mutationFn: async () => {
-      const formData = new FormData();
+      const formData = new FormData()
 
       formData.append(
         "json",
         JSON.stringify({
           action: "new",
           propertyId: formik.values.id,
-        })
-      );
+        }),
+      )
 
       formattedImages.forEach((image, index) => {
-        formData.append(`images`, image);
-      });
+        formData.append(`images`, image)
+      })
 
-      const res = await updatePropertyImage(formData);
-      return res;
+      const res = await updatePropertyImage(formData)
+      return res
     },
     onSuccess(data, variables, context) {
       if (data.status === 200) {
-        toast.success("image deleting successfully");
-        RevalidatePath(`/intime-admin/managelisting/${formik.values.id}`);
+        toast.success("image deleting successfully")
+        RevalidatePath(`/intime-admin/managelisting/${formik.values.id}`)
       } else {
-        toast.error("Error deleting image");
+        toast.error("Error deleting image")
       }
     },
     onError(error, variables, context) {},
-  });
-  
+  })
+
+  // Add mutation for reordering
+  const reorderImagesMutation = useMutation({
+    mutationFn: async (newOrder: typeof existingImages) => {
+      setIsReordering(true)
+      try {
+        const imageOrder = newOrder.map((img:PropertyImage) => img.publicId)
+        const response = await updatePropertyImageOrder(formik.values.id, imageOrder)
+
+        if (response.status !== 200) {
+          throw new Error("Failed to update image order")
+        }
+
+        return response.data
+      } finally {
+        setIsReordering(false)
+      }
+    },
+    onSuccess: () => {
+      toast.success("Image order updated successfully")
+      RevalidatePath(`/intime-admin/managelisting/${formik.values.id}`)
+    },
+    onError: () => {
+      toast.error("Failed to update image order")
+      // Revert to original order on error
+      setExistingImages(propertyById?.data?.images || [])
+    },
+  })
+
+  // Handle reordering of existing images
+  const handleExistingImagesReorder = async (newOrder: typeof existingImages) => {
+    setExistingImages(newOrder)
+    reorderImagesMutation.mutate(newOrder)
+  }
+
+  // Handle reordering of uploaded images
+  const handleUploadedImagesReorder = (newOrder: PropertyImage[]) => {
+    setUploadedImages(newOrder)
+  }
 
   return (
     <Card className="w- border-none shadow-none">
       <CardHeader className="flex flex-row justify-between">
         <CardTitle className="flex">Edit property</CardTitle>
         <Link href="/intime-admin/managelisting" className="justify-end">
-          <Button className="bg-primary500 text-white rounded-none" >Back</Button>
+          <Button className="bg-primary500 text-white rounded-none">Back</Button>
         </Link>
       </CardHeader>
       <CardContent>
         <div className="flex space-x-4 border-b">
           <button
-            className={`px-4 py-2 ${
-              activeTab === "details" ? "border-b-2 border-blue-500" : ""
-            }`}
+            className={`px-4 py-2 ${activeTab === "details" ? "border-b-2 border-blue-500" : ""}`}
             onClick={() => handleTabChange("details")}
           >
             Property Details
           </button>
           <button
-            className={`px-4 py-2 ${
-              activeTab === "images" ? "border-b-2 border-blue-500" : ""
-            }`}
+            className={`px-4 py-2 ${activeTab === "images" ? "border-b-2 border-blue-500" : ""}`}
             onClick={() => handleTabChange("images")}
           >
             Images
           </button>
         </div>
         {activeTab === "details" && (
-          <form
-            className="md:grid gap-4 md:grid-cols-3 grid-cols-1"
-            onSubmit={formik.handleSubmit}
-          >
+          <form className="md:grid gap-4 md:grid-cols-3 grid-cols-1" onSubmit={formik.handleSubmit}>
             <div>
-              <label
-                htmlFor="name"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
+              <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Property title
               </label>
               <input
@@ -289,10 +316,7 @@ export default function EditProperty({
             </div>
 
             <div>
-              <label
-                htmlFor=""
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
+              <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Description
               </label>
               <textarea
@@ -312,10 +336,7 @@ export default function EditProperty({
             </div>
 
             <div>
-              <label
-                htmlFor=""
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
+              <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Select a sale type
               </label>
               <select
@@ -338,10 +359,7 @@ export default function EditProperty({
             <hr className="my-4 md:col-span-3 col-span-1" />
 
             <div>
-              <label
-                htmlFor="location"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
+              <label htmlFor="location" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Property Location
               </label>
               {/* <select id="location"
@@ -379,10 +397,7 @@ export default function EditProperty({
             </div>
 
             <div>
-              <label
-                htmlFor=""
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
+              <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Street Address
               </label>
               <input
@@ -402,10 +417,7 @@ export default function EditProperty({
             </div>
 
             <div>
-              <label
-                htmlFor="city"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
+              <label htmlFor="city" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 City
               </label>
               <input
@@ -424,10 +436,7 @@ export default function EditProperty({
              )} */}
             </div>
             <div>
-              <label
-                htmlFor=""
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
+              <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 county
               </label>
               <input
@@ -447,10 +456,7 @@ export default function EditProperty({
             </div>
 
             <div>
-              <label
-                htmlFor=""
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
+              <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 State
               </label>
               <input
@@ -470,10 +476,7 @@ export default function EditProperty({
             </div>
 
             <div>
-              <label
-                htmlFor="country"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
+              <label htmlFor="country" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Country
               </label>
               <input
@@ -492,10 +495,7 @@ export default function EditProperty({
              )} */}
             </div>
             <div>
-              <label
-                htmlFor="long"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
+              <label htmlFor="long" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Longitude
               </label>
               {/* <select id="location"
@@ -528,10 +528,7 @@ export default function EditProperty({
              )} */}
             </div>
             <div>
-              <label
-                htmlFor="lat"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
+              <label htmlFor="lat" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Latitude
               </label>
               {/* <select id="location"
@@ -565,10 +562,7 @@ export default function EditProperty({
             </div>
 
             <div>
-              <label
-                htmlFor=""
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
+              <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Area
               </label>
               <input
@@ -600,19 +594,13 @@ export default function EditProperty({
                 value=""
                 className="w-4 h-4  text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-primary300 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
               />
-              <label
-                htmlFor="default-checkbox"
-                className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
+              <label htmlFor="default-checkbox" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                 Featured
               </label>
             </div>
 
             <div>
-              <label
-                htmlFor=""
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
+              <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Select a property type
               </label>
               <select
@@ -624,13 +612,11 @@ export default function EditProperty({
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
               >
                 <option disabled>Choose a property type</option>
-                {propertytypes?.map(
-                  (type: { name: string; id: number }, idx: number) => (
-                    <option className="text-gray-900" value={type.id} key={idx}>
-                      {type.name}
-                    </option>
-                  )
-                )}
+                {propertytypes?.map((type: { name: string; id: number }, idx: number) => (
+                  <option className="text-gray-900" value={type.id} key={idx}>
+                    {type.name}
+                  </option>
+                ))}
               </select>
               {/* {formik.errors.propertyType && formik.touched.propertyType && (
                <div className="text-red-500">{formik.errors.propertyType}</div>
@@ -638,10 +624,7 @@ export default function EditProperty({
             </div>
 
             <div>
-              <label
-                htmlFor="size"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
+              <label htmlFor="size" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Size
               </label>
               <input
@@ -662,10 +645,7 @@ export default function EditProperty({
             </div>
 
             <div>
-              <label
-                htmlFor="distance"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
+              <label htmlFor="distance" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Distance
               </label>
               <input
@@ -685,10 +665,7 @@ export default function EditProperty({
             </div>
 
             <div>
-              <label
-                htmlFor=""
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
+              <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Price
               </label>
               <input
@@ -708,10 +685,7 @@ export default function EditProperty({
             </div>
 
             <div>
-              <label
-                htmlFor=""
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
+              <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Price per month
               </label>
               <input
@@ -731,10 +705,7 @@ export default function EditProperty({
             </div>
 
             <div>
-              <label
-                htmlFor=""
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
+              <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Bedrooms
               </label>
               <input
@@ -754,31 +725,21 @@ export default function EditProperty({
             </div>
 
             <div>
-              <label
-                htmlFor=""
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
+              <label htmlFor="" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Property features
               </label>
 
               <FeatureBadges
                 features={features}
                 selectedFeatures={formik.values.features}
-                onFeatureToggle={function (feature: string): void {
-                  if (
-                    formik.values.features?.find((f: string) => f == feature)
-                  ) {
+                onFeatureToggle={(feature: string): void => {
+                  if (formik.values.features?.find((f: string) => f == feature)) {
                     formik.setFieldValue(
                       "features",
-                      formik.values.features.filter(
-                        (f: string) => f !== feature
-                      )
-                    );
+                      formik.values.features.filter((f: string) => f !== feature),
+                    )
                   } else {
-                    formik.setFieldValue("features", [
-                      ...formik.values.features,
-                      feature,
-                    ]);
+                    formik.setFieldValue("features", [...formik.values.features, feature])
                   }
                 }}
               />
@@ -791,60 +752,74 @@ export default function EditProperty({
         )}
         {activeTab === "images" && (
           <div className="space-y-4 mt-4">
-            {/* Instructions for Deleting Images */}
             <div>
               <p className="text-sm text-muted-foreground my-6">
-                <strong>Deleting Images:</strong> Below, you will find the
-                current images associated with this property. To delete an
-                image, click the &quot;Delete&ldquo; button on the image you want to
-                remove. This action will permanently delete the image from the
-                gallery.
+                <strong>Managing Images:</strong> You can reorder images by dragging them up or down. Click and hold an
+                image to start dragging. The new order will be saved automatically. To delete an image, use the Delete
+                button.
               </p>
-              <div className="grid grid-cols-3 gap-4 mt-2">
-                {propertyById?.data?.images.map(
-                  (
-                    image: {
-                      url: string;
-                      publicId: string;
-                    },
-                    index: number
-                  ) => (
-                    <div key={index} className="relative">
-                      <img
-                        src={image.url}
-                        alt={`Uploaded ${index + 1}`}
-                        className="w-full h-32 object-cover rounded"
-                      />
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="sm"
-                        className="absolute top-0 right-0 m-1"
-                        onClick={() =>
-                          deleteImagefromCloud(image.publicId, "delete")
-                        }
-                      >
-                        Delete
-                      </Button>
-                    </div>
-                  )
-                )}
-              </div>
+
+              {/* Existing Images Section */}
+              <Reorder.Group
+                axis="y"
+                values={existingImages}
+                onReorder={handleExistingImagesReorder}
+                className="space-y-4"
+              >
+                <div className="grid grid-cols-1 gap-4 mt-2">
+                  {existingImages.map(
+                    (image: {
+                      url: string
+                      publicId: string
+                    }) => (
+                      <Reorder.Item key={image.publicId} value={image} className="cursor-move">
+                        <div className="relative bg-background p-4 rounded-lg shadow-sm border flex items-center gap-4">
+                          <div className="flex-shrink-0">
+                            <img
+                              src={image.url || "/placeholder.svg"}
+                              alt="Property image"
+                              className="w-32 h-32 object-cover rounded"
+                            />
+                          </div>
+                          <div className="flex-grow">
+                            <p className="text-sm text-muted-foreground truncate">{image.url.split("/").pop()}</p>
+                          </div>
+                          <div className="flex-shrink-0">
+                            <Button
+                              type="button"
+                              variant="destructive"
+                              size="sm"
+                              className="ml-2"
+                              onClick={() => deleteImagefromCloud(image.publicId, "delete")}
+                              disabled={isReordering}
+                            >
+                              Delete
+                            </Button>
+                          </div>
+                        </div>
+                      </Reorder.Item>
+                    ),
+                  )}
+                </div>
+              </Reorder.Group>
+
+              {isReordering && (
+                <div className="text-center py-4">
+                  <p className="text-sm text-muted-foreground">Saving new image order...</p>
+                </div>
+              )}
             </div>
 
-            {/* Instructions for Uploading Images */}
+            {/* Upload New Images Section */}
             <div>
               <p className="text-sm text-muted-foreground my-6">
-                <strong>Uploading Images:</strong> Use the file input below to
-                upload new images to the property gallery. You can select
-                multiple files at once. After selecting the images, click the
-                &quot;Update Images&ldquo; button to add them to the gallery.
+                <strong>Uploading Images:</strong> Use the file input below to upload new images to the property
+                gallery. You can select multiple files at once and reorder them before uploading.
               </p>
               <form
-                action=""
                 onSubmit={(e: FormEvent) => {
-                  e.preventDefault();
-                  createNewImage.mutateAsync();
+                  e.preventDefault()
+                  createNewImage.mutateAsync()
                 }}
                 className="mt-2"
               >
@@ -853,43 +828,54 @@ export default function EditProperty({
                   name="images"
                   type="file"
                   multiple
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
-                  onChange={(event) =>
-                    handleImageUpload(event, formik.setFieldValue)
-                  }
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary300 focus:border-primary300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary300 dark:focus:border-primary300"
+                  onChange={(event) => handleImageUpload(event, formik.setFieldValue)}
                 />
-                <div className="grid grid-cols-3 gap-4 mt-4">
-                  {uploadedImages.map((image, index) => (
-                    <div key={index} className="relative">
-                      <img
-                        src={image.url}
-                        alt={`Uploaded ${index + 1}`}
-                        className="w-full h-32 object-cover rounded"
-                      />
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="sm"
-                        className="absolute top-0 right-0 m-1"
-                        onClick={() =>
-                          handleImageDelete(index, formik.setFieldValue)
-                        }
-                      >
-                        Delete
-                      </Button>
+
+                {uploadedImages.length > 0 && (
+                  <Reorder.Group
+                    axis="y"
+                    values={uploadedImages}
+                    onReorder={handleUploadedImagesReorder}
+                    className="space-y-4 mt-4"
+                  >
+                    <div className="grid grid-cols-1 gap-4">
+                      {uploadedImages.map((image, index) => (
+                        <Reorder.Item key={image.url} value={image} className="cursor-move">
+                          <div className="relative bg-background p-4 rounded-lg shadow-sm border flex items-center gap-4">
+                            <div className="flex-shrink-0">
+                              <img
+                                src={image.url || "/placeholder.svg"}
+                                alt={`Upload preview ${index + 1}`}
+                                className="w-32 h-32 object-cover rounded"
+                              />
+                            </div>
+                            <div className="flex-grow">
+                              <p className="text-sm text-muted-foreground truncate">{image.Image.name}</p>
+                            </div>
+                            <div className="flex-shrink-0">
+                              <Button
+                                type="button"
+                                variant="destructive"
+                                size="sm"
+                                onClick={() => handleImageDelete(index, formik.setFieldValue)}
+                              >
+                                Remove
+                              </Button>
+                            </div>
+                          </div>
+                        </Reorder.Item>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </Reorder.Group>
+                )}
+
                 <Button
                   type="submit"
                   className="w-full disabled:opacity-50 mt-6"
-                  disabled={
-                    (uploadedImages.length === 0 &&
-                      formattedImages.length === 0) ||
-                    createNewImage.isPending
-                  }
+                  disabled={uploadedImages.length === 0 || createNewImage.isPending || isReordering}
                 >
-                  {createNewImage.isPending ? "Updating..." : "Update Images"}
+                  {createNewImage.isPending ? "Uploading..." : "Upload Images"}
                 </Button>
               </form>
             </div>
@@ -897,5 +883,6 @@ export default function EditProperty({
         )}
       </CardContent>
     </Card>
-  );
+  )
 }
+

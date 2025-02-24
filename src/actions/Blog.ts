@@ -61,16 +61,13 @@ export const postBlogData = async (formData: FormData) => {
 
   export const getBlogByID = async (id: number) => {
     try {
-     
-      const data = await axios.get(baseUrl + id + "blog");
-  
-      // console.log(data, "data.data")
-  
-      return data?.data?.data ?? [];
+      const res = await axios.get(`${baseUrl}${id}/blog`);
+      return res.data?.data ?? []; // Access the data property from the response
     } catch (e: any) {
+      console.error(e, "Error fetching blog data"); // Log the error for debugging
       return [];
     }
-  }
+  };
 
   // export const updateBlogData = async (data: FormData) => {
   //   try {

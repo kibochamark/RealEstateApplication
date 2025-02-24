@@ -135,17 +135,6 @@ export const patchProperty = async (data: FormData) => {
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
 export async function patchPropertyData(data: any) {
   console.log(data, 'data for updating property');
   
@@ -157,9 +146,9 @@ export async function patchPropertyData(data: any) {
       },
       body: JSON.stringify(data),
     });
-    console.log(response, 'response---------------');
-    console.log(response.status, "status", response.statusText, 'response------------------');
-    console.log('Request Payload:', response.body, 'Request Payload-----------------');
+    // console.log(response, 'response---------------');
+    // console.log(response.status, "status", response.statusText, 'response------------------');
+    // console.log('Request Payload:', response.body, 'Request Payload-----------------');
 
 
 
@@ -196,6 +185,43 @@ export async function updatePropertyImage(formData: FormData) {
   } catch (error) {
     console.error("Error uploading images:", error);
     return { data: null, error: "Failed to upload images",status: 400 };
+  }
+}
+
+
+export async function updatePropertyImageOrder(propertyId: number, imageOrder: string[]) {
+  try {
+    const url = baseUrl + `${propertyId}/orderImages`
+   
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ imageOrder,propertyId }),
+    })
+
+    
+
+    // Log all response headers
+    const headers: any = {}
+    response.headers.forEach((value, key) => {
+      headers[key] = value
+    })
+
+    // Read and log full response text
+    const responseText = await response.text()
+
+    if (!response.ok) {
+      
+      throw new Error("Failed to update image order")
+    }
+
+    // If needed, parse data as JSON
+    const data = JSON.parse(responseText)
+    return { status: 200, data }
+  } catch (error) {
+    return { status: 500, error: "Failed to update image order" }
   }
 }
 

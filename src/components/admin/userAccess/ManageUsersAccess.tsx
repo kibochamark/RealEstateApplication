@@ -1,15 +1,14 @@
 "use client"
 import { DataTable } from '@/components/globalcomponents/data-table'
-import { Button } from '@/components/ui/button'
+// import { Button } from '@/components/ui/button'
 import { RootState } from '@/store/store'
 import { Loader } from 'lucide-react'
 import React, { Suspense } from 'react'
 import { useSelector } from 'react-redux'
 import { useAppDispatch } from '@/store/hooks'
-import { clearEditData, setIsAdd } from '@/store/slices/PropertySlice'
 import EditUser from './EditUser'
-import AddUsersAccess from './AddUsersAccess'
 import { columns } from './columns'
+import AddUsers from '../users/AddUsers'
 
 const ManageUsersAccess = ({ accessdata, features, propertytypes }: { accessdata: any; features:any; propertytypes:any; }) => {
     const editdata = useSelector((state: RootState) => state.property.editdata)
@@ -37,7 +36,7 @@ const ManageUsersAccess = ({ accessdata, features, propertytypes }: { accessdata
             <Suspense fallback={<Loader className='animate animate-spin text-secondary300' />}>
 
                 {isadd ? (
-                    <AddUsersAccess/>
+                    <AddUsers/>
                 ) : isedit ? (<EditUser />) : (
                     <div className='overflow-hidden'>
                         <DataTable columns={columns} data={accessdata ?? []} searchColumn="name"/>

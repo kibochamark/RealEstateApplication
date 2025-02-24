@@ -3,6 +3,8 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Check, X } from 'lucide-react';
+
 
 import { DataTableColumnHeader } from "../../../components/admin/property/data-table-column-header"
 
@@ -247,16 +249,20 @@ export const columns: ColumnDef<Property>[] = [
             <DataTableColumnHeader column={column} title="Featured" />
         ),
         cell: ({ row }) => {
-            
-
+            const isFeatured = row.original.featured;
+    
             return (
                 <div className="flex w-[100px] items-center">
-                    <span>{row?.original?.featured}</span>
+                    {isFeatured ? (
+                        <Check className="text-green-500" />
+                    ) : (
+                        <X className="text-red-500" />
+                    )}
                 </div>
-            )
+            );
         },
         filterFn: (row, id, value) => {
-            return value.includes(row.getValue(id))
+            return value.includes(row.getValue(id));
         },
     },
     {

@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
@@ -48,6 +48,7 @@ const comments = [
 export default function ReadMore( { blogPost,properties }: {blogPost:any; properties:any} ) {
   const { id } = useParams()
   const [localComments, setLocalComments] = useState(comments)
+  console.log(blogPost, "blog")
 
   const addComment = (newComment: { author: string; content: string }) => {
     const comment = {
@@ -68,8 +69,8 @@ export default function ReadMore( { blogPost,properties }: {blogPost:any; proper
       >
         <h1 className="text-4xl font-bold mb-4 text-secondary300" dangerouslySetInnerHTML={{ __html: blogPost.name}}></h1>
         <div className="flex items-center mb-4">
-          <span className="text-gray-600 mr-4">{formatDistanceToNow(new Date(blogPost.createdAt), { addSuffix: true })}</span>
-          <span className="text-gray-600">By {blogPost.user.firstname} {blogPost.user.lastname}</span>
+        <span className="text-gray-600 mr-4">{formatDistanceToNow(new Date(blogPost.createdAt), { addSuffix: true })}</span>
+        <span className="text-gray-600">By {blogPost.user.firstname} {blogPost.user.lastname}</span>
         </div>
         <div className="relative h-96 mb-8">
           <Image src={blogPost?.imageUrl?.length > 0 ? blogPost?.imageUrl : "/9.jpg"} alt={blogPost.name} layout="fill" objectFit="cover" className="rounded-lg" />

@@ -14,14 +14,48 @@ import { postUserData } from '@/actions/Users';
 
 //generate random password
 const generateRandomPassword = (length = 12) => {
-  const chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
-  let password = "";
-  for (let i = 0; i < length; i++) {
-    password += chars.charAt(Math.floor(Math.random() * chars.length));
+  if (length < 4) {
+    throw new Error("Password length must be at least 4 to include all character types.");
   }
-  return password;
+
+  // Define the character sets
+  const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const lowercase = "abcdefghijklmnopqrstuvwxyz";
+  const numbers = "0123456789";
+  // Include the specific strong password special characters: @, #, !
+  const special = "@#!";
+
+  // Helper to pick a random character from a given string
+  const randomChar = (str:any) => str[Math.floor(Math.random() * str.length)];
+
+  // Ensure the password has at least one character from each category
+  const passwordChars = [
+    randomChar(uppercase),
+    randomChar(lowercase),
+    randomChar(numbers),
+    randomChar(special),
+  ];
+
+  // Create a combined pool for the remaining characters
+  const allChars = uppercase + lowercase + numbers + special;
+
+  // Add remaining characters randomly until reaching the desired length
+  for (let i = passwordChars.length; i < length; i++) {
+    passwordChars.push(randomChar(allChars));
+  }
+
+  // Shuffle the result to remove any predictability in character positioning
+  for (let i = passwordChars.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [passwordChars[i], passwordChars[j]] = [passwordChars[j], passwordChars[i]];
+  }
+
+  return passwordChars.join('');
 };
+
+// Example usage
+console.log(generateRandomPassword(12));
+
 export default function AddUsers() {
   const [uploadedImages, setUploadedImages] = useState<{ url: string; Image: File }[]>([]);
   const [isLoading, setIsLoading] = useState(false);
