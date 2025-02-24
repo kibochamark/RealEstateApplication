@@ -1,6 +1,6 @@
 "use client"
 import type { ColumnDef } from "@tanstack/react-table"
-import { Badge } from "@/components/ui/badge"
+// import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
   ArrowDownIcon,
@@ -12,7 +12,6 @@ import {
   QuestionMarkCircledIcon,
   StopwatchIcon,
 } from "@radix-ui/react-icons"
-import { DataTableRowActions } from "../property/data-table-row-actions"
 import { DataTableColumnHeader } from "../property/data-table-column-header"
 import axios from "axios"
 import { baseUrl } from "@/lib/globalvariables"
@@ -20,10 +19,8 @@ import toast from "react-hot-toast"
 import { RevalidatePath } from "@/components/globalcomponents/RevalidateCustomPath"
 import { useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { postUserData } from '@/actions/Users';
+import { postUserData } from '@/actions/Users'
 import { useSession } from 'next-auth/react'
-
-
 
 // Helper function to generate random string
 function generateRandomString(length: number) {
@@ -111,10 +108,119 @@ export type accessdata = {
   reason: string
   createdAt: string
   status: string
-
   images: {
     url: string
   }
+}
+
+// Rename the inline cell logic to a separate React component.
+type AccessStatusActionsProps = {
+  row: any
+}
+
+const AccessStatusActions = ({ row }: AccessStatusActionsProps) => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [createdUser, setCreatedUser] = useState<any>(null)
+  const { data: session } = useSession()
+  const companyId = session?.user?.companyId
+
+  const handleStatusUpdate = async (status: string) => {
+    try {
+      const payload = {
+        id: row.original.id,
+        status: status.toUpperCase(),
+      }
+
+      const response = await axios.patch(baseUrl + "requestuseraccess", payload)
+
+      if (response.status === 201) {
+        toast.success(`Access ${status.toLowerCase()} successfully!`)
+        RevalidatePath("/intime-admin/requestaccess")
+        row.original.status = status.toUpperCase()
+
+        if (status.toUpperCase() === "APPROVED") {
+          const updatedValues = {
+            username: generateRandomString(8),
+            firstname: generateRandomString(6),
+            lastname: generateRandomString(6),
+            email: row.original.email,
+            contact: generateRandomPhoneNumber(),
+            password: defaultPassword,
+            confimpassword: defaultPassword,
+            companyId: companyId,
+          }
+
+          try {
+            // Assuming you have a postUserData function defined elsewhere
+            await postUserData(updatedValues)
+            setCreatedUser(updatedValues)
+            setIsDialogOpen(true)
+          } catch (error) {
+            console.error("Error creating user:", error)
+            toast.error("Failed to create user account")
+          }
+        }
+      } else {
+        toast.error(`Failed to update access status`)
+      }
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.error?.[0] ||
+        "Failed to update access status. Please try again later."
+      console.error("Error updating access status:", error)
+      alert(errorMessage)
+    }
+  }
+
+  return (
+    <>
+      <div className="flex gap-2">
+        <button
+          onClick={() => handleStatusUpdate("approved")}
+          disabled={row.original.status === "APPROVED" || row.original.status === "REJECTED"}
+          className={`px-3 py-1 rounded ${
+            row.original.status === "APPROVED" || row.original.status === "REJECTED"
+              ? "bg-gray-400 cursor-not-allowed"
+              : "text-white bg-green-500 hover:bg-green-600"
+          }`}
+        >
+          Approve
+        </button>
+        <button
+          onClick={() => handleStatusUpdate("rejected")}
+          disabled={row.original.status === "APPROVED" || row.original.status === "REJECTED"}
+          className={`px-3 py-1 rounded ${
+            row.original.status === "APPROVED" || row.original.status === "REJECTED"
+              ? "bg-gray-400 cursor-not-allowed"
+              : "text-white bg-red-500 hover:bg-red-600"
+          }`}
+        >
+          Reject
+        </button>
+      </div>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>User Account Created</DialogTitle>
+          </DialogHeader>
+          <div className="mt-4">
+            <p>
+              <strong>Username:</strong> {createdUser?.username}
+            </p>
+            <p>
+              <strong>Email:</strong> {createdUser?.email}
+            </p>
+            <p>
+              <strong>Password:</strong> {createdUser?.password}
+            </p>
+            <p className="mt-4 text-sm text-gray-500">
+              Please copy these details and share them securely with the user.
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  )
 }
 
 export const columns: ColumnDef<accessdata>[] = [
@@ -157,7 +263,6 @@ export const columns: ColumnDef<accessdata>[] = [
       )
     },
   },
-
   {
     accessorKey: "status",
     header: ({ column }) => <DataTableColumnHeader column={column} title="status" />,
@@ -169,12 +274,11 @@ export const columns: ColumnDef<accessdata>[] = [
               row.original.status === "PENDING"
                 ? "text-orange-400"
                 : row.original.status === "REJECTED"
-                  ? "text-red-500"
-                  : row.original.status === "APPROVED"
-                    ? "text-green-500"
-                    : ""
-            } 
-                      max-w-[500px] truncate font-medium shadow-lg p-2 rounded-md`}
+                ? "text-red-500"
+                : row.original.status === "APPROVED"
+                ? "text-green-500"
+                : ""
+            } max-w-[500px] truncate font-medium shadow-lg p-2 rounded-md`}
           >
             {row.original?.status}
           </span>
@@ -182,7 +286,6 @@ export const columns: ColumnDef<accessdata>[] = [
       )
     },
   },
-
   {
     accessorKey: "createdAt",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Created At" />,
@@ -199,122 +302,7 @@ export const columns: ColumnDef<accessdata>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row }) => {
-      const [isDialogOpen, setIsDialogOpen] = useState(false)
-      const [createdUser, setCreatedUser] = useState<any>(null);
-
-      const {data: session} = useSession();
-      
-      const companyId = session?.user?.companyId;
-
-      const handleStatusUpdate = async (status: string) => {
-        try {
-          const payload = {
-            id: row.original.id,
-            status: status.toUpperCase(),
-          }
-
-          const response = await axios.patch(baseUrl + "requestuseraccess", payload)
-
-          if (response.status === 201) {
-            toast.success(`Access ${status.toLowerCase()} successfully!`)
-            RevalidatePath("/intime-admin/requestaccess")
-            row.original.status = status.toUpperCase()
-
-            if (status.toUpperCase() === "APPROVED") {
-              const updatedValues = {
-                username: generateRandomString(8),
-                firstname: generateRandomString(6),
-                lastname: generateRandomString(6),
-                email: row.original.email,
-                contact: generateRandomPhoneNumber(),
-                password: defaultPassword,
-                confimpassword: defaultPassword,
-                companyId: session?.user?.companyId,
-              }
-
-              try {
-                // Assuming you have a postUserData function defined elsewhere
-                await postUserData(updatedValues);
-                setCreatedUser(updatedValues);
-                setIsDialogOpen(true)
-              } catch (error) {
-                console.error("Error creating user:", error)
-                toast.error("Failed to create user account")
-              }
-            }
-          } else {
-            toast.error(`Failed to update access status`)
-          }
-        } catch (error: any) {
-          const errorMessage =
-            error.response?.data?.error?.[0] || "Failed to update access status. Please try again later."
-          console.error("Error updating access status:", error)
-          alert(errorMessage)
-        }
-      }
-
-      return (
-        <>
-          <div className="flex gap-2">
-            <button
-              onClick={() => handleStatusUpdate("approved")}
-              disabled={row.original.status === "APPROVED" || row.original.status === "REJECTED"}
-              className={`px-3 py-1 rounded ${
-                row.original.status === "APPROVED" || row.original.status === "REJECTED"
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "text-white bg-green-500 hover:bg-green-600"
-              }`}
-            >
-              Approve
-            </button>
-            <button
-              onClick={() => handleStatusUpdate("rejected")}
-              disabled={row.original.status === "APPROVED" || row.original.status === "REJECTED"}
-              className={`px-3 py-1 rounded ${
-                row.original.status === "APPROVED" || row.original.status === "REJECTED"
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "text-white bg-red-500 hover:bg-red-600"
-              }`}
-            >
-              Reject
-            </button>
-          </div>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>User Account Created</DialogTitle>
-              </DialogHeader>
-              <div className="mt-4">
-                <p>
-                  <strong>Username:</strong> {createdUser?.username}
-                </p>
-                <p>
-                  <strong>Email:</strong> {createdUser?.email}
-                </p>
-                <p>
-                  <strong>Password:</strong> {createdUser?.password}
-                </p>
-                <p className="mt-4 text-sm text-gray-500">
-                  Please copy these details and share them securely with the user.
-                </p>
-              </div>
-            </DialogContent>
-          </Dialog>
-        </>
-      )
-    },
+    // Use the external component here
+    cell: ({ row }) => <AccessStatusActions row={row} />,
   },
 ]
-
-// Placeholder for postUserData function.  You'll need to implement this.
-// const postUserData = async (userData: any) => {
-//   // Your code to send userData to the server goes here.  Example using axios:
-//   // try {
-//   //   const response = await axios.post(baseUrl + "/users", userData);
-//   //   // Handle the response
-//   // } catch (error) {
-//   //   throw error; // Re-throw the error to be handled by the calling function
-//   // }
-// }
-
