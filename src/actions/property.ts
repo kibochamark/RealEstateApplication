@@ -191,7 +191,7 @@ export async function updatePropertyImage(formData: FormData) {
 
 export async function updatePropertyImageOrder(propertyId: number, imageOrder: string[]) {
   try {
-    const url = baseUrl + `${propertyId}/orderImages`
+    const url = baseUrl + `${propertyId}/n`
    
     const response = await fetch(url, {
       method: "POST",
