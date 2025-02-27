@@ -18,6 +18,8 @@ import {
   Building2,
   User,
   Maximize2,
+  ArrowLeft,
+  ArrowRight,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
@@ -206,7 +208,13 @@ export default function PropertyDetail({
       });
     }
   };
+  const handleNext = () => {
+    setSelectedImage((prev) => (prev + 1) % images.length);
+  };
 
+  const handlePrev = () => {
+    setSelectedImage((prev) => (prev - 1 + images.length) % images.length);
+  };
   return (
     <div className="mx-auto ">
       <div className="grid lg:grid-cols-[1fr_400px] gap-8 px-4 py-8 container">
@@ -258,38 +266,40 @@ export default function PropertyDetail({
 
           {/* Image Gallery */}
           <div className="space-y-2">
-            <Dialog>
-              <DialogTrigger asChild>
-                <div className="relative aspect-video cursor-pointer group">
-                  <Image
-                    src={images[selectedImage]}
-                    alt="Property"
-                    fill
-                    className="object-cover rounded-lg"
-                  />
-                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg" />
-                  <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
-                    <Camera className="w-4 h-4 inline mr-2" />
-                    View all photos
-                  </div>
-                </div>
-              </DialogTrigger>
-              <DialogContent className="max-w-4xl">
-                <div className="grid grid-cols-2 gap-2">
-                  {images.map((src, idx) => (
-                    <Image
-                      key={idx}
-                      src={src}
-                      alt={`Property ${idx + 1}`}
-                      width={400}
-                      height={300}
-                      className="rounded-lg"
-                    />
-                  ))}
-                </div>
-              </DialogContent>
-            </Dialog>
+      <Dialog>
+        <DialogTrigger asChild>
+          <div className="relative aspect-video cursor-pointer group">
+            <Image
+              src={images[selectedImage]}
+              alt="Property"
+              fill
+              className="object-cover rounded-md"
+            />
+            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg" />
+            <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+              <Camera className="w-4 h-4 inline mr-2" />
+              View all photos
+            </div>
           </div>
+        </DialogTrigger>
+        <DialogContent className="max-w-4xl p-0 bg-black rounded-md">
+          <div className="relative w-full h-screen">
+            <Image
+              src={images[selectedImage]}
+              alt={`Property ${selectedImage + 1}`}
+              fill
+              className="object-cover w-full h-full rounded-md"
+            />
+            <button onClick={handlePrev} className="absolute top-1/2 left-4 transform -translate-y-1/2 p-2 bg-gray-200 rounded-lg">
+              <ArrowLeft className="w-8 h-8" />
+            </button>
+            <button onClick={handleNext} className="absolute top-1/2 right-4 transform -translate-y-1/2 p-2 bg-gray-200 rounded-lg">
+              <ArrowRight className="w-8 h-8" />
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
           {/* Property Details */}
           <div className="grid grid-cols-3 gap-4">
             <Card>
