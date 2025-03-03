@@ -135,7 +135,7 @@ export default function PropertyDetail({
   const [isOpen, setIsOpen] = useState(false)
   const [zoomLevel, setZoomLevel] = useState(1)
   const [message, setMessage] = useState(
-    `Hello, I am interested in [${property?.data?.property?.bedrooms} Bedroom Apartments for Sale in ${property?.data?.property?.propertyType?.name} ${property?.data?.property?.area}]`
+    `Hello, I am interested in [${property?.data?.property?.bedrooms} Bedroom Apartments for ${property.data.property.saleType} in ${property?.data?.property?.propertyType?.name} ${property?.data?.property?.area}]`
   );
 
   const handleSendMessage = async () => {
@@ -290,7 +290,7 @@ export default function PropertyDetail({
   }
 
   return (
-    <div className="mx-auto ">
+    <div className="mx-18 ">
       <div className="grid lg:grid-cols-[1fr_400px] gap-8 px-4 py-8 container">
         <div className="space-y-6">
           {/* Header */}
@@ -518,15 +518,15 @@ export default function PropertyDetail({
       />
                 <div className="flex grid-cols-2 gap-4">
 
-                <Button className="w-1/2 bg-[#B5A887] hover:bg-[#A39775] text-white"    >
+                <Button type="button" className="w-1/2 bg-secondary600 text-white"    >
                   Send Message
                 </Button>
-                <Button className="w-1/2 bg-[#B5A887] hover:bg-[#A39775] text-white"           onClick={handleCall}
+                <Button type="button"className="w-1/2 border border-secondary600 text-black bg-white hover:text-white"           onClick={handleCall}
                 >
                   Call
                 </Button>
                 </div>
-                <Button className="w-full bg-[#B5A887] hover:bg-[#A39775] text-white" onClick={handleSendMessage}
+                <Button type="button" className="w-full  border text-black bg-white  hover:bg-[#A39775] hover:text-white" onClick={handleSendMessage}
                 >
                   Whatsapp
                   <Image src={"/whatsapp.png"} alt="whatsapp" width={30} height={20} />
