@@ -20,6 +20,11 @@ import {
   Maximize2,
   ArrowLeft,
   ArrowRight,
+  X,
+  
+  ZoomIn,
+  ZoomOut,
+  PhoneIcon as WhatsApp
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
@@ -30,6 +35,7 @@ import Link from "next/link";
 import { PropertyCarousel } from "./cards";
 import { useInView } from "react-intersection-observer";
 import toast, { ToastBar, Toaster } from "react-hot-toast";
+import { saveMessageToDb } from "@/actions/Users";
 
 // Fix for default marker icon
 // delete L.Icon.Default.prototype
@@ -126,7 +132,32 @@ export default function PropertyDetail({
   const [isGridView, setIsGridView] = useState(true);
   const [isShared, setIsShared] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
+  const [zoomLevel, setZoomLevel] = useState(1)
+  const [message, setMessage] = useState(
+    `Hello, I am interested in [${property?.data?.property?.bedrooms} Bedroom Apartments for Sale in ${property?.data?.property?.propertyType?.name} ${property?.data?.property?.area}]`
+  );
 
+  const handleSendMessage = async () => {
+    try {
+      // WhatsApp API URL to open chat with pre-filled message
+      const phoneNumber = "0700000000"; // Replace with the desired phone number
+      const encodedMessage = encodeURIComponent(message);
+      const url = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+      window.open(url, "_blank");
+
+      // Store the message in the database
+      await saveMessageToDb(message);
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  };
+
+  const handleCall = () => {
+    // You can replace this with the actual phone number to dial
+    const phoneNumber = "0700000000";
+    window.open(`tel:${phoneNumber}`);
+  };
   // console.log(similarproperties)
 
   const images = property?.data?.images?.map((image: any) => image.url) || [];
@@ -208,13 +239,56 @@ export default function PropertyDetail({
       });
     }
   };
-  const handleNext = () => {
-    setSelectedImage((prev) => (prev + 1) % images.length);
-  };
-
   const handlePrev = () => {
-    setSelectedImage((prev) => (prev - 1 + images.length) % images.length);
-  };
+    setSelectedImage((prev) => (prev === 0 ? images.length - 1 : prev - 1))
+  }
+
+  const handleNext = () => {
+    setSelectedImage((prev) => (prev === images.length - 1 ? 0 : prev + 1))
+  }
+
+  const handleZoomIn = () => {
+    setZoomLevel((prev) => Math.min(prev + 0.5, 3))
+  }
+
+  const handleZoomOut = () => {
+    setZoomLevel((prev) => Math.max(prev - 0.5, 1))
+  }
+
+  const resetZoom = () => {
+    setZoomLevel(1)
+  }
+
+  // const handleShare = () => {
+  //   if (navigator.share) {
+  //     navigator.share({
+  //       title: "Property Image",
+  //       text: "Check out this property!",
+  //       url: window.location.href,
+  //     })
+  //   }
+  // }
+
+  const handleWhatsAppShare = () => {
+    const text = encodeURIComponent("Check out this property!")
+    const url = encodeURIComponent(window.location.href)
+    window.open(`https://wa.me/?text=${text} ${url}`, "_blank")
+  }
+
+  const toggleFullScreen = () => {
+    const element = document.documentElement
+
+    if (!document.fullscreenElement) {
+      if (element.requestFullscreen) {
+        element.requestFullscreen()
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen()
+      }
+    }
+  }
+
   return (
     <div className="mx-auto ">
       <div className="grid lg:grid-cols-[1fr_400px] gap-8 px-4 py-8 container">
@@ -266,11 +340,11 @@ export default function PropertyDetail({
 
           {/* Image Gallery */}
           <div className="space-y-2">
-      <Dialog>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
           <div className="relative aspect-video cursor-pointer group">
             <Image
-              src={images[selectedImage]}
+              src={images[selectedImage] || "/placeholder.svg"}
               alt="Property"
               fill
               className="object-cover rounded-md"
@@ -282,20 +356,92 @@ export default function PropertyDetail({
             </div>
           </div>
         </DialogTrigger>
-        <DialogContent className="max-w-4xl p-0 bg-black rounded-md">
-          <div className="relative w-full h-screen">
-            <Image
-              src={images[selectedImage]}
-              alt={`Property ${selectedImage + 1}`}
-              fill
-              className="object-cover w-full h-full rounded-md"
-            />
-            <button onClick={handlePrev} className="absolute top-1/2 left-4 transform -translate-y-1/2 p-2 bg-gray-200 rounded-lg">
+        <DialogContent
+          className="max-w-full p-0 bg-black rounded-none border-0 h-screen w-screen m-0"
+          onInteractOutside={(e) => e.preventDefault()}
+        >
+          <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
+            {/* Top bar with counter and controls */}
+            <div className="absolute top-0 left-0 right-0 bg-black/50 text-white p-4 flex justify-between items-center z-10">
+              <div className="text-sm font-medium">
+                {selectedImage + 1} / {images.length}
+              </div>
+              <div className="flex items-center gap-4">
+                <button onClick={handleZoomIn} className="p-2 hover:bg-white/10 rounded-full">
+                  <ZoomIn className="w-5 h-5" />
+                </button>
+                <button onClick={handleZoomOut} className="p-2 hover:bg-white/10 rounded-full">
+                  <ZoomOut className="w-5 h-5" />
+                </button>
+                <button onClick={toggleFullScreen} className="p-2 hover:bg-white/10 rounded-full">
+                  <Maximize2 className="w-5 h-5" />
+                </button>
+                <button onClick={handleShare} className="p-2 hover:bg-white/10 rounded-full">
+                  <Share2 className="w-5 h-5" />
+                </button>
+                <button onClick={handleWhatsAppShare} className="p-2 hover:bg-white/10 rounded-full text-green-500">
+                  <WhatsApp className="w-5 h-5" />
+                </button>
+                <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-white/10 rounded-full">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Main image with zoom */}
+            <div
+              className="w-full h-full flex items-center justify-center"
+              onClick={resetZoom}
+              style={{
+                cursor: zoomLevel > 1 ? "zoom-out" : "default",
+                overflow: "auto",
+              }}
+            >
+              <div
+                style={{
+                  transform: `scale(${zoomLevel})`,
+                  transition: "transform 0.3s ease",
+                  maxWidth: "100%",
+                  maxHeight: "80%",
+                  position: "relative",
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                <Image
+                  src={images[selectedImage] || "/placeholder.svg"}
+                  alt={`Property ${selectedImage + 1}`}
+                  fill
+                  className="object-contain"
+                  sizes="80vw"
+                  priority
+                />
+              </div>
+            </div>
+
+            {/* Navigation buttons positioned at the edges */}
+            <button
+              onClick={handlePrev}
+              className="absolute top-1/2 left-4 transform -translate-y-1/2 p-2 bg-white/10 hover:bg-white/20 rounded-full text-white"
+              aria-label="Previous image"
+            >
               <ArrowLeft className="w-8 h-8" />
             </button>
-            <button onClick={handleNext} className="absolute top-1/2 right-4 transform -translate-y-1/2 p-2 bg-gray-200 rounded-lg">
+            <button
+              onClick={handleNext}
+              className="absolute top-1/2 right-4 transform -translate-y-1/2 p-2 bg-white/10 hover:bg-white/20 rounded-full text-white"
+              aria-label="Next image"
+            >
               <ArrowRight className="w-8 h-8" />
             </button>
+             {/* Floating WhatsApp button */}
+          <button
+            onClick={handleWhatsAppShare}
+            className="absolute bottom-6 right-6 p-3 bg-green-500 hover:bg-green-600 rounded-full text-white shadow-lg z-10"
+            aria-label="Share on WhatsApp"
+          >
+                  <Image src={"/whatsapp.png"} alt="whatsapp" width={30} height={20} />
+                  </button>
           </div>
         </DialogContent>
       </Dialog>
@@ -366,11 +512,24 @@ export default function PropertyDetail({
                 <Input placeholder="Phone" />
                 <Input placeholder="Email" />
                 <Textarea
-                  placeholder="Message"
-                  defaultValue="Hello, I am interested in [2 and 3 Bedroom Apartments for Sale in Riverside]"
-                />
-                <Button className="w-full bg-[#B5A887] hover:bg-[#A39775] text-white">
+        placeholder="Message"
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+      />
+                <div className="flex grid-cols-2 gap-4">
+
+                <Button className="w-1/2 bg-[#B5A887] hover:bg-[#A39775] text-white"    >
                   Send Message
+                </Button>
+                <Button className="w-1/2 bg-[#B5A887] hover:bg-[#A39775] text-white"           onClick={handleCall}
+                >
+                  Call
+                </Button>
+                </div>
+                <Button className="w-full bg-[#B5A887] hover:bg-[#A39775] text-white" onClick={handleSendMessage}
+                >
+                  Whatsapp
+                  <Image src={"/whatsapp.png"} alt="whatsapp" width={30} height={20} />
                 </Button>
               </form>
             </CardContent>

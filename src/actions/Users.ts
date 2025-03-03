@@ -48,6 +48,25 @@ export const postUserData = async (data: any) => {
       return [e.message, 400];
     }
   };
+  export const saveMessageToDb = async (message: string) => {
+    try {
+      const response = await fetch("/api/saveMessage", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message }),
+      });
 
+      if (!response.ok) {
+        throw new Error("Failed to save message to database");
+      }
+
+      const data = await response.json();
+      console.log("Message saved successfully:", data);
+    } catch (error) {
+      console.error("Error saving message:", error);
+    }
+  };
 
   
