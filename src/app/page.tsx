@@ -6,6 +6,7 @@ import Aboutus from "@/components/aboutus";
 import { RecentBlogs } from "@/components/Blogs/RecentBlogs";
 import Component from "@/components/cards";
 import { Categories } from "@/components/Categories";
+import HeroCarousel from "@/components/hero-carousel";
 import HeroSection from "@/components/herosection";
 import Process from "@/components/Process";
 import { AnimatedTestimonialsDemo } from "@/components/Testimonial";
@@ -62,18 +63,11 @@ export default async function Home() {
 
 
       {/* <HeroSection propertytypes={propertyTypes} /> */}
-      <div className="h-[100vh] relative w-full px-6">
-        <FullScreenCarousel />
+      <div className="h-[80vh] relative w-full">
+        {/* <FullScreenCarousel /> */}
+        <HeroCarousel propertytypes={propertyTypes}/>
         {/* Search area */}
-        <div className="absolute -bottom-10 z-30 flex justify-center mx-auto inset-x-0">
-          <div className="w-fit bg-[#F0F8FF] py-2 px-4 rounded-lg shadow-lg backdrop-blur-lg">
-            <h3 className="text-labelLarge p-2 font-bold">Find you next dream house</h3>
-            <div className="my-2 p-2">
-              <HeroSearchBar />
-            </div>
-          </div>
-
-        </div>
+     {/* / */}
       </div>
 
 

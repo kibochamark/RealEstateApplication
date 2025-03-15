@@ -14,7 +14,7 @@ import {  FloatingNavDemo } from "@/components/layout/FloatingNav";
 
 // Import the Lato font from Google Fonts
 const lato = Jost({
-  weight: ["400", "700", "900"], // Adjust weights as needed
+  weight: ["500","700", "900"], // Adjust weights as needed
   subsets: ["latin"], // Specify subsets
 });
 

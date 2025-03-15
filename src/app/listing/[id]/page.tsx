@@ -18,7 +18,7 @@ const Editpage = async ({ params }: PageProps) => {
 
   return (
     <div className="w-full min-h-[50vh]">
-      <div className="mt-20">
+      <div className="">
         <Suspense fallback={<Loader className='animate animate-spin text-secondary400' />}>
 
           <PropertyDetail property={property} similarproperties={similarProperties} />
