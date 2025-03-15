@@ -85,6 +85,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         url: "/intime-admin/requestaccess",
         icon: "/access.png",
 
+      },
+      {
+
+        title: "Connections",
+        url: "/intime-admin/connections",
+        icon: "/access.png",
+
       }
 
       

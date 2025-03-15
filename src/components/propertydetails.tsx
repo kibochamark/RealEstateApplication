@@ -34,6 +34,7 @@ import Link from "next/link"
 import { useInView } from "react-intersection-observer"
 import { toast, Toaster } from "react-hot-toast"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { postConnectionData } from "@/actions/connection"
 
 // Fix for default marker icon
 L.Icon.Default.mergeOptions({
@@ -229,20 +230,11 @@ export default function PropertyDetail({
 
   const handleContactSubmit = async (values: any, { setSubmitting, resetForm }: any) => {
     try {
+      console.log(values)
       // Replace with your actual API endpoint
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...values,
-          propertyId: property?.data?.property?.id,
-          propertyName: property?.data?.property?.name,
-        }),
-      })
+      const response = await postConnectionData(values)
 
-      if (response.ok) {
+      if (response[1] == 201) {
         toast.success("Message sent successfully!")
         resetForm()
       } else {
